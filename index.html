@@ -76,7 +76,7 @@ body.home .top .av,body.home .top .who{visibility:hidden}
 .tiles{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin-bottom:12px}
 .tile{border:0;background:var(--card);border-radius:22px;padding:16px;text-align:left;display:flex;flex-direction:column;gap:4px;min-height:120px;justify-content:space-between}
 .tile .tl{color:var(--mute);font-weight:600;font-size:14px}
-.tile b{font:800 40px/1 "Barlow Condensed",sans-serif;overflow-wrap:anywhere}
+.tile b{font:800 40px/1 "Barlow Condensed",sans-serif;overflow-wrap:break-word}
 .tile .ts{font-size:14px;color:var(--mute);line-height:1.25;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical}
 .tile.acc{background:var(--acc);color:var(--accink)}.tile.acc .tl,.tile.acc .ts{color:#0b4a2a}
 .tile.pur{background:var(--pf);color:#fff}.tile.pur .tl,.tile.pur .ts{color:#e3d9ff}
@@ -105,6 +105,10 @@ body.home .top .av,body.home .top .who{visibility:hidden}
 .btn:disabled{opacity:.5}
 .acts{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 .acts .btn{flex:1 1 auto}
+.tile.q b{font-size:25px;line-height:1.05;overflow-wrap:normal}.tile.q .ts{color:var(--acc);font-weight:700}
+.hadith p{font-size:17px;line-height:1.5;margin:8px 0}
+.why summary{color:var(--p);font-size:13px;font-weight:700;cursor:pointer;margin-top:4px;list-style:none}.why summary::-webkit-details-marker{display:none}.why p{margin:6px 0 4px;font-size:14px;line-height:1.45}.why span{font-size:12px;color:var(--mute)}
+.hd{font-size:15px;line-height:1.45;background:rgba(255,255,255,.08);border-radius:14px;padding:10px 12px;text-align:left}
 .week{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:6px;height:120px;margin-top:12px}
 .wd{display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end;font-size:13px;color:var(--mute);font-weight:700}
 .wd .bars{width:100%;max-width:30px;flex:1;background:var(--card2);border-radius:9px;display:flex;align-items:flex-end;overflow:hidden}
@@ -251,6 +255,7 @@ const DFULL={Lun:'Lundi',Mar:'Mardi',Mer:'Mercredi',Jeu:'Jeudi',Ven:'Vendredi',S
 const ST=['À contacter','Message envoyé','En discussion','Piste chaude','Sans réponse','Terminé'];
 const CH=['WhatsApp','Instagram','Email','Téléphone','SMS','Facebook','En personne'];
 const SCH={
+habit:{t:'Petit objectif',f:[['title','Objectif de chaque jour','text',0,1]]},
 contact:{t:'Contact',f:[['name','Nom','text',0,1],['org','Club / agence','text'],['role','Rôle','text'],['country','Pays','text'],['channel','Canal','select',CH],['handle','Numéro / compte / email','text'],['status','Statut','select',ST,1],['last','Dernier contact','date'],['next','Relancer le','date'],['notes','Notes','textarea']]},
 goal:{t:'Objectif',f:[['title','Objectif','text',0,1],['cat','Catégorie','select',['Foot','Carrière','Physique','École','Religion'],1],['deadline','Pour quand','date'],['cur','Où j\'en suis (chiffre, optionnel)','number'],['target','Cible (chiffre, optionnel)','number'],['notes','Notes','textarea'],['done','Atteint','check']]},
 match:{t:'Match',f:[['date','Date','date',0,1],['opp','Adversaire','text',0,1],['comp','Compétition','text'],['starter','Titulaire','check'],['min','Minutes jouées','number'],['goals','Buts','number'],['assists','Passes décisives','number'],['rating','Ma note sur 10','number'],['notes','Bien fait / à travailler','textarea']]},
@@ -323,11 +328,13 @@ function vHome(){const t=today(),dw=dowOf(t),p=prof(),day=dayOf(t),sd=day.sess||
  const ss=items('season')[0];
  return `<div class="me"><img src="card.jpg" alt="Mohamed en maillot n°9 de Prairie State"><div class="mi"><span class="kick">N°9 · Ailier</span><h1>Mohamed<br>Ghelaissa</h1><div class="mute">Prairie State Pioneers</div>${ss?`<div class="ms"><div><b>${num(ss.goals)}</b><span>buts</span></div><div><b>${num(ss.assists)}</b><span>passes</span></div><div><b>${num(ss.games)}</b><span>matchs</span></div></div>`:''}</div></div>${hero}
  ${nx?`<button class="next" data-act="pg" data-x="agenda"><b>J-${dBetween(t,nx.date)}</b><span>${esc(nx.title)}<small>${fmtD(nx.date)}</small></span>${I.chev}</button>`:''}
- ${sect('Ma journée')}<div class="card"><div class="rings">${ring('pr','Prières',nPr,5,nPr+'/5','goto','vie')}${ring('ea','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}${ring('pt','Protéines',prot,p.protein,prot+'g','goto','vie')}</div>${prayBtns(t)}</div>
+ ${sect('Ma journée')}<div class="card"><div class="rings">${ring('pr','Prières',nPr,5,nPr+'/5','pg','prayers')}${ring('ea','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}${ring('pt','Protéines',prot,p.protein,prot+'g','pg','nutri')}</div>${prayBtns(t)}</div>
  <div class="tiles">${adhTiles(t)}</div>
+ ${items('habit').length?sect('Mes petits objectifs',`<button class="link" data-act="tab" data-x="ia">Tout voir</button>`)+`<div class="card list">${habRows(t,4)}</div>`:''}
  ${sect('À faire',todo.length?`<span class="mute">${todo.length}</span>`:'')}<div class="card list">${todo.slice(0,5).join('')||'<div class="empty">Rien d\'urgent aujourd\'hui.</div>'}</div>
  ${sect('Ma semaine')}<div class="card"><div class="bigrow"><b>${st}</b><span class="mute">jour${st>1?'s':''} de suite avec les 5 prières</span></div><div class="week">${week}</div><div class="mute" style="margin-top:10px">Barres : prières · point vert : séance faite</div></div>
- <div class="card"><div class="kick">Bilan IA de la semaine</div>${bil?`<div style="margin-top:8px">${md(bil.text)}</div>`:`<p class="mute" style="margin:6px 0 0">3 priorités pour la suite, à partir de ta semaine.</p>`}<div class="acts"><button class="btn ${bil?'':'acc'}" data-act="bilan">Faire mon bilan avec Claude</button></div></div>`}
+ ${(()=>{const hd=hadithDuJour();return hadCard(hd.h,hd.src,'Hadith du jour')})()}
+ <div class="card"><div class="kick">Bilan de la semaine</div>${bil?`<div style="margin-top:8px">${md(bil.text)}</div>`:`<p class="mute" style="margin:6px 0 0">3 priorités pour la suite, à partir de ta semaine.</p>`}<div class="acts"><button class="btn ${bil?'':'acc'}" data-act="bilan">Faire mon bilan avec Claude</button></div></div>`}
 
 function vFoot(){const t=today(),dw=dowOf(t),ws=weekStart(t),s=items('season')[0],cs=items('contact'),gs=items('goal');
  const late=cs.filter(isLate).length,open=cs.filter(c=>['Message envoyé','En discussion','Piste chaude'].includes(c.status)).length,hot=cs.filter(c=>c.status==='Piste chaude').length;
@@ -397,7 +404,7 @@ function pAg(){const t=today(),es=items('event').sort((a,b)=>(a.date||'').locale
 function pBac(){const bs=items('bac').sort((a,b)=>(!!a.done)-(!!b.done)),d=bs.filter(b=>b.done).length;return`<div class="card"><div class="bigrow"><b>${d}/${bs.length}</b><span class="mute">démarches faites</span></div>${bar(d,bs.length)}</div><div class="card list">${bs.map(b=>lr(rc(b.done,'tog',b.id,'done'),esc(b.title),esc(b.notes||''),b.done?'':dueTag(b.due),['edit','',b.id],b.done?'done':'')).join('')||'<div class="empty">Aucune démarche.</div>'}</div>`}
 function pHifz(){const hs=items('hifz'),L=hs.reduce((n,h)=>n+num(h.learned),0);return`<div class="card"><div class="bigrow"><b>${L}</b><span class="mute">versets mémorisés</span></div></div><div class="card list">${hs.map(h=>lr(`<span class="ini">${num(h.learned)}</span>`,esc(h.title),num(h.learned)+' / '+(num(h.total)||'?')+' versets'+bar(num(h.learned),num(h.total)),`<button class="iconb" data-act="hz" data-id="${h.id}" data-x="-1" aria-label="Moins un verset">−</button><button class="iconb" data-act="hz" data-id="${h.id}" data-x="1" aria-label="Plus un verset">+</button>`,['edit','',h.id])).join('')||'<div class="empty">Touche + pour ajouter la sourate que tu apprends, puis avance verset par verset.</div>'}</div>`}
 function pMeals(){const t=today(),last=[...Array(7)].map((_,i)=>addDays(t,-i));return`<div class="card"><table><tr><th>Jour</th><th>Protéines</th><th>kcal</th><th>Eau</th></tr>${last.map(d=>{const m=items('meal').filter(x=>x.date===d);return`<tr><td>${fmtD(d)}</td><td>${m.reduce((n,x)=>n+num(x.protein),0)} g</td><td>${m.reduce((n,x)=>n+num(x.kcal),0)}</td><td>${num(dayOf(d).water)}</td></tr>`}).join('')}</table></div>`}
-const PAGES={contacts:{t:'Agents & clubs',add:'contact',f:pContacts},contact:{t:'Contact',f:pContact},goals:{t:'Objectifs',add:'goal',f:pGoals},matches:{t:'Mes stats',add:'match',f:pMatches},day:{t:'Programme',add:'session',f:pDay},hw:{t:'Devoirs',add:'hw',f:pHw},edt:{t:'Emploi du temps',add:'weekly',f:pEdt},agenda:{t:'Agenda',add:'event',f:pAg},bac:{t:'Bac+3 France',add:'bac',f:pBac},hifz:{t:'Hifz',add:'hifz',f:pHifz},meals:{t:'Nutrition',add:'meal',f:pMeals}};
+const PAGES={prayers:{t:'Prières',f:pPrayers},nutri:{t:'Nutrition',add:'meal',f:pNutri},contacts:{t:'Agents & clubs',add:'contact',f:pContacts},contact:{t:'Contact',f:pContact},goals:{t:'Objectifs',add:'goal',f:pGoals},matches:{t:'Mes stats',add:'match',f:pMatches},day:{t:'Programme',add:'session',f:pDay},hw:{t:'Devoirs',add:'hw',f:pHw},edt:{t:'Emploi du temps',add:'weekly',f:pEdt},agenda:{t:'Agenda',add:'event',f:pAg},bac:{t:'Bac+3 France',add:'bac',f:pBac},hifz:{t:'Hifz',add:'hifz',f:pHifz},meals:{t:'Nutrition',add:'meal',f:pMeals}};
 function renderPage(){const el=$('#page');if(!S.pg){if(el.classList.contains('open')){el.classList.remove('open','slide');el.innerHTML=''}return}
  const P=PAGES[S.pg.n];if(!P){S.pg=null;return renderPage()}const old=el.querySelector('.pc'),sc=old&&!S.pgNew?old.scrollTop:0;
  el.innerHTML=`<div class="ph"><button class="hb" data-act="back" aria-label="Retour">${I.back}</button><h2>${esc(P.t)}</h2>${P.add?`<button class="hb" data-act="add" data-x="${P.add}" aria-label="Ajouter">${I.plus}</button>`:'<span style="width:44px;flex:none"></span>'}</div><div class="pc">${P.f(S.pg.a)}</div>`;
@@ -414,7 +421,7 @@ let raf=0;
 function renderMsgs(){if(raf)return;raf=requestAnimationFrame(()=>{raf=0;const el=$('#msgs');if(el){el.innerHTML=msgsHtml();window.scrollTo(0,document.body.scrollHeight)}})}
 function ctx(){const t=today(),p=prof(),L=[];
  L.push(`Tu es l'assistant intégré à MG9, l'appli perso de Mohamed Ghelaissa. Date du jour : ${fmtLong(t)}.`);
- L.push('Règles : réponds en français (sauf demande contraire), court et clair car il lit sur téléphone. Sois franc et constructif, sans flatterie ; corrige-le quand il se trompe. N\'invente aucun fait : appuie-toi sur les données ci-dessous et dis-le quand une info manque. Pour un message à un club, un agent ou un coach : commence par « Bonjour », ton cordial et carré, uniquement des infos sûres tirées des données ci-dessous ; relis et corrige le message toi-même avant de donner la version finale. Devoirs rédigés en anglais : anglais simple, phrases courtes. Maths : explique d\'abord l\'idée en langage simple, jamais de code LaTeX. Duaas et adhkar : uniquement des formules authentiques (Coran et sunna), avec arabe, translittération et traduction.');
+ L.push('Règles : réponds en français (sauf demande contraire), court et clair car il lit sur téléphone. Sois franc et constructif, sans flatterie ; corrige-le quand il se trompe. N\'invente aucun fait : appuie-toi sur les données ci-dessous et dis-le quand une info manque. Pour un message à un club, un agent ou un coach : commence par « Bonjour », ton cordial et carré, uniquement des infos sûres tirées des données ci-dessous ; relis et corrige le message toi-même avant de donner la version finale. Devoirs rédigés en anglais : anglais simple, phrases courtes. Maths : explique d\'abord l\'idée en langage simple, jamais de code LaTeX. Duaas et adhkar : uniquement des formules authentiques (Coran et sunna), avec arabe, translittération et traduction. Quand tu cites un hadith, un verset ou une source islamique, écris toujours le texte (traduit) avec la référence, jamais la référence seule.');
  L.push('PROFIL :\n'+(p.about||'(non rempli)'));
  L.push('OBJECTIFS :\n'+items('goal').map(g=>`- [${g.cat}] ${g.title}${g.done?' (atteint)':''}${g.deadline?' — pour le '+g.deadline:''}${num(g.target)?` (${num(g.cur)}/${num(g.target)})`:''}${g.notes?' — '+g.notes:''}`).join('\n'));
  L.push('STATS :\n'+items('season').map(s=>`- ${s.title} : ${num(s.games)} matchs, ${num(s.starts)} titularisations, ${num(s.goals)} buts, ${num(s.assists)} passes D. ${s.notes||''}`).join('\n')+'\n'+items('match').sort((a,b)=>(b.date||'').localeCompare(a.date||'')).slice(0,8).map(m=>`- ${m.date} vs ${m.opp} : ${num(m.min)} min, ${num(m.goals)} B, ${num(m.assists)} P, note ${m.rating||'?'}. ${m.notes||''}`).join('\n'));
@@ -510,6 +517,70 @@ const ADH=[
  fr:"Gloire et louange à Allah.",
  src:"100 fois matin et soir (Muslim 2692)"}
 ];
+/* ---------- hadiths liés aux adhkar (texte + source) ---------- */
+const ADH_H={
+'Âyat al-Kursî':"Ubayy ibn Ka'b surprit un djinn qui prenait de ses dattes. Le djinn lui dit : « Celui qui la récite le soir est protégé de nous jusqu'au matin, et celui qui la récite le matin est protégé de nous jusqu'au soir. » Le Prophète ﷺ dit ensuite : « Le perfide a dit vrai. »",
+'Sourate al-Ikhlâs':"« Dis : Il est Allah, l'Unique (al-Ikhlâs), et les deux sourates protectrices (al-Falaq et an-Nâs), le soir et le matin, trois fois : elles te suffiront contre toute chose. »",
+'Sourate al-Falaq':"« Dis : Il est Allah, l'Unique (al-Ikhlâs), et les deux sourates protectrices (al-Falaq et an-Nâs), le soir et le matin, trois fois : elles te suffiront contre toute chose. »",
+'Sourate an-Nâs':"« Dis : Il est Allah, l'Unique (al-Ikhlâs), et les deux sourates protectrices (al-Falaq et an-Nâs), le soir et le matin, trois fois : elles te suffiront contre toute chose. »",
+'Invocation du matin':"Ibn Mas'ûd rapporte que le Prophète ﷺ disait le soir : « Amsaynâ wa amsâ al-mulku lillâh… », et que le matin il disait la même chose en commençant par « Asbahnâ wa asbaha al-mulku lillâh ».",
+'Invocation du soir':"Ibn Mas'ûd rapporte que le Prophète ﷺ disait le soir : « Amsaynâ wa amsâ al-mulku lillâh… », et que le matin il disait la même chose en commençant par « Asbahnâ wa asbaha al-mulku lillâh ».",
+'Allâhumma bika asbahnâ':"Abû Hurayra rapporte que le Prophète ﷺ disait le matin : « Allâhumma bika asbahnâ… », et le soir : « Allâhumma bika amsaynâ… ».",
+'Allâhumma bika amsaynâ':"Abû Hurayra rapporte que le Prophète ﷺ disait le matin : « Allâhumma bika asbahnâ… », et le soir : « Allâhumma bika amsaynâ… ».",
+'Sayyid al-istighfâr':"« Le maître des demandes de pardon, c'est de dire : Allâhumma anta rabbî… Celui qui le dit dans la journée en y croyant fermement, et meurt ce jour-là avant le soir, fait partie des gens du Paradis. Et celui qui le dit la nuit en y croyant fermement, et meurt avant le matin, fait partie des gens du Paradis. »",
+'Bismillâhi lladhî lâ yadurru':"« Aucun serviteur ne dit, au matin de chaque jour et au soir de chaque nuit, trois fois : Bismillâhi lladhî lâ yadurru ma'a smihi shay'un… sans que rien ne lui nuise. » (rapporté par 'Uthmân ibn 'Affân)",
+"A'ûdhu bi-kalimâti llâh":"Un homme vint dire au Prophète ﷺ : « Ô Messager d'Allah, qu'est-ce que j'ai souffert d'un scorpion qui m'a piqué cette nuit ! » Il répondit : « Si tu avais dit, en arrivant au soir : A'ûdhu bi-kalimâti llâhi t-tâmmâti min sharri mâ khalaq, il ne t'aurait pas nui. »",
+'Subhânallâhi wa bihamdih':"« Celui qui dit, le matin et le soir, cent fois : Subhânallâhi wa bihamdih, personne ne viendra le Jour de la Résurrection avec quelque chose de meilleur que ce qu'il apporte, sauf quelqu'un qui aura dit la même chose ou davantage. »"};
+ADH.forEach(a=>{a.h=ADH_H[a.t]||''});
+
+/* ---------- actes du jour (avec le hadith) ---------- */
+const ACTS=[
+{id:'rawatib',t:"12 rak'at surérogatoires (sunna)",h:"« Aucun serviteur musulman ne prie pour Allah, chaque jour, douze rak'at volontaires en plus des prières obligatoires, sans qu'Allah lui construise une maison au Paradis. »",src:"Muslim 728, rapporté par Umm Habîba"},
+{id:'duha',t:"Prière de Duha (2 rak'at le matin)",h:"« Chaque matin, une aumône est due pour chacune des articulations de l'un d'entre vous… et deux rak'at de Duha suffisent pour tout cela. »",src:"Muslim 720, rapporté par Abû Dharr"},
+{id:'quran',t:"Lire du Coran",h:"« Celui qui lit une lettre du Livre d'Allah obtient une bonne action, et la bonne action vaut dix fois autant. Je ne dis pas que Alif-Lâm-Mîm est une lettre : Alif est une lettre, Lâm est une lettre et Mîm est une lettre. »",src:"at-Tirmidhî 2910, rapporté par Ibn Mas'ûd"},
+{id:'istighfar',t:"Istighfar 100 fois",h:"« Ô gens, repentez-vous à Allah, car je me repens à Lui cent fois par jour. »",src:"Muslim 2702, rapporté par al-Agharr al-Muzanî",count:true},
+{id:'sadaqa',t:"Faire une aumône, même petite",h:"« L'aumône ne diminue en rien les biens. »",src:"Muslim 2588, rapporté par Abû Hurayra"},
+{id:'witr',t:"Witr avant de dormir",h:"« Faites du witr la dernière de vos prières de la nuit. »",src:"al-Bukhârî 998 et Muslim 751, rapporté par Ibn 'Umar"},
+{id:'jeune',t:"Jeûne du lundi / jeudi",days:[1,4],h:"Interrogé sur le jeûne du lundi, le Prophète ﷺ a dit : « C'est le jour où je suis né, et le jour où la révélation est descendue sur moi. »",src:"Muslim 1162, rapporté par Abû Qatâda"}];
+const ISTI={t:'Istighfar',n:100,ar:'أَسْتَغْفِرُ اللَّهَ',tr:'Astaghfirullāh',fr:"Je demande pardon à Allah.",src:"Muslim 2702",h:"« Ô gens, repentez-vous à Allah, car je me repens à Lui cent fois par jour. »"};
+function hadithDuJour(){const all=[...ACTS.map(a=>({h:a.h,src:a.src})),...ADH.filter((a,i,arr)=>a.h&&arr.findIndex(b=>b.h===a.h)===i).map(a=>({h:a.h,src:a.src}))];const n=Math.floor(new Date(today()+'T12:00:00')/864e5);return all[n%all.length]}
+
+/* ---------- programmes rapides ---------- */
+const QUICK=[
+{id:'abdos',title:'Gainage express',dur:'10 min',ex:"Planche — 3x40 s\nPlanche latérale — 3x30 s par côté\nDead bug — 3x10 par côté\nHollow hold — 3x20 s"},
+{id:'chevilles',title:'Chevilles et genoux',dur:'10 min',ex:"Montées sur pointes — 3x15\nÉquilibre sur un pied — 3x30 s par jambe\nTibialis raises — 3x15\nFentes arrière lentes — 3x8 par jambe"},
+{id:'vitesse',title:'Vitesse sans matériel',dur:'15 min',ex:"Montées de genoux sur place — 4x20 s\nSprint 10 m — 6 fois\nDépart allongé + sprint 10 m — 4 fois\nSauts groupés — 3x6"},
+{id:'ballon',title:'Touches de balle',dur:'12 min',ex:"Jonglage pied droit — 3x1 min\nJonglage pied gauche — 3x1 min\nContrôle orienté contre un mur — 3x10 par pied\nConduite + crochet — 4 fois"},
+{id:'mobilite',title:'Mobilité du soir',dur:'8 min',ex:"Étirement du pigeon (hanches) — 2x45 s par côté\nÉtirement des ischios — 2x45 s\nMollets contre un mur — 2x45 s\nRespiration lente — 1 min"},
+{id:'pompes',title:'Haut du corps express',dur:'10 min',ex:"Pompes — 4x12\nPompes diamant — 3x8\nDips sur une chaise — 3x10\nSuperman — 3x12"}];
+const HAB_DEFAULT=['10 min de touches de balle','Étirements 10 min','Lire 10 min (cours ou livre)','Pas de téléphone 30 min avant de dormir','Coucher avant 23h'];
+
+/* ---------- vues Islam et Moi ---------- */
+const prTable=t=>{const last=[...Array(7)].map((_,i)=>addDays(t,i-6));return`<table style="margin-top:14px"><tr><th></th>${last.map(d=>`<th>${DAYS[(dowOf(d)+6)%7].slice(0,1)}</th>`).join('')}</tr>${PR.map(([k,l])=>`<tr><td>${l}</td>${last.map(d=>`<td><span class="dot${(dayOf(d).prayers||{})[k]?' on':''}"></span></td>`).join('')}</tr>`).join('')}</table>`};
+const hadCard=(h,src,kick)=>`<div class="card hadith">${kick?`<div class="kick">${kick}</div>`:''}<p>${esc(h)}</p><div class="mute">${esc(src)}</div></div>`;
+function vIslam(){const t=today(),day=dayOf(t),dw=dowOf(t),acts=day.acts||[],hs=items('hifz'),L=hs.reduce((n,h)=>n+num(h.learned),0);
+ const list=ACTS.filter(a=>!a.days||a.days.includes(dw)),dn=list.filter(a=>acts.includes(a.id)).length,hd=hadithDuJour();
+ return `<h1 class="vt">Islam</h1>
+ ${sect('Prières')}<div class="card">${prayBtns(t).replace('class="prs"','class="prs" style="margin-top:0"')}${prTable(t)}</div>
+ <div class="tiles">${adhTiles(t)}</div>
+ ${sect('Mes actes du jour',`<span class="mute">${dn}/${list.length}</span>`)}<div class="card list">${list.map(a=>{const on=acts.includes(a.id);return`<div class="lr${on?' done':''}" style="align-items:flex-start">${rc(on,'act','',a.id)}<div class="lm"><div class="lt">${esc(a.t)}</div><details class="why"><summary>Le hadith</summary><p>${esc(a.h)}</p><span>${esc(a.src)}</span></details></div>${a.count?`<button class="btn sm" data-act="dhikr" data-x="istighfar">Compter</button>`:''}</div>`}).join('')}</div>
+ ${sect('Coran')}<div class="card"><div class="bigrow" style="justify-content:space-between;align-items:center"><div><b>${num(day.quran)}</b> <span class="mute">page${num(day.quran)>1?'s':''} lue${num(day.quran)>1?'s':''} aujourd'hui</span></div><div class="water"><button class="iconb" data-act="quran" data-x="-1" aria-label="Moins une page">−</button><button class="iconb" data-act="quran" data-x="1" aria-label="Plus une page">+</button></div></div></div>
+ <div class="tiles">${tile('pg','hifz','','Hifz',L,'versets mémorisés','pur')}${tile('pg','hifz','','Sourates',hs.length,hs.length?'en cours':'Ajoute ta sourate')}</div>
+ ${hadCard(hd.h,hd.src,'Hadith du jour')}`}
+const habRows=(t,max)=>{const d=dayOf(t).hab||[];return items('habit').slice(0,max||99).map(h=>{const on=d.includes(h.id);return lr(rc(on,'hab',h.id),esc(h.title),'','',['edit','',h.id],on?'done':'')}).join('')};
+function vMoi(){const t=today(),p=prof(),day=dayOf(t),hb=items('habit'),hd=(day.hab||[]).filter(id=>hb.some(h=>h.id===id)).length,qd=day.quick||[];
+ const ms=items('meal').filter(m=>m.date===t),prot=ms.reduce((n,m)=>n+num(m.protein),0);
+ const Q=['Qu\'est-ce que je fais aujourd\'hui ?','Quels agents je dois relancer en priorité ?','Aide-moi sur un devoir','Donne-moi un exo pour ma finition'];
+ return `<h1 class="vt">Moi</h1>
+ ${sect('Mes petits objectifs',`<span class="mute">${hd}/${hb.length}</span>`)}<div class="card list">${habRows(t)||'<div class="empty">Ajoute tes petits objectifs de chaque jour.</div>'}</div><div class="acts" style="margin-top:-4px;margin-bottom:8px"><button class="btn" data-act="add" data-x="habit">+ Petit objectif</button></div>
+ ${sect('Programmes rapides')}<div class="tiles">${QUICK.map(q=>tile('quick',q.id,'',esc(q.dur),esc(q.title),qd.includes(q.id)?'Fait aujourd\'hui':'▶ Lancer',qd.includes(q.id)?'done q':'q')).join('')}</div>
+ ${sect('Nutrition',`<button class="link" data-act="pg" data-x="nutri">Historique</button>`)}<div class="card"><div class="rings two">${ring('pt2','Protéines',prot,p.protein,prot+'g','','')}${ring('ea2','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div>
+ <div class="list" style="margin-top:10px">${ms.map(m=>lr(m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="">`:`<span class="ini t">${num(m.protein)}g</span>`,esc(m.name),num(m.protein)+' g de protéines'+(num(m.kcal)?' · '+num(m.kcal)+' kcal':''),I.chev,['edit','',m.id])).join('')}</div>
+ <div class="acts"><button class="btn acc" data-act="mealphoto">Repas en photo</button><button class="btn" data-act="add" data-x="meal">+ Repas</button><button class="btn" data-act="water" data-x="-1">− Eau</button></div></div>
+ ${sect('Demander à Claude')}<div class="card"><p class="mute" style="margin:0 0 10px">MG9 ajoute ton contexte (profil, agents, devoirs, planning), le copie, et tu colles dans Claude.</p><textarea id="aiq" placeholder="Ex : rédige une relance pour Laurent de Pétange"></textarea><button class="cta" style="margin-top:10px" data-act="askc">Copier et ouvrir Claude</button><div class="seg wrap" style="margin:12px 0 0">${Q.map(q=>`<button data-act="askq" data-x="${esc(q)}">${esc(q)}</button>`).join('')}</div></div>`}
+function pPrayers(){const t=today();return`<div class="card">${prayBtns(t).replace('class="prs"','class="prs" style="margin-top:0"')}${prTable(t)}</div><div class="tiles">${adhTiles(t)}</div>`}
+function pNutri(){const t=today(),p=prof(),day=dayOf(t),ms=items('meal').filter(m=>m.date===t),prot=ms.reduce((n,m)=>n+num(m.protein),0);
+ return `<div class="card"><div class="rings two">${ring('pt3','Protéines',prot,p.protein,prot+'g','','')}${ring('ea3','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div><div class="list" style="margin-top:10px">${ms.map(m=>lr(m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="">`:`<span class="ini t">${num(m.protein)}g</span>`,esc(m.name),num(m.protein)+' g de protéines',I.chev,['edit','',m.id])).join('')||'<div class="empty">Aucun repas noté aujourd\'hui.</div>'}</div><div class="acts"><button class="btn acc" data-act="mealphoto">Repas en photo</button><button class="btn" data-act="add" data-x="meal">+ Repas</button><button class="btn" data-act="water" data-x="-1">− Eau</button></div></div>`+pMeals()}
 
 /* ---------- lecteur plein écran ---------- */
 let tick=0;
@@ -519,20 +590,20 @@ const fmtS=s=>Math.floor(s/60)+':'+pad(Math.max(0,s%60));
 function parseEx(s){return(s.ex||'').split('\n').map(x=>x.trim()).filter(Boolean).map(x=>{const pr=x.split(/\s[—–-]\s/),name=pr[0].trim(),det=(pr[1]||'').trim(),m=det.match(/^(\d+)\s*[x×]\s*(.+)$/);return{name,det,sets:m?+m[1]:1,reps:m?m[2]:det}})}
 function renderPlayer(){const P=S.P;if(!P)return;const el=$('#player');
  if(P.type==='adh'){const L=P.list,it=L[P.i];
-  if(P.done){el.innerHTML=`<div class="ptop"><h3>Adhkar du ${P.w==='M'?'matin':'soir'}</h3><button class="pclose" data-act="pclose" aria-label="Fermer">×</button></div><div class="pbody"><h2>Bârak Allâhu fîk</h2><p class="sub">Adhkar du ${P.w==='M'?'matin':'soir'} terminés et cochés pour aujourd'hui.</p><button class="btn white" data-act="pclose">Fermer</button></div>`;return}
+  if(P.done){el.innerHTML=`<div class="ptop"><h3>${P.title||'Adhkar du '+(P.w==='M'?'matin':'soir')}</h3><button class="pclose" data-act="pclose" aria-label="Fermer">×</button></div><div class="pbody"><h2>Bârak Allâhu fîk</h2><p class="sub">${P.title?P.title+' terminé':'Adhkar du '+(P.w==='M'?'matin':'soir')+' terminés'} et coché pour aujourd'hui.</p><button class="btn white" data-act="pclose">Fermer</button></div>`;return}
   const C=2*Math.PI*70,f=Math.min(1,P.c/it.n);
-  el.innerHTML=`<div class="ptop"><h3>Adhkar du ${P.w==='M'?'matin':'soir'}</h3><button class="pclose" data-act="pclose" aria-label="Fermer">×</button></div><div class="dots">${L.map((_,i)=>`<i class="${i<=P.i?'on':''}"></i>`).join('')}</div>
-  <div class="pbody" style="justify-content:flex-start"><div class="sub">${P.i+1} / ${L.length} · ${esc(it.t)}</div><div class="ar">${it.ar}</div><div class="tr">${esc(it.tr)}</div><div class="fr">${esc(it.fr)}</div><div class="src">${esc(it.src)}</div>
+  el.innerHTML=`<div class="ptop"><h3>${P.title||'Adhkar du '+(P.w==='M'?'matin':'soir')}</h3><button class="pclose" data-act="pclose" aria-label="Fermer">×</button></div><div class="dots">${L.map((_,i)=>`<i class="${i<=P.i?'on':''}"></i>`).join('')}</div>
+  <div class="pbody" style="justify-content:flex-start"><div class="sub">${P.i+1} / ${L.length} · ${esc(it.t)}</div><div class="ar">${it.ar}</div><div class="tr">${esc(it.tr)}</div><div class="fr">${esc(it.fr)}</div>${it.h?`<div class="hd">${esc(it.h)}</div>`:''}<div class="src">${esc(it.src)}</div>
   <button class="counter" data-act="pcount" aria-label="Compter"><svg viewBox="0 0 150 150"><circle cx="75" cy="75" r="70" stroke="rgba(255,255,255,.18)"/><circle cx="75" cy="75" r="70" stroke="#fff" stroke-linecap="round" stroke-dasharray="${C}" stroke-dashoffset="${C*(1-f)}" style="transition:stroke-dashoffset .25s"/></svg><b>${P.c}</b><span>sur ${it.n} · touche</span></button></div>
   <div class="pbtns"><button class="btn line" data-act="pprev" ${P.i?'':'disabled'}>Précédent</button><button class="btn white" data-act="pnext">${P.i===L.length-1?'Terminer':'Suivant'}</button></div>`;return}
  const s=S.items.find(i=>i.id===P.sid),L=P.list,e=L[P.i];
- const top=`<div class="ptop"><h3>${esc(s?s.title:'Séance')}</h3><button class="pclose" data-act="pclose" aria-label="Fermer">×</button></div><div class="dots">${L.map((_,i)=>`<i class="${i<P.i||(i===P.i&&P.done)?'on':''}"></i>`).join('')}</div>`;
+ const top=`<div class="ptop"><h3>${esc(s?s.title:(P.quick?P.quick.title:'Séance'))}</h3><button class="pclose" data-act="pclose" aria-label="Fermer">×</button></div><div class="dots">${L.map((_,i)=>`<i class="${i<P.i||(i===P.i&&P.done)?'on':''}"></i>`).join('')}</div>`;
  if(P.done){el.innerHTML=top+`<div class="pbody"><h2>Séance terminée</h2><p class="sub">Elle est cochée pour aujourd'hui. Pense à t'étirer et à boire.</p><button class="btn white" data-act="pclose">Fermer</button></div>`;return}
  if(P.rest){const nx=P.set<=e.sets?e:L[P.i];el.innerHTML=top+`<div class="pbody timer"><div class="sub">Récupération</div><b id="tleft">${fmtS(Math.ceil((P.end-Date.now())/1000))}</b><div class="sub">Ensuite : ${esc(nx.name)} · série ${P.set}/${nx.sets}</div><div class="rests">${[45,60,90,120].map(x=>`<button class="${(S.restDur||90)===x?'on':''}" data-act="prest" data-x="${x}">${x} s</button>`).join('')}</div></div><div class="pbtns"><button class="btn line" data-act="padd">+15 s</button><button class="btn white" data-act="pskip">C'est reparti</button></div>`;return}
  el.innerHTML=top+`<div class="pbody"><div class="sub">Exercice ${P.i+1} / ${L.length}</div><h2>${esc(e.name)}</h2><div class="sub" style="font-size:20px">Série <b>${P.set}</b> / ${e.sets}${e.reps?' · '+esc(e.reps)+(/^\d+$/.test(e.reps)?' répétitions':''):''}</div><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(e.name+' exercice')}" target="_blank" rel="noopener">Voir la démo</a></div><div class="pbtns"><button class="btn line" data-act="pnextex">${P.i===L.length-1?'Finir':'Exercice suivant'}</button><button class="btn white" data-act="pset">Série faite</button></div>`}
 function startRest(){const P=S.P;P.rest=true;P.end=Date.now()+(S.restDur||90)*1000;clearInterval(tick);tick=setInterval(()=>{if(!S.P||!S.P.rest){clearInterval(tick);return}const left=Math.ceil((S.P.end-Date.now())/1000);const t=$('#tleft');if(t)t.textContent=fmtS(left);if(left<=0){clearInterval(tick);beep();S.P.rest=false;renderPlayer()}},250);renderPlayer()}
-function finishSess(){const P=S.P;P.done=true;P.rest=false;clearInterval(tick);const t=today(),ss=[...(dayOf(t).sess||[])];if(!ss.includes(P.sid)){ss.push(P.sid);setDay(t,{sess:ss})}renderPlayer();burst(center());beep()}
-function finishAdh(){const P=S.P;P.done=true;setDay(today(),{[P.w==='M'?'adhM':'adhS']:true});renderPlayer();burst(center())}
+function finishSess(){const P=S.P;P.done=true;P.rest=false;clearInterval(tick);const t=today(),ss=[...(dayOf(t).sess||[])];if(P.quick){const q=[...(dayOf(t).quick||[])];if(!q.includes(P.quick.id)){q.push(P.quick.id);setDay(t,{quick:q})}}else if(!ss.includes(P.sid)){ss.push(P.sid);setDay(t,{sess:ss})}renderPlayer();burst(center());beep()}
+function finishAdh(){const P=S.P;P.done=true;if(P.act){const a=[...(dayOf(today()).acts||[])];if(!a.includes(P.act))a.push(P.act);setDay(today(),{acts:a})}else setDay(today(),{[P.w==='M'?'adhM':'adhS']:true});renderPlayer();burst(center())}
 
 /* ---------- formulaires ---------- */
 function openForm(kind,obj){const sc=SCH[kind],p=prof();obj=obj||{};S.form={kind,obj:{...obj}};let h=`<h2>${obj.id?'Modifier':'Ajouter'} : ${sc.t}</h2><form id="frm" novalidate>`;
@@ -568,6 +639,11 @@ const ACT={
  tab:(id,x)=>{S.pg=null;S.stack=[];if(S.tab!==x)S.anim=true;S.tab=x;render();window.scrollTo(0,0)},
  goto:(id,x)=>{S.pg=null;S.stack=[];const [a,b]=x.split(':');S.tab=a;if(b)S.seg[a]=b;S.anim=true;render();window.scrollTo(0,0)},
  play:id=>{const s=S.items.find(i=>i.id===id);if(!s)return;const L=parseEx(s);if(!L.length){toast('Ajoute des exercices à cette séance');return}unlockAudio();openPlayer({type:'sess',sid:id,list:L,i:0,set:1,rest:false})},
+ quick:(id,x)=>{const q=QUICK.find(z=>z.id===x);if(!q)return;unlockAudio();openPlayer({type:'sess',sid:'q-'+q.id,quick:q,list:parseEx(q),i:0,set:1,rest:false})},
+ hab:(id,x,b)=>{const t=today(),s=[...(dayOf(t).hab||[])],i=s.indexOf(id);if(i>=0)s.splice(i,1);else{s.push(id);if(b)burst(b.getBoundingClientRect())}setDay(t,{hab:s})},
+ act:(id,x,b)=>{const t=today(),s=[...(dayOf(t).acts||[])],i=s.indexOf(x);if(i>=0)s.splice(i,1);else{s.push(x);if(b)burst(b.getBoundingClientRect())}setDay(t,{acts:s})},
+ quran:(id,x)=>{const t=today();setDay(t,{quran:Math.max(0,num(dayOf(t).quran)+num(x))})},
+ dhikr:()=>openPlayer({type:'adh',w:'I',title:'Istighfar',act:'istighfar',list:[ISTI],i:0,c:0}),
  playToday:()=>{const t=today(),dw=dowOf(t),d=dayOf(t).sess||[];const s=items('session').filter(x=>DMAP[x.day]===dw&&x.type!=='Repos');const n=s.find(x=>!d.includes(x.id))||s[0];if(n)ACT.play(n.id)},
  adhkar:(id,x)=>openPlayer({type:'adh',w:x,list:ADH.filter(a=>a.w.includes(x)),i:0,c:0}),
  pclose:()=>closePlayer(),
@@ -606,7 +682,7 @@ document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(
 document.addEventListener('input',e=>{if(e.target.id==='csearch'){S.cq=e.target.value;renderContacts()}if(e.target.id==='cin'){e.target.style.height='auto';e.target.style.height=Math.min(140,e.target.scrollHeight)+'px'}});
 $('#sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
 $('#fmeal').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;let ph='';try{const bmp=await createImageBitmap(f),sc=Math.min(1,320/Math.max(bmp.width,bmp.height)),c=document.createElement('canvas');c.width=Math.round(bmp.width*sc);c.height=Math.round(bmp.height*sc);c.getContext('2d').drawImage(bmp,0,0,c.width,c.height);ph=c.toDataURL('image/jpeg',.7)}catch(er){}openForm('meal',{kind:'meal',date:today(),photo:ph})});
-$('#fimp').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const d=JSON.parse(await f.text());if(!d||!Array.isArray(d.items))throw 0;S.items=d.items;S.days=d.days||{};S.profile=d.profile||{};S.bilan=d.bilan||null;S.fresh=false;persist();closeSheet();render();toast('Sauvegarde importée : '+d.items.length+' éléments')}catch(er){toast('Fichier non reconnu')}});
+$('#fimp').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;try{const d=JSON.parse(await f.text());if(!d||!Array.isArray(d.items))throw 0;S.items=d.items;S.days=d.days||{};S.profile=d.profile||{};S.bilan=d.bilan||null;S.fresh=false;if(!S.items.some(i=>i.kind==='habit')){HAB_DEFAULT.forEach((t,i)=>S.items.push({id:'hab-'+i,kind:'habit',title:t}));S.profile={...S.profile,habSeeded:true}}persist();closeSheet();render();toast('Sauvegarde importée : '+d.items.length+' éléments')}catch(er){toast('Fichier non reconnu')}});
 $('#attach').addEventListener('click',()=>{if(!S.aiImg){toast('Photos non disponibles pour l\'IA ici');return}$('#fchat').click()});
 $('#fchat').addEventListener('change',async e=>{const f=e.target.files[0];e.target.value='';if(!f)return;S.pendImg=await shrink(f);const p=$('#pend');p.hidden=false;p.textContent='Photo prête à envoyer · toucher pour retirer';p.onclick=()=>{S.pendImg=null;p.hidden=true}});
 function send(){const cin=$('#cin');const v=cin.value.trim();if(!v&&!S.pendImg)return;const img=S.pendImg;S.pendImg=null;$('#pend').hidden=true;cin.value='';cin.style.height='';ask(v||'Analyse cette photo et dis-moi ce qui est utile pour moi.',img)}
@@ -617,15 +693,15 @@ $('#send').addEventListener('click',send);
  V.addEventListener('touchend',e=>{const t=e.changedTouches[0],dx=t.clientX-tx,dy=t.clientY-ty;if(Math.abs(dx)<90||Math.abs(dy)>45||!src||src.closest('.seg,table,input,textarea,select'))return;const i=TABS.findIndex(x=>x[0]===S.tab),j=dx<0?i+1:i-1;if(j>=0&&j<TABS.length)ACT.tab('',TABS[j][0])},{passive:true})}
 
 /* ---------- rendu ---------- */
-const ICON={home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',foot:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5l4 2.9-1.5 4.7h-5L8 10.4z"/><path d="M12 3v4.5M16 10.4l4.3-1.4M14.5 15.1l2.7 3.7M9.5 15.1l-2.7 3.7M8 10.4L3.7 9"/>',ecole:'<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h12"/>',vie:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',ia:'<path d="M12 3l2 5.5 5.5 2-5.5 2L12 18l-2-5.5-5.5-2 5.5-2z"/><path d="M19 16l.8 2.2L22 19l-2.2.8L19 22l-.8-2.2L16 19l2.2-.8z"/>'};
-const TABS=[['home','Accueil'],['foot','Foot'],['ecole','École'],['vie','Vie'],['ia','IA']];
+const ICON={home:'<path d="M3 11l9-7 9 7v9a1 1 0 0 1-1 1h-5v-6H9v6H4a1 1 0 0 1-1-1z"/>',foot:'<circle cx="12" cy="12" r="9"/><path d="M12 7.5l4 2.9-1.5 4.7h-5L8 10.4z"/><path d="M12 3v4.5M16 10.4l4.3-1.4M14.5 15.1l2.7 3.7M9.5 15.1l-2.7 3.7M8 10.4L3.7 9"/>',ecole:'<path d="M5 4h12a2 2 0 0 1 2 2v14H7a2 2 0 0 1-2-2z"/><path d="M5 18a2 2 0 0 1 2-2h12"/>',vie:'<path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/>',ia:'<circle cx="12" cy="8" r="4"/><path d="M4 21c1.5-4 4.5-6 8-6s6.5 2 8 6"/>'};
+const TABS=[['home','Accueil'],['foot','Foot'],['ecole','École'],['vie','Islam'],['ia','Moi']];
 function status(){if(S.fresh)return`<div class="card" style="margin-top:10px"><h2 style="margin:0 0 6px;font-size:26px">Bienvenue sur MG9</h2><p class="mute" style="margin:0 0 12px">Importe ta sauvegarde (le fichier mg9-sauvegarde.json) pour retrouver tes contacts, devoirs, objectifs et ton programme.</p><button class="cta" data-act="import">Importer ma sauvegarde</button></div>`;return''}
 function render(){
  $('#tabs').innerHTML=TABS.map(([k,l])=>`<button class="${S.tab===k?'on':''}" data-act="tab" data-x="${k}" aria-label="${l}"><svg viewBox="0 0 24 24">${ICON[k]}</svg>${l}</button>`).join('');
  $('#hdate').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
  document.body.classList.toggle('home',S.tab==='home');
  const v=$('#view');v.classList.toggle('anim',!!S.anim&&!RM.matches);S.anim=false;
- v.innerHTML=status()+({home:vHome,foot:vFoot,ecole:vEcole,vie:vVie,ia:()=>'<h1 class="vt">Mon IA</h1>'+vIA()})[S.tab]();
+ v.innerHTML=status()+({home:vHome,foot:vFoot,ecole:vEcole,vie:vIslam,ia:vMoi})[S.tab]();
  renderPage();
  $('#composer').classList.toggle('show',S.tab==='ia'&&!!S.ai&&!S.pg);
  $('#attach').style.display=S.aiImg?'':'none';
@@ -639,6 +715,7 @@ function exportData(){const d=JSON.stringify({v:1,exported:new Date().toISOStrin
  const a=document.createElement('a');a.href=URL.createObjectURL(new Blob([d],{type:'application/json'}));a.download=name;document.body.appendChild(a);a.click();setTimeout(()=>{URL.revokeObjectURL(a.href);a.remove()},1500)}
 function loadLocal(){try{const d=JSON.parse(localStorage.getItem(LSK)||'null');if(d&&Array.isArray(d.items)){S.items=d.items;S.days=d.days||{};S.profile=d.profile||{};S.bilan=d.bilan||null;return true}}catch(e){}return false}
 S.loaded=true;S.fresh=!loadLocal();
+if(!S.fresh&&!S.profile.habSeeded&&!S.items.some(i=>i.kind==='habit')){HAB_DEFAULT.forEach((t,i)=>S.items.push({id:'hab-'+i,kind:'habit',title:t}));S.profile={...S.profile,habSeeded:true};persist()}
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
 render();
