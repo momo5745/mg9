@@ -668,7 +668,7 @@ function openSettings(){const p=prof();$('#panel').innerHTML=`<h2>Réglages</h2>
  <label class="f">À propos de moi (l'IA lit ce texte)<textarea name="about" style="min-height:200px">${esc(p.about)}</textarea></label>
  <label class="f">Mes cours (un par ligne)<textarea name="courses">${esc(p.courses.join('\n'))}</textarea></label>
  <div class="grid2"><label class="f">Objectif protéines (g/jour)<input name="protein" inputmode="numeric" value="${esc(p.protein)}"></label><label class="f">Objectif eau (verres/jour)<input name="water" inputmode="numeric" value="${esc(p.water)}"></label></div>
- <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div>
+ <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div><div class="acts" style="margin:-4px 0 12px"><button type="button" class="btn" data-act="forceupd">Forcer la mise à jour</button></div><p class="mute" style="margin:0 0 12px">Version de MG9 : v5 (22 nov.)</p>
  <div class="acts"><button class="btn" type="submit">Enregistrer</button><button type="button" class="btn ghost" data-act="close">Fermer</button></div></form>`;
  $('#sheet').classList.add('open');
  $('#sfrm').onsubmit=e=>{e.preventDefault();const f=e.target.elements;saveProfile({about:f.about.value.trim(),courses:f.courses.value.split('\n').map(x=>x.trim()).filter(Boolean),protein:num(f.protein.value)||140,water:num(f.water.value)||8});closeSheet();toast('Réglages enregistrés')}}
@@ -710,6 +710,7 @@ const ACT={
  aimsg:id=>{const c=S.items.find(i=>i.id===id);if(!c)return;askClaude(`Rédige-moi un message de relance pour ${c.name}${c.org?' ('+c.org+')':''}, à envoyer par ${c.channel||'message'}.`)},
  askc:()=>{const v=($('#aiq')||{}).value||'';if(!v.trim()){toast('Écris ta question d\'abord');return}askClaude(v.trim())},
  export:()=>exportData(),
+ forceupd:async()=>{toast('Mise à jour…');try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)));const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.unregister()))}catch(e){}location.replace(location.pathname+'?u='+Date.now())},
  import:()=>$('#fimp').click(),
  askq:(id,x)=>askClaude(x),
  clearchat:()=>{S.chat=[];renderMsgs();writeDoc('meta/chat',{msgs:[]})},
@@ -760,7 +761,7 @@ function loadLocal(){try{const d=JSON.parse(localStorage.getItem(LSK)||'null');i
 S.loaded=true;S.fresh=!loadLocal();
 if(!S.fresh&&!S.profile.habSeeded&&!S.items.some(i=>i.kind==='habit')){HAB_DEFAULT.forEach((t,i)=>S.items.push({id:'hab-'+i,kind:'habit',title:t}));S.profile={...S.profile,habSeeded:true};persist()}
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
-if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{}));
+if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 render();
 }
 </script>
