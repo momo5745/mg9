@@ -232,6 +232,11 @@ button,.tap{transition:transform .12s}
 @media (prefers-reduced-motion:reduce){#view.anim>*,.player.open,.chk.on{animation:none}.burst{display:none}}
 @media (prefers-reduced-motion:no-preference){.panel{animation:up .22s ease-out}@keyframes up{from{transform:translateY(40px);opacity:.5}}}
 @media (min-width:700px){header{padding-left:max(18px,calc(50vw - 346px))}}
+.rdc{border-left:6px solid var(--acc)}.rdc.o{border-left-color:var(--w)}.rdc.r{border-left-color:#ff6b6b}.rdtop{display:flex;align-items:center;gap:12px}.rdtop b{font:800 54px/1 "Barlow Condensed",sans-serif;color:var(--acc)}.rdc.o .rdtop b{color:var(--w)}.rdc.r .rdtop b{color:#ff6b6b}.rdtop>div{flex:1}.rdtop h3{margin:0;font-size:21px;line-height:1.15}.rdc p{margin:10px 0 0;line-height:1.4}.rdc p.mute{margin-top:6px;font-size:14px}
+.rdc0{display:block;width:100%;text-align:left;background:linear-gradient(135deg,var(--pf),var(--card) 80%)}.rdc0 h3{margin:4px 0;font-size:28px}.rdc0 .kick{color:#e3d9ff}.h3b{margin:2px 0 6px;font-size:28px;line-height:1.05;font-weight:800}
+.rpe{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;margin:6px 0 8px}.rpe button{border:0;border-radius:10px;min-height:46px;font:800 19px "Barlow Condensed",sans-serif;background:var(--card2);color:var(--ink);padding:0}.rpe button.on{background:hsl(var(--h) 70% 42%);color:#fff}.rpe.dark button{background:rgba(255,255,255,.12);color:#fff}.rpe.dark button.on{background:hsl(var(--h) 70% 42%)}
+.food{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.food button{border:0;background:var(--card2);border-radius:14px;padding:8px 10px;font-size:13px;font-weight:600;text-align:left;min-height:44px;color:var(--ink)}.food button b{color:var(--acc);margin-right:5px}
+.dtype{display:grid;gap:2px;background:var(--card2);border-radius:14px;padding:10px 12px;margin-bottom:14px}
 </style>
 </head>
 <body>
@@ -799,7 +804,7 @@ const shuffle=a=>{const r=a.slice();for(let i=r.length-1;i>0;i--){const j=Math.f
 const mcq=(q,opts,expl)=>({k:'mcq',q,ans:opts[0],opts:shuffle(opts),expl});
 
 /* ---------- XP et niveau ---------- */
-function dayXP(x){x=x||{};return PR.filter(([k])=>(x.prayers||{})[k]).length*10+['adhM','adhS','adhC','adhP'].filter(k=>x[k]).length*15+(x.sess||[]).length*30+(x.quick||[]).length*20+(x.hab||[]).length*5+(x.acts||[]).length*10+num(x.xp)}
+function dayXP(x){x=x||{};return PR.filter(([k])=>(x.prayers||{})[k]).length*10+['adhM','adhS','adhC','adhP'].filter(k=>x[k]).length*15+(x.sess||[]).length*30+(x.quick||[]).length*20+(x.hab||[]).length*5+(x.acts||[]).length*10+(x.chk?10:0)+(x.load||[]).length*10+(num(x.kg)?5:0)+num(x.xp)}
 function xpInfo(){const tot=Object.values(S.days).reduce((n,x)=>n+dayXP(x),0),per=300,lvl=Math.floor(tot/per)+1;return{tot,lvl,cur:tot%per,per}}
 function weekXP(){const ws=weekStart(today());let n=0;for(let i=0;i<7;i++)n+=dayXP(dayOf(addDays(ws,i)));return n}
 function addXP(n){const t=today();setDay(t,{xp:num(dayOf(t).xp)+n})}
@@ -832,7 +837,7 @@ function planCard(){const t=today(),L=planItems(),d=L.filter(x=>x.done).length,e
 
 /* ---------- semaine en détail ---------- */
 function weekCard(){const t=today(),ws=weekStart(t),wd=[...Array(7)].map((_,i)=>addDays(ws,i)),hb=items('habit').length||1;
- const rows=[['Prières',d=>PR.filter(([k])=>(dayOf(d).prayers||{})[k]).length/5],['Adhkar',d=>['adhM','adhS'].filter(k=>dayOf(d)[k]).length/2],['Séance',d=>((dayOf(d).sess||[]).length+(dayOf(d).quick||[]).length)?1:0],['Coran',d=>(dayOf(d).acts||[]).includes('quran')?1:0],['Objectifs',d=>(dayOf(d).hab||[]).length/hb],['Anglais',d=>dayOf(d).engDone?1:0]];
+ const rows=[['Prières',d=>PR.filter(([k])=>(dayOf(d).prayers||{})[k]).length/5],['Adhkar',d=>['adhM','adhS'].filter(k=>dayOf(d)[k]).length/2],['Séance',d=>((dayOf(d).sess||[]).length+(dayOf(d).quick||[]).length)?1:0],['Coran',d=>(dayOf(d).acts||[]).includes('quran')?1:0],['Objectifs',d=>(dayOf(d).hab||[]).length/hb],['Anglais',d=>dayOf(d).engDone?1:0],['Protéines',d=>Math.min(1,protOn(d)/(prof().protein||140))],['Forme',d=>dayOf(d).chk?1:0],['Effort noté',d=>(dayOf(d).load||[]).length?1:0]];
  const cell=(v,d)=>d>t?'<td><span class="hm f"></span></td>':`<td><span class="hm" style="opacity:${v?0.25+0.75*Math.min(1,v):1};background:${v?'var(--acc)':'var(--card2)'}"></span></td>`;
  const xi=xpInfo(),wx=weekXP(),st=streak();
  return `${sect('Ma semaine')}<div class="card"><div class="stat3"><div class="g"><b>${wx}</b><span>XP cette semaine</span></div><div><b>${st}</b><span>jours 5 prières</span></div><div><b>${wd.filter(d=>d<=t&&dayXP(dayOf(d))>=150).length}</b><span>grosses journées</span></div></div>
@@ -885,9 +890,7 @@ function vMoi(){const t=today(),p=prof(),day=dayOf(t),hb=items('habit'),hd=(day.
  return `<h1 class="vt">Moi</h1>
  ${sect('Mes petits objectifs',`<span class="mute">${hd}/${hb.length}</span>`)}<div class="card">${habRich(t)||'<div class="empty">Ajoute tes petits objectifs de chaque jour.</div>'}</div><div class="acts" style="margin-top:-4px;margin-bottom:8px"><button class="btn" data-act="add" data-x="habit">+ Petit objectif</button></div>
  ${sect('Programmes rapides')}<div class="tiles">${QUICK.map(q=>tile('quick',q.id,'',esc(q.dur),esc(q.title),qd.includes(q.id)?'Fait aujourd\'hui':'▶ Lancer',qd.includes(q.id)?'done q':'q')).join('')}</div>
- ${sect('Nutrition',`<button class="link" data-act="pg" data-x="nutri">Historique</button>`)}<div class="card"><div class="rings two">${ring('pt2','Protéines',prot,p.protein,prot+'g','','')}${ring('ea2','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div>
- <div class="list" style="margin-top:10px">${ms.map(m=>lr(m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="">`:`<span class="ini t">${num(m.protein)}g</span>`,esc(m.name),num(m.protein)+' g de protéines'+(num(m.kcal)?' · '+num(m.kcal)+' kcal':''),I.chev,['edit','',m.id])).join('')}</div>
- <div class="acts"><button class="btn acc" data-act="mealphoto">Repas en photo</button><button class="btn" data-act="add" data-x="meal">+ Repas</button><button class="btn" data-act="water" data-x="-1">− Eau</button></div></div>
+ ${nutriCard()}
  ${sect('Demander à Claude')}<div class="card"><p class="mute" style="margin:0 0 10px">MG9 ajoute ton contexte (profil, agents, devoirs, planning), le copie, et tu colles dans Claude.</p><textarea id="aiq" placeholder="Ex : rédige une relance pour Laurent de Pétange"></textarea><button class="cta" style="margin-top:10px" data-act="askc">Copier et ouvrir Claude</button><div class="seg wrap" style="margin:12px 0 0">${Q.map(q=>`<button data-act="askq" data-x="${esc(q)}">${esc(q)}</button>`).join('')}</div></div>`}
 function pPrayers(){const t=today();return`<div class="card">${prayBtns(t).replace('class="prs"','class="prs" style="margin-top:0"')}${prTable(t)}</div><div class="tiles">${adhTiles(t)}</div>`}
 function pNutri(){const t=today(),p=prof(),day=dayOf(t),ms=items('meal').filter(m=>m.date===t),prot=ms.reduce((n,m)=>n+num(m.protein),0);
@@ -909,7 +912,7 @@ function renderPlayer(){const P=S.P;if(!P)return;const el=$('#player');if(P.type
   <div class="src" style="text-align:center;margin-top:6px">Glisse vers la gauche pour passer à la suite, vers la droite pour revenir</div><div class="pbtns"><button class="btn line" data-act="pprev" ${P.i?'':'disabled'}>Précédent</button><button class="btn white" data-act="pnext">${P.i===L.length-1?'Terminer':'Suivant'}</button></div>`;return}
  const s=S.items.find(i=>i.id===P.sid),L=P.list,e=L[P.i];
  const top=`<div class="ptop"><h3>${esc(s?s.title:(P.quick?P.quick.title:'Séance'))}</h3><button class="pclose" data-act="pclose" aria-label="Fermer">×</button></div><div class="dots">${L.map((_,i)=>`<i class="${i<P.i||(i===P.i&&P.done)?'on':''}"></i>`).join('')}</div>`;
- if(P.done){el.innerHTML=top+`<div class="pbody"><h2>Séance terminée</h2><p class="sub">Elle est cochée pour aujourd'hui. Pense à t'étirer et à boire.</p><button class="btn white" data-act="pclose">Fermer</button></div>`;return}
+ if(P.done){el.innerHTML=top+sessDone(P);return}
  if(P.rest){const nx=P.set<=e.sets?e:L[P.i];el.innerHTML=top+`<div class="pbody timer"><div class="sub">Récupération</div><b id="tleft">${fmtS(Math.ceil((P.end-Date.now())/1000))}</b><div class="sub">Ensuite : ${esc(nx.name)} · série ${P.set}/${nx.sets}</div><div class="rests">${[45,60,90,120].map(x=>`<button class="${(S.restDur||90)===x?'on':''}" data-act="prest" data-x="${x}">${x} s</button>`).join('')}</div></div><div class="pbtns"><button class="btn line" data-act="padd">+15 s</button><button class="btn white" data-act="pskip">C'est reparti</button></div>`;return}
  el.innerHTML=top+`<div class="pbody"><div class="sub">Exercice ${P.i+1} / ${L.length}</div><h2>${esc(e.name)}</h2><div style="text-align:left">${exHtml(e.name)}</div><div class="sub" style="font-size:20px">Série <b>${P.set}</b> / ${e.sets}${e.reps?' · '+esc(e.reps)+(/^\d+$/.test(e.reps)?' répétitions':''):''}</div><a href="https://www.youtube.com/results?search_query=${encodeURIComponent(e.name+' exercice')}" target="_blank" rel="noopener">Voir la démo</a></div><div class="pbtns"><button class="btn line" data-act="pnextex">${P.i===L.length-1?'Finir':'Exercice suivant'}</button><button class="btn white" data-act="pset">Série faite</button></div>`}
 function startRest(){const P=S.P;P.rest=true;P.end=Date.now()+(S.restDur||90)*1000;clearInterval(tick);tick=setInterval(()=>{if(!S.P||!S.P.rest){clearInterval(tick);return}const left=Math.ceil((S.P.end-Date.now())/1000);const t=$('#tleft');if(t)t.textContent=fmtS(left);if(left<=0){clearInterval(tick);beep();S.P.rest=false;renderPlayer()}},250);renderPlayer()}
@@ -937,7 +940,7 @@ function openSettings(){const p=prof();$('#panel').innerHTML=`<h2>Réglages</h2>
  <label class="f">À propos de moi (l'IA lit ce texte)<textarea name="about" style="min-height:200px">${esc(p.about)}</textarea></label>
  <label class="f">Mes cours (un par ligne)<textarea name="courses">${esc(p.courses.join('\n'))}</textarea></label>
  <div class="grid2"><label class="f">Objectif protéines (g/jour)<input name="protein" inputmode="numeric" value="${esc(p.protein)}"></label><label class="f">Objectif eau (verres/jour)<input name="water" inputmode="numeric" value="${esc(p.water)}"></label></div>
- <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div><div class="acts" style="margin:-4px 0 12px"><button type="button" class="btn" data-act="forceupd">Forcer la mise à jour</button></div><p class="mute" style="margin:0 0 12px">Version de MG9 : v7 (23 nov.)</p>
+ <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div><div class="acts" style="margin:-4px 0 12px"><button type="button" class="btn" data-act="forceupd">Forcer la mise à jour</button></div><p class="mute" style="margin:0 0 12px">Version de MG9 : v8 (23 nov.)</p>
  <div class="acts"><button class="btn" type="submit">Enregistrer</button><button type="button" class="btn ghost" data-act="close">Fermer</button></div></form>`;
  $('#sheet').classList.add('open');
  $('#sfrm').onsubmit=e=>{e.preventDefault();const f=e.target.elements;saveProfile({about:f.about.value.trim(),courses:f.courses.value.split('\n').map(x=>x.trim()).filter(Boolean),protein:num(f.protein.value)||140,water:num(f.water.value)||8});closeSheet();toast('Réglages enregistrés')}}
@@ -999,6 +1002,260 @@ const ACT={
  settings:()=>openSettings(),
  close:()=>closeSheet()
 };
+/* =========================================================
+   v8 : foot, corps, récupération, nutrition
+   ========================================================= */
+const protOn=d=>items('meal').filter(m=>m.date===d).reduce((n,m)=>n+num(m.protein),0);
+const loadOf=d=>(dayOf(d).load||[]).reduce((n,x)=>n+num(x.min)*num(x.rpe),0);
+
+/* ---------- check-in forme du matin ---------- */
+const CHK_F=[['sl','Sommeil cette nuit',[[5,'5 h ou moins'],[6,'6 h'],[7,'7 h'],[8,'8 h'],[9,'9 h et +']]],['en','Énergie',[[1,'À plat'],[2,'Bof'],[3,'Normale'],[4,'Bonne'],[5,'Au top']]],['so','Courbatures',[[5,'Aucune'],[4,'Légères'],[3,'Moyennes'],[2,'Fortes'],[1,'Très fortes']]],['mo','Moral',[[1,'Très bas'],[2,'Bas'],[3,'Normal'],[4,'Bon'],[5,'Excellent']]]];
+function rdScore(c){if(!c)return null;const sl=Math.max(0,Math.min(1,(Math.min(num(c.sl),9)-4)/5));return Math.round(sl*40+(num(c.en)-1)/4*20+(num(c.so)-1)/4*20+(num(c.mo)-1)/4*20)}
+function rdAdvice(c){const s=rdScore(c);let col,t,x;
+ if(s>=75){col='g';t='Feu vert';x="Séance complète, à fond. C'est le bon jour pour les sprints, la pliométrie et la finition à vitesse de match."}
+ else if(s>=50){col='o';t='Séance normale, mais écoute ton corps';x="Garde la qualité des gestes, et enlève une série par exercice si ça tire. Échauffement complet obligatoire."}
+ else{col='r';t='Journée légère';x="Ton corps est fatigué : mobilité, touches de balle tranquilles, pas de sprint max ni de saut. Couche-toi plus tôt ce soir."}
+ const ex=[];
+ if(num(c.so)<=2)ex.push("Courbatures fortes : pas de pliométrie ni de sprint max aujourd'hui.");
+ if(num(c.sl)<7)ex.push("Moins de 7 h de sommeil : vise 8 à 9 h cette nuit, c'est là que ton corps récupère.");
+ if(num(c.mo)<=2)ex.push("Moral bas : fais quand même un petit truc, 10 min de touches de balle. Ça relance.");
+ return{s,col,t,x,ex}}
+
+/* ---------- feuilles (sheets) ---------- */
+function openSheet(fn){S.sheetFn=fn;$('#panel').innerHTML=fn();$('#sheet').classList.add('open')}
+function reSheet(){if(S.sheetFn&&$('#sheet').classList.contains('open'))$('#panel').innerHTML=S.sheetFn()}
+const chips=(k,opts,cur)=>`<div class="seg wrap" style="margin:6px 0 14px">${opts.map(([v,l])=>`<button type="button" class="${String(cur)===String(v)?'on':''}" data-act="tset" data-x="${esc(k+':'+v)}">${esc(l)}</button>`).join('')}</div>`;
+function chkSheet(){const c=S.tmp;return`<h2>Check-in forme</h2><p class="mute" style="margin:-6px 0 12px">30 secondes, le matin. MG9 te dit comment adapter ta séance.</p>${CHK_F.map(([k,l,o])=>`<div class="f">${l}${chips(k,o,c[k])}</div>`).join('')}<div class="acts"><button class="btn acc" data-act="chksave">Valider</button><button class="btn ghost" data-act="close">Fermer</button></div>`}
+
+/* ---------- charge d'entraînement (durée × difficulté) ---------- */
+const LTYPES=['Entraînement équipe','Match','Terrain perso','Salle','Footing','Autre'];
+const RPE_L={1:'Très très facile',2:'Très facile',3:'Facile',4:'Assez facile',5:'Moyen',6:'Un peu dur',7:'Dur',8:'Très dur',9:'Extrêmement dur',10:'Maximal'};
+const rpeBtns=(cur,act,dark)=>`<div class="rpe${dark?' dark':''}">${[1,2,3,4,5,6,7,8,9,10].map(n=>`<button type="button" class="${cur===n?'on':''}" data-act="${act}" data-x="${act==='tset'?'rpe:'+n:n}" style="--h:${120-n*12}">${n}</button>`).join('')}</div>`;
+function loadSheet(){const c=S.tmp;return`<h2>Noter un effort</h2><div class="f">Quoi${chips('ty',LTYPES.map(x=>[x,x]),c.ty)}</div><div class="f">Durée${chips('min',[20,30,45,60,75,90,120].map(m=>[m,m+' min']),c.min)}</div><div class="f">C'était dur comment ?</div>${rpeBtns(c.rpe,'tset')}<div class="mute" style="margin:0 0 12px;min-height:20px">${c.rpe?c.rpe+' = '+RPE_L[c.rpe]:'1 = très facile · 10 = maximal'}</div><div class="acts"><button class="btn acc" data-act="loadsave">Enregistrer</button><button class="btn ghost" data-act="close">Fermer</button></div>`}
+function acwr(){const t=today();let a=0,c=0;for(let i=0;i<28;i++){const v=loadOf(addDays(t,-i));if(i<7)a+=v;c+=v}
+ const first=Object.keys(S.days).filter(d=>(S.days[d].load||[]).length).sort()[0];return{a,c:c/4,enough:!!first&&first<=addDays(t,-20)}}
+function loadCard(){const t=today(),wd=[...Array(7)].map((_,i)=>addDays(t,i-6)),vals=wd.map(loadOf),mx=Math.max(500,...vals),r=acwr();
+ let msg;const n=Object.keys(S.days).filter(d=>(S.days[d].load||[]).length).length;
+ if(!n)msg="Après chaque séance ou match, note la durée et la difficulté. MG9 calcule ta charge pour t'éviter les blessures.";
+ else if(!r.enough)msg="Continue à tout noter : à partir de 3 semaines de données, MG9 te dit si tu en fais trop ou pas assez.";
+ else{const k=r.c?r.a/r.c:0;msg=k<0.8?"Semaine plus légère que d'habitude. Normal si tu récupères, sinon tu peux en remettre un peu.":k<=1.3?"Zone idéale : tu progresses sans te surcharger.":k<=1.5?"Grosse semaine : surveille ta fatigue et ton sommeil.":"Hausse brutale de ta charge : c'est souvent là que les blessures arrivent. Allège 1 ou 2 séances."}
+ return`<div class="card"><div class="stat3"><div class="g"><b>${r.a}</b><span>charge 7 jours</span></div><div><b>${Math.round(r.c)||'—'}</b><span>moyenne / semaine</span></div><div><b>${wd.filter(d=>(dayOf(d).load||[]).length).length}</b><span>jours notés</span></div></div>
+ <div class="week">${wd.map((d,i)=>`<div class="wd${d===t?' today':''}"><div class="bars"><i style="height:${Math.round(vals[i]/mx*100)}%"></i></div>${DAYS[(dowOf(d)+6)%7].slice(0,1)}</div>`).join('')}</div>
+ <p class="mute" style="margin:10px 0 0;font-size:14px">${esc(msg)}</p><div class="acts"><button class="btn acc" data-act="loadadd">+ Noter un entraînement ou un match</button></div></div>`}
+function postTip(){return"Dans les 2 heures : protéines + glucides (ex. poulet-riz, ou yaourt grec + banane + pain). Bois 500 ml d'eau maintenant, puis 8 min d'étirements."}
+function sessDone(P){if(P.saved)return`<div class="pbody"><h2>Bien joué</h2><p class="sub">Charge de la séance : <b>${P.min*P.rpe}</b> (${P.min} min × difficulté ${P.rpe})</p><div class="hd">${esc(postTip())}</div><button class="btn white" data-act="pclose">Fermer</button></div>`;
+ return`<div class="pbody" style="justify-content:flex-start"><h2>Séance terminée</h2><p class="sub">Elle est cochée pour aujourd'hui. Note ton effort : MG9 suit ta charge de la semaine.</p><div class="sub" style="text-align:left;margin-top:6px">Durée</div><div class="rests" style="flex-wrap:wrap">${[...new Set([10,15,20,30,45,60,75,90,P.min].filter(Boolean))].sort((a,b)=>a-b).map(m=>`<button class="${P.min===m?'on':''}" data-act="pmin" data-x="${m}">${m} min</button>`).join('')}</div><div class="sub" style="text-align:left">C'était dur comment ?</div>${rpeBtns(P.rpe,'prpe',1)}<div class="sub">${P.rpe?P.rpe+' = '+RPE_L[P.rpe]:'1 = très facile · 10 = maximal'}</div></div><div class="pbtns"><button class="btn line" data-act="pclose">Plus tard</button><button class="btn white" data-act="psave" ${P.rpe?'':'disabled'}>Enregistrer</button></div>`}
+const _finishSess=finishSess;finishSess=function(){const P=S.P;_finishSess();if(P&&P.min==null){P.min=P.quick?(parseInt(P.quick.dur)||15):60;renderPlayer()}};
+
+/* ---------- corps : poids ---------- */
+const kgList=()=>Object.keys(S.days).filter(d=>num(S.days[d].kg)>0).sort().map(d=>[d,num(S.days[d].kg)]);
+function spark(pts){if(pts.length<2)return'';const W=300,H=60,vs=pts.map(p=>p[1]),mn=Math.min(...vs),mx=Math.max(...vs),r=(mx-mn)||1,xy=pts.map((p,i)=>[(i/(pts.length-1)*W).toFixed(1),(H-6-((p[1]-mn)/r)*(H-12)).toFixed(1)]),l=xy[xy.length-1];
+ return`<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none" style="width:100%;height:60px;margin-top:12px;display:block" aria-label="Évolution du poids"><polyline fill="none" stroke="var(--acc)" stroke-width="3" stroke-linecap="round" stroke-linejoin="round" vector-effect="non-scaling-stroke" points="${xy.map(a=>a.join(',')).join(' ')}"/></svg>`}
+function bodyCard(){const L=kgList(),t=today(),last=L[L.length-1],w7=L.filter(([d])=>d>addDays(t,-7)),avg7=w7.length?w7.reduce((n,x)=>n+x[1],0)/w7.length:0,old=L.filter(([d])=>d<=addDays(t,-28)).pop()||L[0],dif=last&&old&&old[0]!==last[0]?last[1]-old[1]:null;
+ return`<div class="card"><div class="stat3"><div class="g"><b>${last?last[1].toFixed(1).replace('.',','):'—'}</b><span>kg${last?' · '+fmtD(last[0]):''}</span></div><div><b>${avg7?avg7.toFixed(1).replace('.',','):'—'}</b><span>moyenne 7 jours</span></div><div><b>${dif==null?'—':(dif>0?'+':'')+dif.toFixed(1).replace('.',',')}</b><span>en 4 semaines</span></div></div>${spark(L.slice(-30))}
+ <div class="acts"><button class="btn acc" data-act="kg">Noter mon poids</button></div><p class="mute" style="margin:10px 0 0;font-size:13px">Pèse-toi le matin, après les toilettes et avant de manger. Regarde la moyenne de la semaine, pas le chiffre d'un jour. Pour sécher sans perdre ta vitesse : baisse lente, pas plus de 0,5 kg par semaine.</p></div>`}
+function kgSheet(){const v=num(dayOf(today()).kg);return`<h2>Mon poids</h2><label class="f">Poids ce matin (kg)<input id="kgin" inputmode="decimal" value="${v||''}" placeholder="Ex : 75,4"></label><div class="acts"><button class="btn acc" data-act="kgsave">Enregistrer</button><button class="btn ghost" data-act="close">Fermer</button></div>`}
+
+/* ---------- tests physiques ---------- */
+const TESTS=[
+{k:'s10',t:'Sprint 10 m',u:'s',low:1,how:"Départ arrêté, un pied devant. Le chrono part au premier mouvement. 3 essais avec 2 min de récup, garde le meilleur. Le mieux : un coéquipier qui filme au ralenti."},
+{k:'s30',t:'Sprint 30 m',u:'s',low:1,how:"Même départ que le 10 m. Cours jusqu'au-delà de la ligne des 30 m sans ralentir avant. 2 à 3 essais, 3 min de récup."},
+{k:'cmj',t:'Détente verticale',u:'cm',how:"Debout de profil contre un mur, bras tendu : marque le point le plus haut. Saute sur place (flexion rapide puis saut) et touche le plus haut possible. La différence = ta détente. 3 essais."},
+{k:'broad',t:'Saut en longueur sans élan',u:'cm',how:"Pieds derrière une ligne, saute le plus loin possible à deux pieds et tiens la réception. Mesure jusqu'au talon le plus proche de la ligne. 3 essais."},
+{k:'t505',t:'Changement de direction (5-0-5)',u:'s',low:1,how:"Élan de 10 m, puis chrono sur 5 m jusqu'à une ligne, demi-tour, et 5 m retour. Teste le pied droit et le pied gauche : la différence entre les deux compte aussi."},
+{k:'yoyo',t:'Yo-Yo test (niveau 1)',u:'m',how:"Navettes de 2 × 20 m sur des bips de plus en plus rapides, avec 10 s de récupération entre chaque navette. Utilise une bande-son « Yo-Yo IR1 ». Note la distance totale."},
+{k:'plank',t:'Gainage planche max',u:'s',how:"Sur les avant-bras, corps bien aligné. Arrête dès que les hanches tombent ou montent."},
+{k:'pushup',t:'Pompes max',u:'reps',how:"Pompes complètes (poitrine à 5 cm du sol), sans pause en haut. Arrête quand la forme se casse."},
+{k:'bal',t:'Équilibre sur une jambe, yeux fermés',u:'s',how:"Mains sur les hanches, yeux fermés, sur une jambe. Chrono jusqu'à ce que tu poses le pied ou ouvres les yeux. Fais les deux jambes : très bon test pour tes chevilles."}];
+const testRes=k=>items('test').filter(x=>x.test===k).sort((a,b)=>(a.date||'').localeCompare(b.date||'')||(a.updated||0)-(b.updated||0));
+const fmtV=(T,v)=>String(T.u==='s'&&T.k!=='plank'&&T.k!=='bal'?num(v).toFixed(2):Math.round(num(v))).replace('.',',')+' '+T.u;
+function bestOf(T,L){if(!L.length)return null;const v=L.map(x=>num(x.val));return T.low?Math.min(...v):Math.max(...v)}
+function pTests(){const all=items('test'),lastD=all.map(x=>x.date).sort().pop();
+ return`<div class="card"><p style="margin:0">Refais tes tests toutes les 6 semaines, dans les mêmes conditions (même terrain, même échauffement). C'est la seule façon de voir si ta vitesse et ton explosivité progressent vraiment.</p>${lastD?`<p class="mute" style="margin:8px 0 0">Derniers tests : ${fmtD(lastD)}${lastD<=addDays(today(),-42)?' · <b style="color:var(--w)">c\'est le moment de les refaire</b>':''}</p>`:''}</div>
+ <div class="card list">${TESTS.map(T=>{const L=testRes(T.k),b=bestOf(T,L),last=L[L.length-1],prev=L[L.length-2];let d='';if(last&&prev){const up=T.low?num(last.val)<num(prev.val):num(last.val)>num(prev.val),eq=num(last.val)===num(prev.val);d=eq?'':` · <b style="color:${up?'var(--acc)':'var(--w)'}">${up?'en progrès':'en baisse'}</b>`}
+  return lr(`<span class="ini t" style="font-size:13px">${b==null?'—':fmtV(T,b).replace(' ','<br>')}</span>`,esc(T.t),last?'Dernier : '+fmtV(T,last.val)+' · '+fmtD(last.date)+d:'Pas encore testé',I.chev,['test',T.k])}).join('')}</div>`}
+function testSheet(){const T=TESTS.find(x=>x.k===S.tmp.k),L=testRes(T.k);return`<h2>${esc(T.t)}</h2><div class="note" style="margin:0 0 12px">${esc(T.how)}</div><label class="f">Résultat (${T.u})<input id="tval" inputmode="decimal" placeholder="${T.u==='s'?'Ex : 1,78':'Ex : 45'}"></label><label class="f">Date<input id="tdate" type="date" value="${today()}"></label><div class="acts"><button class="btn acc" data-act="testsave">Enregistrer</button><button class="btn ghost" data-act="close">Fermer</button></div>${L.length?`<div class="sect" style="margin-top:16px"><h2 style="font-size:18px">Historique</h2></div><div class="list">${L.slice().reverse().map(x=>lr('',fmtV(T,x.val),fmtD(x.date),`<button class="btn sm ghost" data-act="testdel" data-id="${x.id}">Suppr.</button>`)).join('')}</div>`:''}`}
+
+/* ---------- routine jour de match ---------- */
+const MD=[
+['v','La veille',[
+ ['v1',"Séance légère ou repos : pas de grosse séance de jambes."],
+ ['v2',"Dîner riche en glucides : riz, pâtes ou pommes de terre + poulet ou poisson. Peu de gras, pas de friture."],
+ ['v3',"Bois régulièrement dans la journée (urine claire)."],
+ ['v4',"Sac prêt : crampons, protège-tibias, gourde, collation, serviette."],
+ ['v5',"5 min de visualisation : 3 appels en profondeur et 3 finitions placées au poteau."],
+ ['v6',"Au lit tôt : 8 à 9 h de sommeil."]]],
+['j','Jour J',[
+ ['j1',"Dernier vrai repas 3 à 4 h avant le coup d'envoi : féculents + un peu de protéines, pas de gras."],
+ ['j2',"Si faim, collation 60 à 90 min avant : banane, pain ou barre de céréales."],
+ ['j3',"Environ 500 ml d'eau dans les 2 h avant, puis quelques gorgées pendant l'échauffement."],
+ ['j4',"Programme « Activation avant match » (8 min) avant l'échauffement de l'équipe."],
+ ['j5',"Ton mot-clé du match (ex. « place ») et un objectif simple : 3 appels en profondeur par mi-temps."]]],
+['a','Après le match',[
+ ['a1',"Dans l'heure : boisson + collation protéines et glucides (lait chocolaté, yaourt + fruit, sandwich poulet)."],
+ ['a2',"Repas complet dans les 2 heures."],
+ ['a3',"Note ton match dans MG9 : stats, ta note, ce qui a marché."],
+ ['a4',"Note ton effort (durée × difficulté)."],
+ ['a5',"Le lendemain : programme « Récup après match » (15 min)."]]]];
+function pMatchday(){const t=today(),on=dayOf(t).md||[];return`<p class="mute" style="margin:0 0 6px">Coche au fur et à mesure. Tout repart à zéro chaque jour.</p>`+MD.map(([k,l,L])=>sect(l)+`<div class="card list">${L.map(([id,x])=>lr(rc(on.includes(id),'md',id),esc(x),'','','',on.includes(id)?'done':'')).join('')}</div>`).join('')+`<div class="tiles">${tile('quick','activation','','8 min','Activation avant match','▶ Lancer','q')}${tile('quick','recupmatch','','15 min','Récup après match','▶ Lancer','q')}</div><div class="acts"><button class="btn acc" data-act="add" data-x="match">+ Ajouter mon match</button><button class="btn" data-act="loadadd">Noter l'effort</button></div>`}
+
+/* ---------- programmes rapides en plus ---------- */
+QUICK.push(
+{id:'echauf',title:'Échauffement FIFA 11+ (court)',dur:'12 min',ex:"Course avec ouverture de hanches — 2x1 min\nCourse avec fermeture de hanches — 2x1 min\nPas chassés latéraux — 2x30 s\nPlanche — 2x20 s\nPlanche latérale — 2x20 s par côté\nNordic hamstring — 1x5\nÉquilibre sur un pied — 2x30 s par jambe\nSquat — 2x10\nSauts verticaux — 2x8\nAccélérations à 80 % — 3 fois"},
+{id:'activation',title:'Activation avant match',dur:'8 min',ex:"Montées de genoux — 2x20 s\nTalons-fesses — 2x20 s\nFentes avec rotation du buste — 1x8 par côté\nSauts sur place pieds joints — 2x10\nAccélérations progressives sur 20 m — 3 fois"},
+{id:'recupmatch',title:'Récup après match',dur:'15 min',ex:"Vélo ou marche légère — 1x8 min\nÉtirement du pigeon (hanches) — 2x45 s par côté\nÉtirement des ischios — 2x45 s\nMollets contre un mur — 2x45 s\nRespiration lente — 1x2 min"},
+{id:'genoux',title:'Prévention genoux et adducteurs',dur:'12 min',ex:"Nordic hamstring — 3x5\nCopenhagen plank — 3x20 s par côté\nSquat sur une jambe vers une chaise — 3x6 par jambe\nPont fessier sur une jambe — 3x10 par jambe"});
+Object.assign(EXI,{
+'copenhagen plank':[["Allongé sur le côté, pose l'intérieur du genou (version facile) ou de la cheville (version dure) de la jambe du dessus sur un banc.","Monte les hanches pour aligner ton corps, la jambe du dessous peut rester en l'air ou toucher le sol.","Tiens la position, puis change de côté."],"Renforce les adducteurs : c'est l'exercice de référence pour éviter les pubalgies et les blessures à l'aine."],
+'squat sur une jambe':[["Debout sur une jambe devant une chaise, l'autre jambe tendue devant toi.","Descends lentement en arrière jusqu'à toucher la chaise avec les fesses.","Remonte sur la même jambe sans t'aider de l'autre."],"Genou dans l'axe du pied : il ne doit pas rentrer vers l'intérieur. C'est ça qui protège ton genou."],
+'pont fessier sur une jambe':[["Allongé sur le dos, un pied au sol, l'autre jambe tendue en l'air.","Pousse dans le talon au sol pour monter les hanches.","Serre le fessier 1 s en haut, redescends lentement."],"Bassin bien droit : il ne doit pas pencher d'un côté."],
+'pas chassés':[["De profil, genoux fléchis, pars en pas chassés sur 10 à 15 m.","Reviens de l'autre côté sans croiser les pieds."],"Reste bas, comme en position défensive."],
+'activation':[["Fais chaque exercice à intensité moyenne puis monte progressivement."],"Le but est d'arriver à l'échauffement de l'équipe déjà chaud."]});
+
+/* ---------- apprendre : modules foot + nutrition ---------- */
+const FOOTM=[
+{id:'f1',t:'Finition : placer avant de frapper',s:'Cadrer, intérieur du pied en repiquant',p:[
+ "Dans la surface, un ballon placé près du poteau bat le gardien plus souvent qu'une frappe puissante au milieu : il a le temps de réagir à une frappe centrale, pas à un ballon collé au poteau.",
+ "Ta règle : dans la surface, intérieur du pied vers le petit filet opposé. La puissance seulement de loin, ou si tu es déjà sûr de cadrer.",
+ "En repiquant, ta dernière touche doit mettre le ballon devant ton pied de frappe, légèrement décalé, pas sous toi. Ballon trop près = frappe coincée = tu forces et ça part au-dessus.",
+ "Pied d'appui à côté du ballon et pointé vers la cible, genou au-dessus du ballon : ballon bas et cadré. Buste en arrière : ballon qui monte.",
+ "Coup d'œil au gardien juste avant de frapper : avancé → à ras de terre ou piqué ; sur sa ligne et décalé → côté opposé.",
+ "À l'entraînement : 50 finitions placées par semaine, à vitesse de match. L'automatisme vient de la répétition, pas de la réflexion pendant le match."],
+q:[["Tu repiques dans la surface sur ton pied droit. Choix prioritaire ?",["Intérieur du pied vers le petit filet opposé","Cou-de-pied en force au milieu","Piqué à chaque fois","Toujours la passe en retrait"],"Placé > puissant dans la surface. Le petit filet opposé est la zone la plus dure à couvrir pour le gardien."],
+ ["Tes frappes partent souvent au-dessus. Cause la plus probable ?",["Buste penché en arrière à l'impact","Pied d'appui trop près du ballon","Tu regardes le gardien","Tu frappes trop tôt"],"Buste en arrière = ballon qui monte. Genou au-dessus du ballon pour le garder bas."],
+ ["Le gardien sort vite et il est à 5 m de toi. Meilleur choix ?",["Ras de terre à côté de lui, ou piqué","Frappe en force sur lui","Attendre qu'il plonge","Revenir en arrière"],"Un gardien qui sort couvre le haut : le ras de terre ou le piqué sont les solutions."]]},
+{id:'f2',t:'1 contre 1 : éliminer',s:'Geste simple + explosion',p:[
+ "Un dribble se gagne sur le changement de rythme, pas sur le nombre de gestes : arrive lentement, puis explose.",
+ "Attaque le défenseur de face, ballon proche du pied, pour le fixer. Il recule ? Accélère. Il se jette ? Crochet.",
+ "Ton arme, c'est ta vitesse : un seul geste (feinte de corps, crochet ou passement) puis 3 à 4 mètres d'explosion. Pas besoin de cinq passements.",
+ "La touche juste après le geste pousse le ballon loin devant, dans l'espace, pour que ta vitesse fasse la différence.",
+ "Moment pour partir : quand le défenseur est sur ses talons, croise les jambes ou se penche du mauvais côté.",
+ "Mental : dans le dernier tiers, un dribble raté n'est pas grave. Ne jamais tenter, c'est ne jamais être décisif."],
+q:[["Le secret numéro 1 d'un dribble réussi ?",["Le changement de rythme","Faire beaucoup de passements","Garder le ballon loin de soi","Regarder ses pieds"],"Lent puis explosif : c'est ça qui déséquilibre le défenseur."],
+ ["Le défenseur se jette vers le ballon :",["Crochet ou changement de direction","Tu recules","Tu frappes directement","Tu fais un passement de plus"],"Quand il s'engage, il ne peut plus revenir : un crochet suffit."],
+ ["Juste après ton geste, ta touche suivante doit…",["Pousser le ballon dans l'espace devant toi","Arrêter le ballon","Revenir vers ton camp","Être une talonnade"],"Ballon devant = tu utilises ta vitesse pour passer."]]},
+{id:'f3',t:'Première touche régulière',s:'Scanner, contrôle orienté',p:[
+ "Avant de recevoir, 2 coups d'œil par-dessus l'épaule. Tu sais déjà où tu vas avant que le ballon arrive.",
+ "Contrôle orienté : la première touche emmène le ballon là où tu veux aller, loin du défenseur. Ce n'est pas un arrêt.",
+ "Reçois corps ouvert, de profil : tu vois le jeu et tu peux partir des deux côtés.",
+ "Va au-devant du ballon au lieu de l'attendre : le défenseur a moins de temps pour arriver.",
+ "Surface souple : recule légèrement le pied au moment du contact pour amortir.",
+ "Sous pression dans un moment clé : la touche simple et propre vaut mieux que la touche brillante."],
+q:[["Avant de recevoir le ballon, tu dois…",["Regarder par-dessus l'épaule (scanner)","Fixer uniquement le ballon","Attendre sans bouger","Appeler le ballon en criant"],"Scanner = décider avant. C'est ce qui rend ta première touche régulière."],
+ ["Un contrôle orienté sert à…",["Emmener le ballon vers l'espace en une touche","Arrêter net le ballon","Gagner du temps","Faire un geste technique"],"Une touche qui oriente, c'est un temps d'avance sur le défenseur."],
+ ["Position du corps idéale pour recevoir ?",["Ouvert, de profil","Dos au jeu","Face à ton but","Accroupi"],"De profil, tu vois le terrain et tu peux partir des deux côtés."]]},
+{id:'f4',t:'Appels en profondeur',s:'Ton point fort, à exploiter',p:[
+ "Timing : pars quand le porteur lève la tête et peut jouer. Trop tôt, tu es hors-jeu ou il ne peut pas te servir.",
+ "Reste sur la ligne du dernier défenseur, épaules ouvertes vers le ballon, et pars en diagonale pour prendre le dos de la défense sans être hors-jeu.",
+ "Appel contre-appel : un pas vers le ballon pour attirer ton défenseur, puis tu pars dans son dos.",
+ "Ballon pas venu ? Recommence. Un appel non servi crée de l'espace pour un coéquipier : il n'est jamais inutile.",
+ "Hors-jeu : au moment où la passe part, tu dois être au même niveau ou derrière l'avant-dernier adversaire (souvent le dernier défenseur, le gardien étant le dernier).",
+ "Après l'appel, pense déjà à la suite : contrôle vers le but, et finition placée."],
+q:[["Quand déclencher ton appel ?",["Quand le porteur lève la tête et peut jouer","Dès que ton équipe a le ballon","Quand le défenseur te regarde","Seulement sur un corner"],"Le bon appel est synchronisé avec le passeur."],
+ ["Au moment de la passe, tu es en jeu si tu es…",["Au même niveau que l'avant-dernier adversaire","Seul entre le dernier défenseur et le gardien","Plus près du but que tous les défenseurs","Peu importe, tant que tu cours vite"],"Même niveau = en jeu. Les deux autres positions sont hors-jeu si tu participes à l'action."],
+ ["L'appel contre-appel, c'est…",["Un pas vers le ballon puis départ dans le dos","Courir en ligne droite","Rester immobile","Demander le ballon dans les pieds"],"Tu fais venir le défenseur, puis tu prends l'espace qu'il a laissé."]]},
+{id:'f5',t:'Mental : lucidité et instinct',s:"Arrêter d'hésiter devant le but",p:[
+ "L'hésitation vient d'un choix fait trop tard. Décide avant de recevoir, et ton corps n'a plus qu'à exécuter.",
+ "Avant un moment clé : une grande expiration lente. Elle calme le cœur et éclaircit la tête.",
+ "Choisis un mot-clé simple (« place », « vas-y ») et répète-le dans ta tête avant de finir. Un seul mot, pas une phrase.",
+ "Visualisation 5 min le soir : vois-toi repiquer et placer au poteau, 5 fois, en détail (les couleurs, le bruit, la sensation du pied).",
+ "Après une erreur : routine de 5 secondes (souffle, tape dans les mains, prochaine action). L'erreur est finie, la prochaine action compte.",
+ "L'instinct de tueur, c'est un automatisme : il se construit avec des centaines de répétitions à vitesse de match à l'entraînement."],
+q:[["D'où vient l'hésitation devant le but ?",["D'un choix fait trop tard","D'un manque de vitesse","Du gardien","Du terrain"],"Décider avant de recevoir supprime l'hésitation."],
+ ["Après une erreur en match, tu…",["Fais ta routine de 5 s et passes à la suite","Repenses à l'action pendant 5 minutes","Arrêtes de tenter","Demandes le changement"],"Une routine courte coupe le fil des pensées négatives."],
+ ["Un bon mot-clé, c'est…",["Un mot simple, toujours le même","Une longue phrase de motivation","Le nom du gardien adverse","Rien, il faut tout penser"],"Simple et répété : il déclenche l'automatisme."]]},
+{id:'n1',nut:1,t:'Bien manger pour performer',s:'Protéines, glucides, timing, eau',p:[
+ "Protéines : environ 1,6 à 2 g par kg de poids par jour. Pour toi, autour de 120 à 150 g, réparties sur 4 repas de 25 à 40 g.",
+ "Les glucides sont ton carburant pour sprinter : plus les jours d'entraînement intense et de match, moins les jours de repos.",
+ "Avant l'entraînement (2 à 3 h) : repas avec féculents + protéines, peu de gras. Si faim 30 à 60 min avant : une banane.",
+ "Après (dans les 2 h) : protéines + glucides. Ex. poulet-riz, ou yaourt grec + fruit + pain.",
+ "Eau : urine claire. Pèse-toi avant et après une grosse séance : chaque kilo perdu, c'est environ 1,5 L à reboire.",
+ "Pour sécher : garde les protéines hautes et coupe surtout les extras (sodas, fast-food, grignotage), pas les féculents autour de l'entraînement.",
+ "Sommeil : 8 à 9 h. C'est pendant la nuit que le muscle se répare."],
+q:[["Ta cible de protéines par jour, environ ?",["120 à 150 g","40 à 60 g","250 à 300 g","Peu importe"],"1,6 à 2 g par kg × 75 kg ≈ 120 à 150 g."],
+ ["Avant un match, ton repas doit être riche en…",["Féculents (riz, pâtes, pommes de terre)","Friture","Fibres et crudités en grande quantité","Rien, à jeun c'est mieux"],"Les glucides remplissent tes réserves d'énergie pour sprinter."],
+ ["Tu as perdu 1 kg pendant la séance. Tu bois…",["Environ 1,5 L","Un verre","Rien, c'est du gras perdu","5 L d'un coup"],"Le poids perdu en séance, c'est surtout de l'eau : environ 1,5 L par kg sur les heures qui suivent."]]}];
+function footDone(){return prof().footDone||[]}
+function startFoot(id){const m=FOOTM.find(x=>x.id===id);if(!m)return;const steps=[...m.p.map((p,i)=>({k:'card',kick:'Point '+(i+1)+'/'+m.p.length,t:m.t,x:p})),...m.q.map(q=>mcq(q[0],q[1],q[2]))];openPlayer({type:'learn',mode:m.nut?'nut':'foot',mid:id,title:m.t,steps,i:0,score:0,nq:m.q.length})}
+const _finishLearn=finishLearn;finishLearn=function(){_finishLearn();const P=S.P;if(P&&(P.mode==='foot'||P.mode==='nut')&&P.nq&&P.score/P.nq>=0.66&&!footDone().includes(P.mid))saveProfile({footDone:[...footDone(),P.mid]})};
+const learnRows=L=>L.map(m=>{const d=footDone().includes(m.id);return lr(`<span class="pdot${d?' on':''}">${d?I.check:''}</span>`,esc(m.t),esc(m.s)+(d?' · validé':''),I.chev,['footm',m.id],d?'':'')}).join('');
+
+/* ---------- nutrition ---------- */
+const FOODS=[['Poulet cuit 150 g',46,250],['3 œufs',19,215],['Yaourt grec ou skyr 150 g',15,100],['Thon 1 boîte',25,120],['Steak haché 5 % 125 g',26,155],['Saumon 125 g',25,260],['Lentilles cuites 200 g',18,230],['Fromage blanc 200 g',15,150],['Lait 500 ml',16,230],['Whey 1 dose',24,120]];
+const IDEAS=[['Riz + poulet + légumes',45,650,"Avant ou après l'entraînement"],['Pâtes bolognaise au bœuf 5 %',40,700,'Veille de match'],['Omelette 3 œufs + pain complet + fruit',22,500,'Petit-déj'],["Skyr + flocons d'avoine + banane",22,450,'Petit-déj ou collation'],['Wrap thon + crudités',30,450,'Midi rapide'],['Saumon + pommes de terre + haricots verts',32,600,'Dîner'],['Dhal de lentilles corail + riz',22,550,'Dîner pas cher'],['Couscous poulet-légumes',40,750,'Après un gros effort']];
+function dayType(d){if(items('match').some(m=>m.date===d)||(dayOf(d).load||[]).some(x=>x.l==='Match'))return'match';return items('session').some(s=>DMAP[s.day]===dowOf(d)&&s.type!=='Repos')?'train':'rest'}
+const PLATE={rest:['Jour de repos',"Moitié légumes, un quart protéines, un quart féculents. Moins de glucides, protéines toujours hautes."],train:["Jour d'entraînement","Un tiers légumes, un tiers protéines, un tiers féculents (riz, pâtes, pommes de terre, pain)."],match:['Jour de match',"Plus de féculents autour du match (la moitié de l'assiette), protéines normales, très peu de gras avant de jouer."]};
+const foodChips=()=>`<div class="food">${FOODS.map((f,i)=>`<button data-act="food" data-x="${i}"><b>+${f[1]} g</b>${esc(f[0])}</button>`).join('')}</div>`;
+function nutriCore(){const t=today(),p=prof(),day=dayOf(t),ms=items('meal').filter(m=>m.date===t),prot=protOn(t),pl=PLATE[dayType(t)];
+ return`<div class="card"><div class="dtype"><span class="kick" style="margin:0">${esc(pl[0])}</span><span class="mute" style="font-size:14px;line-height:1.3">${esc(pl[1])}</span></div><div class="rings two">${ring('pt2','Protéines',prot,p.protein,prot+'g','','')}${ring('ea2','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div>
+ <div class="mute" style="margin-top:12px;font-size:14px">Ajout rapide (touche pour ajouter) :</div>${foodChips()}
+ <div class="list" style="margin-top:10px">${ms.map(m=>lr(m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="">`:`<span class="ini t">${num(m.protein)}g</span>`,esc(m.name),num(m.protein)+' g de protéines'+(num(m.kcal)?' · '+num(m.kcal)+' kcal':''),I.chev,['edit','',m.id])).join('')}</div>
+ <div class="acts"><button class="btn acc" data-act="mealphoto">Repas en photo</button><button class="btn" data-act="add" data-x="meal">+ Repas</button><button class="btn" data-act="water" data-x="-1">− Eau</button></div></div>`}
+function nutriCard(){return sect('Nutrition',`<button class="link" data-act="pg" data-x="nutri">Tout voir</button>`)+nutriCore()}
+function pNutri8(){const t=today(),p=prof(),last=[...Array(7)].map((_,i)=>addDays(t,-i)),avg=Math.round(last.reduce((n,d)=>n+protOn(d),0)/7),hit=last.filter(d=>protOn(d)>=p.protein).length;
+ return nutriCore()+`<div class="card"><div class="stat3"><div class="g"><b>${avg}</b><span>g/jour en moyenne (7 j)</span></div><div><b>${hit}/7</b><span>jours objectif atteint</span></div><div><b>${p.protein}</b><span>g objectif</span></div></div></div>`
+ +sect('Quand manger')+`<div class="card list">${[['2 à 3 h avant','Repas : féculents + protéines, peu de gras.'],['30 à 60 min avant','Si faim : banane ou pain. Rien de lourd.'],['Pendant','De l\'eau. Plus d\'1 h d\'effort intense : boisson sucrée possible.'],['Dans les 2 h après','Protéines + glucides, puis un vrai repas.'],['Avant de dormir','Si faim : fromage blanc ou skyr (protéines lentes).']].map(([a,b])=>lr(`<span class="ini t" style="font-size:12px;width:62px;border-radius:12px">${a}</span>`,esc(b),'')).join('')}</div>`
+ +sect('Idées de repas',`<span class="mute">touche pour ajouter</span>`)+`<div class="card list">${IDEAS.map((x,i)=>lr(`<span class="ini t">${x[1]}g</span>`,esc(x[0]),esc(x[3])+' · environ '+x[2]+' kcal',`<button class="btn sm" data-act="idea" data-x="${i}">+</button>`)).join('')}</div>`
+ +sect('Apprendre')+`<div class="card list">${learnRows(FOOTM.filter(m=>m.nut))}</div>`+sect('7 derniers jours')+pMeals()}
+
+/* ---------- onglet Foot (v8) ---------- */
+function vFoot8(){const t=today(),dw=dowOf(t),ws=weekStart(t),s=items('season')[0],cs=items('contact'),gs=items('goal'),day=dayOf(t),c=day.chk,sd=day.sess||[];
+ const late=cs.filter(isLate).length,open=cs.filter(x=>['Message envoyé','En discussion','Piste chaude'].includes(x.status)).length,hot=cs.filter(x=>x.status==='Piste chaude').length;
+ const strip=DAYS.map((d,i)=>{const ss=items('session').filter(x=>x.day===d),ty=ss[0]?ss[0].type:'',done=(dayOf(addDays(ws,i)).sess||[]).length>0;return`<button class="${DMAP[d]===dw?'today':''}" data-act="pg" data-x="day" data-id="${d}">${d.slice(0,1)}<span>${esc(ty?ty.slice(0,4):'—')}</span><em class="${done?'on':''}"></em></button>`}).join('');
+ const gd=gs.filter(g=>g.done).length,ms=items('match'),rd=c?rdAdvice(c):null;
+ const work=items('session').filter(x=>DMAP[x.day]===dw&&x.type!=='Repos'),s0=work.find(x=>!sd.includes(x.id));
+ const rdHtml=rd?`<div class="card rdc ${rd.col}"><div class="rdtop"><b>${rd.s}</b><div><span class="kick">Forme du jour</span><h3>${esc(rd.t)}</h3></div><button class="link" data-act="chk">Modifier</button></div><p>${esc(rd.x)}</p>${rd.ex.map(e=>`<p class="mute">• ${esc(e)}</p>`).join('')}</div>`
+  :`<button class="card tap rdc0" data-act="chk"><span class="kick">Check-in du matin · 30 s</span><h3>Comment tu te sens ?</h3><span class="mute">Sommeil, énergie, courbatures, moral. MG9 adapte ta séance.</span></button>`;
+ let sess;
+ if(!work.length)sess=`<div class="card"><span class="kick">Aujourd'hui</span><h3 class="h3b">Récupération</h3><p class="mute" style="margin:4px 0 10px">Le repos fait partie de l'entraînement : c'est là que tu deviens plus fort.</p><div class="acts"><button class="btn acc" data-act="quick" data-x="mobilite">Mobilité 8 min</button><button class="btn" data-act="quick" data-x="recupmatch">Récup 15 min</button></div></div>`;
+ else if(!s0)sess=`<div class="card"><span class="kick">Séance du jour</span><h3 class="h3b">${esc(work[0].title)}</h3><div class="donepill">${I.check} Séance faite</div>${(day.load||[]).length?'':`<div class="acts"><button class="btn acc" data-act="loadadd">Noter l'effort</button></div>`}</div>`;
+ else sess=`<div class="card"><span class="kick">Séance du jour · ${esc(s0.type)}</span><h3 class="h3b">${esc(s0.title)}</h3><p class="mute" style="margin:2px 0 12px">${parseEx(s0).length} exercices${rd&&rd.col==='r'?' · version légère conseillée aujourd\'hui':''}</p><button class="cta" data-act="play" data-id="${s0.id}">${I.play} Lancer la séance</button><div class="acts"><button class="btn" data-act="quick" data-x="echauf">Échauffement 12 min</button><button class="btn" data-act="pg" data-x="day" data-id="${s0.day}">Voir le détail</button></div></div>`;
+ const nt=items('test').length,lastT=items('test').map(x=>x.date).sort().pop();
+ return `<h1 class="vt">Foot</h1>${rdHtml}${sess}
+ ${s?`<div class="tiles">${tile('pg','matches','','Buts',num(s.goals)+ms.reduce((n,m)=>n+num(m.goals),0),esc(s.title.replace('Saison ',''))+(ms.length?' + matchs ajoutés':''),'acc')}${tile('pg','matches','','Passes décisives',num(s.assists)+ms.reduce((n,m)=>n+num(m.assists),0),num(s.games)+' matchs · '+num(s.starts)+' titu')}</div>`:''}
+ ${sect("Charge d'entraînement",`<button class="link" data-act="loadadd">+ Noter</button>`)}${loadCard()}
+ ${sect('Mon corps')}${bodyCard()}
+ <div class="tiles">${tile('pg','tests','','Tests physiques',nt?TESTS.filter(T=>testRes(T.k).length).length+'/'+TESTS.length:'À faire',lastT?'Derniers : '+fmtD(lastT):'Vitesse, détente, endurance','q')}${tile('pg','matchday','','Jour de match','Ma routine','Veille, jour J, après','pur q')}</div>
+ ${sect('Progresser',`<span class="mute">${FOOTM.filter(m=>!m.nut&&footDone().includes(m.id)).length}/${FOOTM.filter(m=>!m.nut).length}</span>`)}<div class="card list">${learnRows(FOOTM.filter(m=>!m.nut))}</div>
+ ${sect('Programme de la semaine')}<div class="strip">${strip}</div>
+ ${sect('Objectifs',more('goals'))}<div class="card"><div class="bigrow"><b>${gd}/${gs.length}</b><span class="mute">atteints</span></div>${bar(gd,gs.length)}<div class="list" style="margin-top:6px">${gs.filter(g=>!g.done&&['Foot','Carrière','Physique'].includes(g.cat)).slice(0,4).map(g=>lr(rc(false,'tog',g.id,'done'),esc(g.title),'','',['edit','',g.id])).join('')}</div></div>
+ ${sect('Prévention et récup')}<div class="tiles">${['genoux','chevilles','recupmatch','mobilite'].map(id=>{const q=QUICK.find(z=>z.id===id),dn=(day.quick||[]).includes(id);return tile('quick',id,'',esc(q.dur),esc(q.title),dn?"Fait aujourd'hui":'▶ Lancer',dn?'done q':'q')}).join('')}</div>
+ ${sect('Bibliothèque')}<div class="tiles">${tile('pg','drills','','Exercices foot',DRILLS.length,'Pas à pas, avec les points clés','acc')}${tile('tab','ia','','Programmes rapides',QUICK.length,'8 à 15 minutes','')}</div>
+ ${sect('Agents & clubs',more('contacts'))}
+ <button class="card tap" data-act="pg" data-x="contacts"><div class="stat3"><div class="${late?'w':''}"><b>${late}</b><span>à relancer</span></div><div><b>${open}</b><span>en cours</span></div><div class="g"><b>${hot}</b><span>pistes chaudes</span></div></div></button>
+ <div class="acts"><button class="btn acc" data-act="add" data-x="match">+ Ajouter un match</button></div>`}
+
+/* ---------- plan du jour : forme, effort, protéines ---------- */
+const _planItems=planItems;planItems=function(){const L=_planItems(),t=today(),d=dayOf(t),p=prof(),pr=protOn(t);
+ L.unshift({t:'Check-in forme',s:d.chk?'Forme '+rdScore(d.chk)+'/100':'30 secondes, le matin',done:!!d.chk,a:['chk']});
+ let i=L.findIndex(x=>/^(Séance|Récupération)/.test(x.t));if(i<0)i=1;
+ const add=[{t:'Protéines : '+pr+' / '+p.protein+' g',s:'Touche pour ajouter un repas',done:pr>=p.protein,a:['tab','ia']}];
+ if((d.sess||[]).length||(d.quick||[]).length)add.unshift({t:"Noter l'effort de ta séance",s:'Durée et difficulté',done:(d.load||[]).length>0,a:['loadadd']});
+ L.splice(i+1,0,...add);return L};
+
+Object.assign(PAGES,{tests:{t:'Tests physiques',f:pTests},matchday:{t:'Jour de match',f:pMatchday},nutri:{t:'Nutrition',add:'meal',f:pNutri8}});
+Object.assign(ACT,{
+ chk:()=>{S.tmp={sl:7,en:3,so:4,mo:3,...(dayOf(today()).chk||{})};openSheet(chkSheet)},
+ tset:(id,x)=>{const i=x.indexOf(':'),k=x.slice(0,i),v=x.slice(i+1);S.tmp[k]=isNaN(+v)?v:+v;reSheet()},
+ chksave:(id,x,b)=>{const c={...S.tmp};setDay(today(),{chk:c});closeSheet();const a=rdAdvice(c);toast('Forme : '+a.s+'/100 · '+a.t)},
+ loadadd:()=>{S.tmp={ty:'Entraînement équipe',min:90,rpe:null};openSheet(loadSheet)},
+ loadsave:()=>{const c=S.tmp;if(!c.rpe){toast('Choisis la difficulté de 1 à 10');return}const t=today();setDay(t,{load:[...(dayOf(t).load||[]),{id:uid(),l:c.ty,min:num(c.min),rpe:c.rpe}]});closeSheet();toast('Effort noté : charge '+num(c.min)*c.rpe)},
+ pmin:(id,x)=>{S.P.min=+x;renderPlayer()},
+ prpe:(id,x)=>{S.P.rpe=+x;renderPlayer()},
+ psave:()=>{const P=S.P;if(!P.rpe)return;const t=today(),nm=P.quick?P.quick.title:((S.items.find(i=>i.id===P.sid)||{}).title||'Séance');setDay(t,{load:[...(dayOf(t).load||[]),{id:uid(),l:nm,min:P.min,rpe:P.rpe}]});P.saved=true;renderPlayer()},
+ kg:()=>openSheet(kgSheet),
+ kgsave:()=>{const v=parseFloat(String(($('#kgin')||{}).value||'').replace(',','.'));if(!(v>35&&v<200)){toast('Entre ton poids en kg');return}setDay(today(),{kg:Math.round(v*10)/10});closeSheet();toast('Poids noté')},
+ test:(id,x)=>{S.tmp={k:x};openSheet(testSheet)},
+ testsave:()=>{const T=TESTS.find(z=>z.k===S.tmp.k),v=parseFloat(String(($('#tval')||{}).value||'').replace(',','.')),d=($('#tdate')||{}).value||today();if(!(v>0)){toast('Entre un résultat');return}const L=testRes(T.k),b=bestOf(T,L);saveItem({kind:'test',test:T.k,val:v,date:d});reSheet();const rec=b==null||(T.low?v<b:v>b);toast(rec&&b!=null?'Nouveau record !':'Résultat enregistré');if(rec&&b!=null)burst(center())},
+ testdel:id=>{delItem(id);reSheet()},
+ md:(id,x,b)=>{const t=today(),s=[...(dayOf(t).md||[])],i=s.indexOf(id);if(i>=0)s.splice(i,1);else{s.push(id);if(b)burst(b.getBoundingClientRect())}setDay(t,{md:s})},
+ footm:(id,x)=>startFoot(x),
+ lagain:()=>{const P=S.P;if(P.mode==='sys')startModule(P.mid);else if(P.mode==='foot'||P.mode==='nut')startFoot(P.mid);else startEnglish()},
+ food:(id,x,b)=>{const f=FOODS[+x];if(!f)return;if(b)burst(b.getBoundingClientRect());saveItem({kind:'meal',date:today(),name:f[0],protein:f[1],kcal:f[2]});toast('+'+f[1]+' g de protéines')},
+ idea:(id,x,b)=>{const f=IDEAS[+x];if(!f)return;if(b)burst(b.getBoundingClientRect());saveItem({kind:'meal',date:today(),name:f[0],protein:f[1],kcal:f[2]});toast('Repas ajouté : +'+f[1]+' g')}
+});
+
+
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b){e.preventDefault();ACT[b.dataset.act]&&ACT[b.dataset.act](b.dataset.id,b.dataset.x,b);return}const d=e.target.closest('[data-day]');if(d){d.classList.toggle('on')}});
 document.addEventListener('input',e=>{if(e.target.id==='csearch'){S.cq=e.target.value;renderContacts()}if(e.target.id==='cin'){e.target.style.height='auto';e.target.style.height=Math.min(140,e.target.scrollHeight)+'px'}});
 $('#sheet').addEventListener('click',e=>{if(e.target.id==='sheet')closeSheet()});
@@ -1023,7 +1280,7 @@ function render(){
  $('#hdate').textContent=new Date().toLocaleDateString('fr-FR',{weekday:'long',day:'numeric',month:'long'});
  document.body.classList.toggle('home',S.tab==='home');
  const v=$('#view');v.classList.toggle('anim',!!S.anim&&!RM.matches);S.anim=false;
- v.innerHTML=status()+({home:vHome,foot:vFoot,ecole:vEcole,vie:vIslam,ia:vMoi})[S.tab]();
+ v.innerHTML=status()+({home:vHome,foot:vFoot8,ecole:vEcole,vie:vIslam,ia:vMoi})[S.tab]();
  renderPage();
  $('#composer').classList.toggle('show',S.tab==='ia'&&!!S.ai&&!S.pg);
  $('#attach').style.display=S.aiImg?'':'none';
