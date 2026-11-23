@@ -237,6 +237,7 @@ button,.tap{transition:transform .12s}
 .rpe{display:grid;grid-template-columns:repeat(10,minmax(0,1fr));gap:4px;margin:6px 0 8px}.rpe button{border:0;border-radius:10px;min-height:46px;font:800 19px "Barlow Condensed",sans-serif;background:var(--card2);color:var(--ink);padding:0}.rpe button.on{background:hsl(var(--h) 70% 42%);color:#fff}.rpe.dark button{background:rgba(255,255,255,.12);color:#fff}.rpe.dark button.on{background:hsl(var(--h) 70% 42%)}
 .food{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.food button{border:0;background:var(--card2);border-radius:14px;padding:8px 10px;font-size:13px;font-weight:600;text-align:left;min-height:44px;color:var(--ink)}.food button b{color:var(--acc);margin-right:5px}
 .dtype{display:grid;gap:2px;background:var(--card2);border-radius:14px;padding:10px 12px;margin-bottom:14px}
+.ptimes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ptimes div{background:var(--card2);border-radius:14px;padding:10px;display:grid;gap:2px}.ptimes span{font-size:13px;color:var(--mute)}.ptimes b{font:800 28px/1 "Barlow Condensed",sans-serif}.ptimes .on b{color:var(--acc)}.ptimes .sr b{color:var(--mute)}
 </style>
 </head>
 <body>
@@ -346,7 +347,7 @@ function vHome(){const t=today(),dw=dowOf(t),p=prof(),day=dayOf(t),sd=day.sess||
  const week=wd.map((d,i)=>{const x=dayOf(d),n=PR.filter(([k])=>(x.prayers||{})[k]).length;return`<div class="wd${d===t?' today':''}${n===5?' full':''}"><div class="bars"><i style="height:${n/5*100}%"></i></div><em class="${(x.sess||[]).length?'on':''}"></em>${DAYS[i].slice(0,1)}</div>`}).join('');
  const st=streak(),bil=S.bilan&&S.bilan.week===ws?S.bilan:null;
  const ss=items('season')[0];
- return `<div class="me"><img src="card.jpg" alt="Mohamed en maillot n°9 de Prairie State"><div class="mi"><span class="kick">N°9 · Ailier</span><h1>Mohamed<br>Ghelaissa</h1><div class="mute">Prairie State Pioneers</div>${ss?`<div class="ms"><div><b>${num(ss.goals)}</b><span>buts</span></div><div><b>${num(ss.assists)}</b><span>passes</span></div><div><b>${num(ss.games)}</b><span>matchs</span></div></div>`:''}</div></div>${levelCard()}${hero}
+ return `<div class="me"><img src="card.jpg" alt="Mohamed en maillot n°9 de Prairie State"><div class="mi"><span class="kick">N°9 · Ailier</span><h1>Mohamed<br>Ghelaissa</h1><div class="mute">Prairie State Pioneers</div>${ss?`<div class="ms"><div><b>${num(ss.goals)}</b><span>buts</span></div><div><b>${num(ss.assists)}</b><span>passes</span></div><div><b>${num(ss.games)}</b><span>matchs</span></div></div>`:''}</div></div>${levelCard()}${prof().pushOn||S.fresh?'':notifCard()}${hero}
  ${nx?`<button class="next" data-act="pg" data-x="agenda"><b>J-${dBetween(t,nx.date)}</b><span>${esc(nx.title)}<small>${fmtD(nx.date)}</small></span>${I.chev}</button>`:''}
  ${sect('Ma journée')}<div class="card"><div class="rings">${ring('pr','Prières',nPr,5,nPr+'/5','pg','prayers')}${ring('ea','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}${ring('pt','Protéines',prot,p.protein,prot+'g','pg','nutri')}</div>${prayBtns(t)}</div>
  <div class="tiles">${adhTiles(t)}</div>
@@ -887,7 +888,7 @@ const habRows=(t,max)=>{const d=dayOf(t).hab||[];return items('habit').slice(0,m
 function vMoi(){const t=today(),p=prof(),day=dayOf(t),hb=items('habit'),hd=(day.hab||[]).filter(id=>hb.some(h=>h.id===id)).length,qd=day.quick||[];
  const ms=items('meal').filter(m=>m.date===t),prot=ms.reduce((n,m)=>n+num(m.protein),0);
  const Q=['Qu\'est-ce que je fais aujourd\'hui ?','Quels agents je dois relancer en priorité ?','Aide-moi sur un devoir','Donne-moi un exo pour ma finition'];
- return `<h1 class="vt">Moi</h1>
+ return `<h1 class="vt">Moi</h1>${notifCard()}
  ${sect('Mes petits objectifs',`<span class="mute">${hd}/${hb.length}</span>`)}<div class="card">${habRich(t)||'<div class="empty">Ajoute tes petits objectifs de chaque jour.</div>'}</div><div class="acts" style="margin-top:-4px;margin-bottom:8px"><button class="btn" data-act="add" data-x="habit">+ Petit objectif</button></div>
  ${sect('Programmes rapides')}<div class="tiles">${QUICK.map(q=>tile('quick',q.id,'',esc(q.dur),esc(q.title),qd.includes(q.id)?'Fait aujourd\'hui':'▶ Lancer',qd.includes(q.id)?'done q':'q')).join('')}</div>
  ${nutriCard()}
@@ -940,7 +941,7 @@ function openSettings(){const p=prof();$('#panel').innerHTML=`<h2>Réglages</h2>
  <label class="f">À propos de moi (l'IA lit ce texte)<textarea name="about" style="min-height:200px">${esc(p.about)}</textarea></label>
  <label class="f">Mes cours (un par ligne)<textarea name="courses">${esc(p.courses.join('\n'))}</textarea></label>
  <div class="grid2"><label class="f">Objectif protéines (g/jour)<input name="protein" inputmode="numeric" value="${esc(p.protein)}"></label><label class="f">Objectif eau (verres/jour)<input name="water" inputmode="numeric" value="${esc(p.water)}"></label></div>
- <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div><div class="acts" style="margin:-4px 0 12px"><button type="button" class="btn" data-act="forceupd">Forcer la mise à jour</button></div><p class="mute" style="margin:0 0 12px">Version de MG9 : v8 (23 nov.)</p>
+ <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div><div class="acts" style="margin:-4px 0 12px"><button type="button" class="btn" data-act="forceupd">Forcer la mise à jour</button></div><p class="mute" style="margin:0 0 12px">Version de MG9 : v9 (23 nov.)</p>
  <div class="acts"><button class="btn" type="submit">Enregistrer</button><button type="button" class="btn ghost" data-act="close">Fermer</button></div></form>`;
  $('#sheet').classList.add('open');
  $('#sfrm').onsubmit=e=>{e.preventDefault();const f=e.target.elements;saveProfile({about:f.about.value.trim(),courses:f.courses.value.split('\n').map(x=>x.trim()).filter(Boolean),protein:num(f.protein.value)||140,water:num(f.water.value)||8});closeSheet();toast('Réglages enregistrés')}}
@@ -1254,6 +1255,66 @@ Object.assign(ACT,{
  food:(id,x,b)=>{const f=FOODS[+x];if(!f)return;if(b)burst(b.getBoundingClientRect());saveItem({kind:'meal',date:today(),name:f[0],protein:f[1],kcal:f[2]});toast('+'+f[1]+' g de protéines')},
  idea:(id,x,b)=>{const f=IDEAS[+x];if(!f)return;if(b)burst(b.getBoundingClientRect());saveItem({kind:'meal',date:today(),name:f[0],protein:f[1],kcal:f[2]});toast('Repas ajouté : +'+f[1]+' g')}
 });
+/* =========================================================
+   v9 : notifications MG9 (Web Push + serveur Cloudflare)
+   ========================================================= */
+const PUSH='https://mg9-push.mohamed-ghelaissa57.workers.dev';
+const isStandalone=()=>matchMedia('(display-mode: standalone)').matches||navigator.standalone===true;
+const TZ=()=>{try{return Intl.DateTimeFormat().resolvedOptions().timeZone||'America/Chicago'}catch(e){return'America/Chicago'}};
+const b64uToU8=s=>{s=s.replace(/-/g,'+').replace(/_/g,'/');while(s.length%4)s+='=';const r=atob(s);return Uint8Array.from(r,c=>c.charCodeAt(0))};
+function pushId(){let id=prof().pushId;if(!id){id=((crypto.randomUUID&&crypto.randomUUID())||(uid()+uid()+uid())).replace(/[^a-z0-9]/g,'').slice(0,32);S.profile={...prof(),pushId:id};persist()}return id}
+const pushPost=(p,o,keep)=>fetch(PUSH+p,{method:'POST',headers:{'content-type':'text/plain'},body:JSON.stringify(o),keepalive:!!keep});
+function pushState(){const t=today(),d=dayOf(t),p=prof(),dw=dowOf(t),acts=d.acts||[];
+ const work=items('session').filter(s=>DMAP[s.day]===dw&&s.type!=='Repos'),sd=d.sess||[],nx=work.find(s=>!sd.includes(s.id));
+ return{d:t,pr:PR.filter(([k])=>(d.prayers||{})[k]).map(([k])=>k),adhM:!!d.adhM,adhS:!!d.adhS,adhC:!!d.adhC,witr:acts.includes('witr'),chk:!!d.chk,
+  train:work.length>0,sess:!!(sd.length||(d.quick||[]).length),sessT:nx?nx.title:'',load:!!(d.load||[]).length,quran:acts.includes('quran'),kahf:acts.includes('kahf'),qp:num(p.quranPage)||1,
+  prot:protOn(t),protT:num(p.protein)||140,water:num(d.water),waterT:num(p.water)||8,eng:!!d.engDone,sys:!!d.sysDay,hw:items('hw').filter(h=>!h.done&&h.due&&h.due<=addDays(t,1)).length}}
+let pushT=0,pushLast='';
+function pushSync(now){if(!prof().pushOn||!prof().pushId)return;clearTimeout(pushT);const go=()=>{const st=pushState(),s=JSON.stringify(st);if(s===pushLast)return;pushLast=s;pushPost('/state',{id:prof().pushId,tz:TZ(),st},true).catch(()=>{pushLast=''})};if(now)go();else pushT=setTimeout(go,15000)}
+async function pushSubscribe(){const reg=await navigator.serviceWorker.ready,{key}=await(await fetch(PUSH+'/vapid')).json();let sub=await reg.pushManager.getSubscription();
+ if(sub){const k=sub.options&&sub.options.applicationServerKey;if(k){const a=new Uint8Array(k),b=b64uToU8(key);if(a.length!==b.length||a.some((x,i)=>x!==b[i])){await sub.unsubscribe();sub=null}}}
+ if(!sub)sub=await reg.pushManager.subscribe({userVisibleOnly:true,applicationServerKey:b64uToU8(key)});
+ const r=await pushPost('/sub',{id:pushId(),sub:sub.toJSON(),tz:TZ()});if(!r.ok)throw new Error('sub '+r.status);return sub}
+async function pushEnable(){
+ if(!isStandalone()){toast("Ouvre MG9 depuis son icône sur l'écran d'accueil, puis réessaie");return}
+ if(!('Notification' in window)||!('PushManager' in window)||!('serviceWorker' in navigator)){toast('Il faut iOS 16.4 ou plus récent pour les notifications');return}
+ let perm;try{perm=await Notification.requestPermission()}catch(e){perm='denied'}
+ if(perm!=='granted'){toast('Refusé. Active-les dans Réglages iPhone › Notifications › MG9');return}
+ try{toast('Activation…');await pushSubscribe();S.profile={...prof(),pushOn:true};persist();pushLast='';pushSync(true);render();toast('Notifications activées');setTimeout(()=>ACT.ptest(),800)}
+ catch(e){toast("Échec de l'activation. Vérifie ta connexion et réessaie")}}
+async function pushDisable(){try{const reg=await navigator.serviceWorker.ready,sub=await reg.pushManager.getSubscription();if(sub)await sub.unsubscribe();await pushPost('/unsub',{id:prof().pushId})}catch(e){}saveProfile({pushOn:false});toast('Notifications désactivées')}
+// au démarrage : on vérifie que l'abonnement existe toujours et on envoie l'état du jour
+async function pushBoot(){if(!prof().pushOn||!('serviceWorker' in navigator)||!('PushManager' in window))return;try{if(Notification.permission==='granted')await pushSubscribe()}catch(e){}pushLast='';pushSync(true)}
+const _persist9=persist;persist=function(){_persist9();pushSync()};
+document.addEventListener('visibilitychange',()=>{if(document.visibilityState==='hidden')pushSync(true);else pushSync()});
+
+/* ---------- ouvrir MG9 au bon endroit depuis une notification ---------- */
+function handleGo(g){if(!g||S.fresh)return;const i=g.indexOf(':'),a=i<0?g:g.slice(0,i),x=i<0?'':g.slice(i+1);
+ if(S.P)closePlayer();closeSheet();S.pg=null;S.stack=[];
+ const f={pg:()=>ACT.pg(undefined,x),tab:()=>ACT.tab(undefined,x),adhkar:()=>ACT.adhkar(undefined,x),chk:()=>{S.tab='foot';render();ACT.chk()},playToday:()=>ACT.playToday(),loadadd:()=>{S.tab='foot';render();ACT.loadadd()},eng:()=>ACT.eng()}[a];
+ if(f)try{f()}catch(e){}}
+if('serviceWorker' in navigator)navigator.serviceWorker.addEventListener('message',e=>{if(e.data&&e.data.go)handleGo(e.data.go)});
+
+/* ---------- interface ---------- */
+function notifCard(){const p=prof();
+ if(p.pushOn)return`<div class="card"><div class="lr" style="padding:0">${`<span class="pdot on">${I.check}</span>`}<div class="lm"><div class="lt">Notifications MG9 activées</div><div class="ls">Intelligentes : pas de rappel pour ce qui est déjà coché</div></div></div><div class="acts"><button class="btn" data-act="pg" data-x="notifs">Mon programme</button><button class="btn" data-act="ptest">Tester</button></div></div>`;
+ return`<button class="card tap rdc0" data-act="penable"><span class="kick">Nouveau</span><h3>Active les notifications MG9</h3><span class="mute">Heures de prière, adhkar, séance, protéines, Coran… Elles s'adaptent à ce que tu as déjà fait et ouvrent MG9 au bon endroit.</span></button>`}
+function pNotifs(){setTimeout(loadNPlan,0);const p=prof();return`<div class="card"><p style="margin:0">MG9 t'envoie ses rappels aux bons moments et saute ceux que tu as déjà cochés. Les heures de prière sont calculées pour l'endroit où se trouve ton iPhone : Chicago Heights, Metz ou Tunis (méthode ISNA à Chicago). Compare-les avec ta mosquée.</p></div><div id="nplan"><div class="empty">Chargement du programme…</div></div>
+ <div class="acts">${p.pushOn?`<button class="btn" data-act="ptest">Envoyer une notif test</button><button class="btn ghost" data-act="pdisable">Désactiver</button>`:`<button class="btn acc" data-act="penable">Activer les notifications</button>`}</div>`}
+async function loadNPlan(){const el=$('#nplan');if(!el)return;try{const r=await(await fetch(PUSH+'/plan?tz='+encodeURIComponent(TZ()))).json(),P=r.prayers,N={fajr:'Fajr',sunrise:'Lever du soleil',dhuhr:'Dhuhr',asr:"'Asr",maghrib:'Maghrib',isha:"'Ishâ'"};
+ const st=pushState();
+ el.innerHTML=sect('Prières aujourd\'hui',`<span class="mute">${esc(r.city)}</span>`)+`<div class="card"><div class="ptimes">${Object.keys(N).map(k=>`<div class="${k==='sunrise'?'sr':''}${st.pr.includes(k)?' on':''}"><span>${N[k]}</span><b>${esc(P[k])}</b></div>`).join('')}</div></div>`
+ +sect('Rappels possibles aujourd\'hui')+`<div class="card list">${r.plan.map(x=>lr(`<span class="ini t">${esc(x.slice(0,5))}</span>`,esc(x.slice(6)),'')).join('')}</div><p class="mute" style="font-size:13px;margin:0 2px 12px">Ceux qui correspondent à ce que tu as déjà fait ne seront pas envoyés.</p>`}
+ catch(e){el.innerHTML='<div class="empty">Pas de connexion pour charger le programme.</div>'}}
+Object.assign(PAGES,{notifs:{t:'Notifications',f:pNotifs}});
+Object.assign(ACT,{
+ penable:()=>pushEnable(),
+ pdisable:()=>pushDisable(),
+ ptest:async()=>{if(!prof().pushId){toast('Active d\'abord les notifications');return}try{const r=await(await pushPost('/test',{id:prof().pushId})).json();toast(r.ok?'Notif test envoyée : elle arrive dans quelques secondes':'Échec de l\'envoi ('+(r.status||r.error)+')')}catch(e){toast('Pas de connexion')}},
+ forceupd:async()=>{toast('Mise à jour…');try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)));const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.replace(location.pathname+'?u='+Date.now())}
+});
+
+
 
 
 document.addEventListener('click',e=>{const b=e.target.closest('[data-act]');if(b){e.preventDefault();ACT[b.dataset.act]&&ACT[b.dataset.act](b.dataset.id,b.dataset.x,b);return}const d=e.target.closest('[data-day]');if(d){d.classList.toggle('on')}});
@@ -1298,6 +1359,7 @@ if(!S.fresh&&!S.profile.habSeeded&&!S.items.some(i=>i.kind==='habit')){HAB_DEFAU
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
 render();
+;(()=>{const g=new URLSearchParams(location.search).get('go');if(g){history.replaceState(null,'',location.pathname);setTimeout(()=>handleGo(g),350)}setTimeout(pushBoot,1200)})();
 }
 </script>
 </body>
