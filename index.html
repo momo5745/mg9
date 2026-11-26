@@ -262,6 +262,7 @@ button,.tap{transition:transform .12s}
 .fgrid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ftile{background:var(--card2);border-radius:18px;border:2px solid transparent;overflow:hidden}.ftile.on{border-color:var(--acc);background:rgba(52,210,127,.1)}.fmain{width:100%;border:0;background:none;color:var(--ink);padding:12px 6px 10px;display:flex;flex-direction:column;align-items:center;gap:4px;min-height:96px}.fe{font-size:32px;line-height:1}.fnm{font-weight:700;font-size:13px;line-height:1.15;text-align:center}.fq{font-size:12px;color:var(--mute)}
 .fstep{display:flex;align-items:center;justify-content:space-between;padding:0 4px 6px}.fstep button{width:34px;height:34px;border-radius:50%;border:0;background:var(--acc);color:#04170c;font-weight:800;font-size:19px;padding:0}.fstep button:disabled{opacity:.3}.fstep span{text-align:center;font-size:11px;font-weight:700;line-height:1.1;display:grid}.fstep small{color:var(--acc);font-size:11px}
 .cbot{position:sticky;bottom:-1px;background:var(--bg,#0b100d);padding:12px 0 4px;margin-top:12px;display:grid;gap:8px}.cbot input#cname{margin:0}.cfav{display:flex;gap:8px;align-items:center;font-weight:600;font-size:14px}.cfav input{width:22px;height:22px;margin:0}
+.pcomp{font-size:12px;line-height:1.35;color:var(--mute);font-weight:500}.pmain .pn{flex:0}.pmain .pcomp{flex:1}
 </style>
 </head>
 <body>
@@ -965,7 +966,7 @@ function openSettings(){const p=prof();$('#panel').innerHTML=`<h2>Réglages</h2>
  <label class="f">À propos de moi (l'IA lit ce texte)<textarea name="about" style="min-height:200px">${esc(p.about)}</textarea></label>
  <label class="f">Mes cours (un par ligne)<textarea name="courses">${esc(p.courses.join('\n'))}</textarea></label>
  <div class="grid2"><label class="f">Objectif protéines (g/jour)<input name="protein" inputmode="numeric" value="${esc(p.protein)}"></label><label class="f">Objectif eau (bouteilles de 50 cl)<input name="water" inputmode="numeric" value="${esc(p.water)}"></label></div>
- <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div><div class="acts" style="margin:-4px 0 12px"><button type="button" class="btn" data-act="forceupd">Forcer la mise à jour</button></div><p class="mute" style="margin:0 0 12px">Version de MG9 : v11 (25 nov.)</p>
+ <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div><div class="acts" style="margin:-4px 0 12px"><button type="button" class="btn" data-act="forceupd">Forcer la mise à jour</button></div><p class="mute" style="margin:0 0 12px">Version de MG9 : v12 (25 nov.)</p>
  <div class="acts"><button class="btn" type="submit">Enregistrer</button><button type="button" class="btn ghost" data-act="close">Fermer</button></div></form>`;
  $('#sheet').classList.add('open');
  $('#sfrm').onsubmit=e=>{e.preventDefault();const f=e.target.elements;saveProfile({about:f.about.value.trim(),courses:f.courses.value.split('\n').map(x=>x.trim()).filter(Boolean),protein:num(f.protein.value)||140,water:num(f.water.value)||6});closeSheet();toast('Réglages enregistrés')}}
@@ -1347,24 +1348,25 @@ const sample=(a,n)=>shuffle([...a]).slice(0,n);
 /* ---------- base d'aliments (valeurs approximatives) ---------- */
 const FCAT=['Féculents','Protéines','Légumes et sauces','Petit-déj et extras','Boissons'];
 const FDB=[
-{id:'pates',c:'Féculents',n:'Pâtes (poids cru)',p:[['100 g',13,355],['150 g',19,530],['200 g',25,710],['250 g',32,890]]},
-{id:'riz',c:'Féculents',n:'Riz (poids cru)',p:[['100 g',7,360],['150 g',11,540],['200 g',14,720]]},
-{id:'pdt',c:'Féculents',n:'Pommes de terre sautées',p:[['200 g',4,280],['300 g',6,410],['400 g',8,550]]},
-{id:'pdteau',c:'Féculents',n:"Pommes de terre à l'eau",p:[['200 g',4,155],['300 g',6,230]]},
-{id:'puree',c:'Féculents',n:'Purée',p:[['1 assiette',5,250],['Grosse assiette',8,400]]},
-{id:'pain',c:'Féculents',n:'Pain',p:[['1 tranche',3,80],['2 tranches',6,160],['½ baguette',9,330]]},
-{id:'poulet',c:'Protéines',n:'Poulet (blanc, poids cru)',p:[['100 g',23,120],['1 blanc ≈ 150 g',34,180],['2 blancs',68,360]]},
+{id:'pates',c:'Féculents',n:'Pâtes (poids cru)',p:[['100 g · ¼ paquet',13,355],['150 g',19,530],['200 g · ½ paquet',25,710],['250 g',32,890]]},
+{id:'riz',c:'Féculents',n:'Riz (poids cru)',p:[['100 g · ½ cup',7,360],['150 g · ¾ cup',11,540],['200 g · 1 cup',14,720]]},
+{id:'pdt',c:'Féculents',n:'Pommes de terre sautées',p:[['1 pomme de terre',3,210],['2 pommes de terre',6,410],['3 pommes de terre',9,620]]},
+{id:'pdteau',c:'Féculents',n:"Pommes de terre à l'eau",p:[['1 pomme de terre',3,115],['2 pommes de terre',6,230],['3 pommes de terre',9,345]]},
+{id:'puree',c:'Féculents',n:'Purée',p:[['1 assiette (≈ 2 pommes de terre)',5,250],['Grosse assiette (≈ 3)',8,400]]},
+{id:'pain',c:'Féculents',n:'Pain de mie',p:[['1 tranche',3,80],['2 tranches',5,160],['4 tranches',10,320]]},
+{id:'baguette',c:'Féculents',n:'Baguette',p:[['¼ baguette',4,165],['½ baguette',9,330]]},
+{id:'poulet',c:'Protéines',n:'Poulet (blanc, poids cru)',p:[['½ blanc (≈ 100 g)',23,120],['1 blanc (≈ 150 g)',34,180],['2 blancs (≈ 300 g)',68,360]]},
 {id:'thon',c:'Protéines',n:'Thon en boîte',p:[['½ boîte',15,65],['1 boîte',30,130]]},
-{id:'boeuf',c:'Protéines',n:'Viande hachée 5 %',p:[['100 g',21,125],['125 g',26,155],['200 g',42,250]]},
-{id:'viande',c:'Protéines',n:'Morceau de viande (bœuf)',p:[['100 g',21,180],['150 g',32,270],['200 g',42,360]]},
+{id:'boeuf',c:'Protéines',n:'Viande hachée 5 %',p:[['100 g',21,125],['1 steak (≈ 125 g)',26,155],['½ paquet de 1 lb (≈ 225 g)',47,280]]},
+{id:'viande',c:'Protéines',n:'Morceau de viande (bœuf)',p:[['Petit morceau (≈ 100 g)',21,180],['Moyen (≈ 150 g)',32,270],['Gros (≈ 200 g)',42,360]]},
 {id:'oeufs',c:'Protéines',n:'Œufs',p:[['1',6,75],['2',13,145],['3',19,215],['4',25,290]]},
 {id:'hrouges',c:'Protéines',n:'Haricots rouges ou noirs (boîte)',p:[['½ boîte',10,155],['1 boîte',20,310]]},
-{id:'fromage',c:'Protéines',n:'Fromage râpé',p:[['1 poignée',7,120]]},
+{id:'fromage',c:'Protéines',n:'Fromage râpé',p:[['1 poignée (≈ 30 g)',7,120]]},
 {id:'whey',c:'Protéines',n:'Whey',p:[['1 dose',24,120]]},
 {id:'hverts',c:'Légumes et sauces',n:'Haricots verts (boîte)',p:[['½ boîte',2,35],['1 boîte',4,70]]},
-{id:'stomate',c:'Légumes et sauces',n:'Sauce tomate',p:[['1 louche',2,60],['½ pot',4,125]]},
-{id:'sblanche',c:'Légumes et sauces',n:'Sauce blanche maison (béchamel + sour cream)',p:[['1 portion',7,265]]},
-{id:'legumes',c:'Légumes et sauces',n:'Légumes ou salade',p:[['1 portion',2,40]]},
+{id:'stomate',c:'Légumes et sauces',n:'Sauce tomate',p:[['1 louche (≈ 120 g)',2,60],['½ pot (≈ 250 g)',4,125]]},
+{id:'sblanche',c:'Légumes et sauces',n:'Sauce blanche maison (béchamel + sour cream)',p:[['1 portion (ta recette ÷ 2)',7,265]]},
+{id:'legumes',c:'Légumes et sauces',n:'Légumes ou salade',p:[['1 bol',2,40]]},
 {id:'pancakes',c:'Petit-déj et extras',n:'Pancakes (mix)',p:[['3',6,250],['6',12,500],['10',20,830]]},
 {id:'crepes',c:'Petit-déj et extras',n:'Crêpes',p:[['2',8,260],['3',12,390],['5',20,650]]},
 {id:'donut',c:'Petit-déj et extras',n:'Donut',p:[['1',3,250],['2',6,500]]},
@@ -1850,13 +1852,14 @@ document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.i
    v11 : repas plus visuels et plus rapides
    ========================================================= */
 // icône, nom court, quantité par défaut (index)
-const FI={pates:['🍝','Pâtes',2],riz:['🍚','Riz',1],pdt:['🥔','PdT sautées',1],pdteau:['🥔',"PdT à l'eau",1],puree:['🥣','Purée',0],pain:['🍞','Pain',1],
+const FI={pates:['🍝','Pâtes',2],riz:['🍚','Riz',1],pdt:['🥔','PdT sautées',1],pdteau:['🥔',"PdT à l'eau",1],puree:['🥣','Purée',0],pain:['🍞','Pain de mie',1],baguette:['🥖','Baguette',0],
  poulet:['🍗','Poulet',1],thon:['🐟','Thon',1],boeuf:['🥩','Steak haché',1],viande:['🥩','Viande',1],oeufs:['🥚','Œufs',2],hrouges:['🫘','Haricots rouges',0],fromage:['🧀','Fromage',0],whey:['💪','Whey',0],
  hverts:['🫛','Haricots verts',0],stomate:['🍅','Sauce tomate',0],sblanche:['🥛','Sauce blanche',0],legumes:['🥗','Légumes',0],
  pancakes:['🥞','Pancakes',1],crepes:['🫓','Crêpes',1],donut:['🍩','Donut',0],tartiner:['🍫','Pâte à tartiner',0],yaourt:['🥄','Yaourt / skyr',0],cereales:['🥣','Céréales',0],banane:['🍌','Banane',0],
  laitchoc:['🍫','Lait choco',0],lait:['🥛','Lait',0],soda:['🥤','Jus / soda',0]};
 const FCAT2=[['Féculents','Féculents'],['Protéines','Protéines'],['Légumes et sauces','Légumes'],['Petit-déj et extras','Petit-déj'],['Boissons','Boissons']];
 const fi=id=>FI[id]||['🍽️',(FDB.find(f=>f.id===id)||{}).n||id,0];
+const platComp=sel=>Object.keys(sel).map(id=>{const f=FDB.find(z=>z.id===id);return f&&f.p[sel[id]]?esc(fi(id)[1]+' : '+f.p[sel[id]][0].replace(/ \(.*\)$/,'').replace(/^1 portion.*$/,'1 portion')):''}).filter(Boolean).join('<br>');
 const platIcons=sel=>Object.keys(sel).slice(0,3).map(id=>fi(id)[0]).join('');
 
 /* ---------- bouteilles d'eau ---------- */
@@ -1877,7 +1880,7 @@ nutriCore=function(){const t=today(),p=prof(),day=dayOf(t),ms=items('meal').filt
  <div class="acts"><button class="btn acc big1" data-act="comp">＋ Ajouter un repas</button><button class="btn" data-act="mealphoto" aria-label="Repas en photo">📷</button></div>
  ${ms.length?`<div class="tmeals">${ms.map(m=>`<div class="tmeal"><span class="tg">${num(m.protein)} g</span><span class="tn">${esc(m.name)}</span><button data-act="mdel" data-id="${m.id}" aria-label="Retirer">×</button></div>`).join('')}</div>`:''}
  </div>
- ${sect('Mes plats',`<span class="mute">1 touche = ajouté</span>`)}<div class="ptiles">${allPlats().map(pl=>{const T=selTot(pl.sel);return`<div class="ptile"><button class="pmain" data-act="platadd" data-x="${pl.id}"><span class="pic">${platIcons(pl.sel)}</span><span class="pn">${esc(pl.n)}</span><span class="pp"><b>${T.p} g</b> · ${T.k} kcal</span></button><button class="pedit" data-act="plat" data-x="${pl.id}" aria-label="Modifier">✎</button></div>`}).join('')}</div>`};
+ ${sect('Mes plats',`<span class="mute">1 touche = ajouté</span>`)}<div class="ptiles">${allPlats().map(pl=>{const T=selTot(pl.sel);return`<div class="ptile"><button class="pmain" data-act="platadd" data-x="${pl.id}"><span class="pic">${platIcons(pl.sel)}</span><span class="pn">${esc(pl.n)}</span><span class="pcomp">${platComp(pl.sel)}</span><span class="pp"><b>${T.p} g</b> · ${T.k} kcal</span></button><button class="pedit" data-act="plat" data-x="${pl.id}" aria-label="Modifier">✎</button></div>`}).join('')}</div>`};
 platsHtml=function(){return''};
 
 /* ---------- composeur : tuiles + quantité ---------- */
