@@ -127,13 +127,14 @@ function plan(tz, L, st) {
   const miss = (st.protT || 140) - (st.prot || 0);
   add('prot1', 13 * 60 + 30, 'Protéines', `Tu en es à ${st.prot || 0} g sur ${st.protT || 140}. Pense à un repas riche en protéines ce midi.`, 'pg:nutri', (st.prot || 0) < (st.protT || 140) / 3);
   add('prot2', 19 * 60 + 30, `Il te manque ${miss} g de protéines`, miss > 40 ? 'Idée : poulet-riz, ou un steak haché 5 % + 3 œufs.' : 'Idée : un skyr ou du fromage blanc ce soir.', 'pg:nutri', miss > 15);
-  add('eau', 16 * 60, 'Hydratation', `${st.water || 0} verre(s) sur ${st.waterT || 8} pour l'instant. Bois un grand verre maintenant.`, 'pg:nutri', (st.water || 0) < (st.waterT || 8) / 2);
+  add('eau', 16 * 60, 'Hydratation', `${st.water || 0} bouteille(s) de 50 cl sur ${st.waterT || 6} pour l'instant. Bois-en une maintenant.`, 'pg:nutri', (st.water || 0) < (st.waterT || 6) / 2);
   // Coran, anglais, école
-  add('quran', 9 * 60 + 30, 'Coran : tes 4 pages du jour', st.qp ? `Pages ${st.qp} à ${Math.min(604, st.qp + 3)}.` : '4 pages, environ 15 minutes.', 'tab:vie', !st.quran);
-  add('quran2', 21 * 60, 'Coran pas encore lu aujourd\'hui', 'Il est encore temps : 4 pages avant de dormir.', 'tab:vie', !st.quran);
+  const qg = st.qg || 2;
+  add('quran', 9 * 60 + 30, `Coran : ${qg} page${qg > 1 ? 's' : ''} aujourd'hui`, st.qp ? (qg > 1 ? `Pages ${st.qp} à ${Math.min(604, st.qp + qg - 1)}.` : `Page ${st.qp}.`) : 'Quelques minutes suffisent.', 'tab:vie', !st.quran);
+  add('quran2', 21 * 60, 'Coran pas encore lu aujourd\'hui', `Il est encore temps : ${qg} page${qg > 1 ? 's' : ''} avant de dormir.`, 'tab:vie', !st.quran);
   if (L.dw === 5) add('kahf', 11 * 60, 'Vendredi : sourate al-Kahf', 'Pages 293 à 304. Une lumière jusqu\'au vendredi suivant.', 'tab:vie', !st.kahf);
-  add('eng', 12 * 60 + 30, 'Anglais : 8 questions', '2 minutes pour corriger tes petites fautes.', 'eng', !st.eng);
-  if ([2, 4, 6].includes(L.dw)) add('sys', 18 * 60, 'Admin sys et réseaux', 'Un module interactif aujourd\'hui : 15 à 20 minutes.', 'pg:sys', !st.sys);
+  add('eng', 12 * 60 + 30, 'Anglais : ta session du jour', '8 exercices différents, 3 minutes.', 'eng', !st.eng);
+  if ([2, 4, 6].includes(L.dw)) add('sys', 18 * 60, 'Admin sys et réseaux', 'Ton défi du jour : sous-réseaux, terminal, ports.', 'pg:sys', !st.sys);
   if ([0, 1, 2, 3, 4].includes(L.dw)) add('hw', 19 * 60, (st.hw || 0) > 1 ? `${st.hw} devoirs à rendre d'ici demain` : 'Un devoir à rendre d\'ici demain', 'Ouvre MG9 pour voir lesquels.', 'pg:hw', (st.hw || 0) > 0);
   if (L.dw === 0 || L.dw === 3) add('jeune', 21 * 60 + 30, `Demain c'est ${L.dw === 0 ? 'lundi' : 'jeudi'}`, 'Jeûne sunna ? Si tu le fais, pense au sahûr avant le Fajr.', 'tab:vie');
   return N.sort((a, b) => a.at - b.at);

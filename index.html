@@ -238,6 +238,17 @@ button,.tap{transition:transform .12s}
 .food{display:flex;flex-wrap:wrap;gap:6px;margin-top:8px}.food button{border:0;background:var(--card2);border-radius:14px;padding:8px 10px;font-size:13px;font-weight:600;text-align:left;min-height:44px;color:var(--ink)}.food button b{color:var(--acc);margin-right:5px}
 .dtype{display:grid;gap:2px;background:var(--card2);border-radius:14px;padding:10px 12px;margin-bottom:14px}
 .ptimes{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px}.ptimes div{background:var(--card2);border-radius:14px;padding:10px;display:grid;gap:2px}.ptimes span{font-size:13px;color:var(--mute)}.ptimes b{font:800 28px/1 "Barlow Condensed",sans-serif}.ptimes .on b{color:var(--acc)}.ptimes .sr b{color:var(--mute)}
+.hadbig{background:linear-gradient(160deg,#1d3b2c,var(--card) 75%);border:1px solid rgba(76,217,123,.25)}.hadbig p{font-size:19px;line-height:1.45;margin:10px 0 8px;font-weight:600}.hadbig .hsrc{color:var(--acc);font-size:14px;font-weight:700}
+.wline{display:flex;align-items:center;gap:6px;flex-wrap:wrap;margin-top:12px}.wline span{flex:1;font-weight:700;min-width:120px}
+.ctot{position:sticky;top:-1px;z-index:3;display:flex;gap:14px;align-items:center;background:var(--card);border-radius:16px;padding:10px 12px;margin:0 0 6px;box-shadow:0 6px 18px rgba(0,0,0,.35)}.ctot div{display:grid}.ctot b{font:800 26px/1 "Barlow Condensed",sans-serif;color:var(--acc)}.ctot div+div b{color:var(--ink)}.ctot span{font-size:12px;color:var(--mute)}.ctot .btn{margin-left:auto}
+.frow{padding:8px 0;border-bottom:1px solid rgba(255,255,255,.06)}.frow.on .fn{color:var(--acc)}.fn{font-weight:700;font-size:15px;margin-bottom:6px}.fp{display:flex;flex-wrap:wrap;gap:6px}.fp button{border:0;border-radius:12px;background:var(--card2);color:var(--ink);padding:7px 10px;min-height:44px;font-weight:600;font-size:14px;display:grid;line-height:1.15;text-align:left}.fp button small{font-size:11px;color:var(--mute);font-weight:600}.fp button.on{background:var(--acc);color:#04170c}.fp button.on small{color:#04170c}
+.chkl{display:flex;gap:10px;align-items:center;font-weight:600;margin:10px 0}.chkl input{width:22px;height:22px;margin:0}
+.stepper{display:flex;align-items:center;justify-content:center;gap:18px;margin:8px 0}.stepper b{font:800 64px/1 "Barlow Condensed",sans-serif;min-width:120px;text-align:center}.stepper button{width:64px;height:64px;border-radius:50%;border:0;background:var(--card2);color:var(--ink);font-size:32px;font-weight:700}
+.lcard.long{font-size:18px;line-height:1.45;text-align:left}.lsrc{margin-top:14px;padding-top:10px;border-top:1px solid rgba(255,255,255,.18);font-size:14px;line-height:1.4;font-weight:500;opacity:.85;text-align:left}
+.ltimer{text-align:center;font:800 30px/1 "Barlow Condensed",sans-serif;margin:4px 0 8px}
+.obuilt{min-height:110px;background:rgba(255,255,255,.08);border-radius:18px;padding:10px;display:flex;flex-wrap:wrap;gap:6px;align-content:flex-start;margin:10px 0;border:2px solid transparent}.obuilt.ok{border-color:#4cd97b}.obuilt.ko{border-color:#ff6b6b}.obuilt .ph{opacity:.55;margin:auto}.obuilt button,.opool button{border:0;border-radius:12px;padding:10px 12px;font-size:17px;font-weight:700;min-height:46px}.obuilt button{background:#fff;color:#0c1a12}.opool{display:flex;flex-wrap:wrap;gap:6px;justify-content:center;margin-bottom:10px}.opool button{background:rgba(255,255,255,.16);color:#fff}
+.term{display:flex;align-items:center;gap:8px;background:#05070a;border:2px solid rgba(255,255,255,.15);border-radius:14px;padding:6px 12px;margin:12px 0;font-family:ui-monospace,Menlo,monospace}.term.ok{border-color:#4cd97b}.term.ko{border-color:#ff6b6b}.term span{color:#4cd97b;font-weight:700;font-size:18px}.term input{flex:1;background:transparent;border:0;color:#e8fbe9;font:600 17px ui-monospace,Menlo,monospace;padding:10px 0;margin:0;outline:none;min-width:0}
+.mgrid{display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0}.mgrid>div{display:grid;gap:8px;align-content:start}.mgrid button{border:2px solid transparent;border-radius:14px;background:rgba(255,255,255,.12);color:#fff;padding:10px;min-height:54px;font-weight:700;font-size:15px;text-align:left}.mgrid button.sel{border-color:#fff}.mgrid button.ok{background:#1f7a45;opacity:.75}.mgrid button.ko{border-color:#ff6b6b;background:rgba(255,107,107,.25)}
 </style>
 </head>
 <body>
@@ -347,15 +358,15 @@ function vHome(){const t=today(),dw=dowOf(t),p=prof(),day=dayOf(t),sd=day.sess||
  const week=wd.map((d,i)=>{const x=dayOf(d),n=PR.filter(([k])=>(x.prayers||{})[k]).length;return`<div class="wd${d===t?' today':''}${n===5?' full':''}"><div class="bars"><i style="height:${n/5*100}%"></i></div><em class="${(x.sess||[]).length?'on':''}"></em>${DAYS[i].slice(0,1)}</div>`}).join('');
  const st=streak(),bil=S.bilan&&S.bilan.week===ws?S.bilan:null;
  const ss=items('season')[0];
- return `<div class="me"><img src="card.jpg" alt="Mohamed en maillot n°9 de Prairie State"><div class="mi"><span class="kick">N°9 · Ailier</span><h1>Mohamed<br>Ghelaissa</h1><div class="mute">Prairie State Pioneers</div>${ss?`<div class="ms"><div><b>${num(ss.goals)}</b><span>buts</span></div><div><b>${num(ss.assists)}</b><span>passes</span></div><div><b>${num(ss.games)}</b><span>matchs</span></div></div>`:''}</div></div>${levelCard()}${prof().pushOn||S.fresh?'':notifCard()}${hero}
+ return `<div class="me"><img src="card.jpg" alt="Mohamed en maillot n°9 de Prairie State"><div class="mi"><span class="kick">N°9 · Ailier</span><h1>Mohamed<br>Ghelaissa</h1><div class="mute">Prairie State Pioneers</div>${ss?`<div class="ms"><div><b>${num(ss.goals)}</b><span>buts</span></div><div><b>${num(ss.assists)}</b><span>passes</span></div><div><b>${num(ss.games)}</b><span>matchs</span></div></div>`:''}</div></div>${levelCard()}${prof().pushOn||S.fresh?'':notifCard()}${hero}${hadBig()}
  ${nx?`<button class="next" data-act="pg" data-x="agenda"><b>J-${dBetween(t,nx.date)}</b><span>${esc(nx.title)}<small>${fmtD(nx.date)}</small></span>${I.chev}</button>`:''}
- ${sect('Ma journée')}<div class="card"><div class="rings">${ring('pr','Prières',nPr,5,nPr+'/5','pg','prayers')}${ring('ea','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}${ring('pt','Protéines',prot,p.protein,prot+'g','pg','nutri')}</div>${prayBtns(t)}</div>
+ ${sect('Ma journée')}<div class="card"><div class="rings">${ring('pr','Prières',nPr,5,nPr+'/5','pg','prayers')}${ring('ea','Bouteilles 50 cl',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}${ring('pt','Protéines',prot,p.protein,prot+'g','pg','nutri')}</div>${prayBtns(t)}</div>
  <div class="tiles">${adhTiles(t)}</div>
  ${items('habit').length?sect('Mes petits objectifs',`<button class="link" data-act="tab" data-x="ia">Tout voir</button>`)+`<div class="card list">${habRows(t,4)}</div>`:''}
  ${planCard()}
  ${weekCard()}
  ${learnCard()}
- ${(()=>{const hd=hadithDuJour();return hadCard(hd.h,hd.src,'Hadith du jour')})()}
+ 
  <div class="card"><div class="kick">Bilan de la semaine</div>${bil?`<div style="margin-top:8px">${md(bil.text)}</div>`:`<p class="mute" style="margin:6px 0 0">3 priorités pour la suite, à partir de ta semaine.</p>`}<div class="acts"><button class="btn ${bil?'':'acc'}" data-act="bilan">Faire mon bilan avec Claude</button></div></div>`}
 
 function vFoot(){const t=today(),dw=dowOf(t),ws=weekStart(t),s=items('season')[0],cs=items('contact'),gs=items('goal');
@@ -388,7 +399,7 @@ function vVie(){const t=today(),p=prof(),day=dayOf(t),last=[...Array(7)].map((_,
  ${sect('Prières')}<div class="card">${prayBtns(t).replace('class="prs"','class="prs" style="margin-top:0"')}
  <table style="margin-top:14px"><tr><th></th>${last.map(d=>`<th>${DAYS[(dowOf(d)+6)%7].slice(0,1)}</th>`).join('')}</tr>${PR.map(([k,l])=>`<tr><td>${l}</td>${last.map(d=>`<td><span class="dot${(dayOf(d).prayers||{})[k]?' on':''}"></span></td>`).join('')}</tr>`).join('')}</table></div>
  <div class="tiles">${adhTiles(t)}${tile('pg','hifz','','Hifz',L,'versets mémorisés','pur')}${tile('pg','hifz','','Sourates',hs.length,hs.length?'en cours':'Ajoute ta sourate')}</div>
- ${sect('Nutrition',more('meals'))}<div class="card"><div class="rings two">${ring('pt2','Protéines',prot,p.protein,prot+'g','','')}${ring('ea2','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div>
+ ${sect('Nutrition',more('meals'))}<div class="card"><div class="rings two">${ring('pt2','Protéines',prot,p.protein,prot+'g','','')}${ring('ea2','Bouteilles 50 cl',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div>
  <div class="list" style="margin-top:10px">${ms.map(m=>lr(m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="">`:`<span class="ini t">${num(m.protein)}g</span>`,esc(m.name),num(m.protein)+' g de protéines'+(num(m.kcal)?' · '+num(m.kcal)+' kcal':''),I.chev,['edit','',m.id])).join('')}</div>
  <div class="acts"><button class="btn acc" data-act="mealphoto">Repas en photo</button><button class="btn" data-act="add" data-x="meal">+ Repas</button><button class="btn" data-act="water" data-x="-1">− Eau</button></div></div>
  `}
@@ -701,7 +712,7 @@ const SUR='Al-Fâtiha|Al-Baqara|Âl \'Imrân|An-Nisâ\'|Al-Mâ\'ida|Al-An\'âm|A
 const SURP=[1,2,50,77,106,128,151,177,187,208,221,235,249,255,262,267,282,293,305,312,322,332,342,350,359,367,377,385,396,404,411,415,418,428,434,440,446,453,458,467,477,483,489,496,499,502,507,511,515,518,520,523,526,528,531,534,537,542,545,549,551,553,554,556,558,560,562,564,566,568,570,572,574,575,577,578,580,582,583,585,586,587,587,589,590,591,591,592,593,594,595,595,596,596,597,597,598,598,599,599,600,600,601,601,601,602,602,602,603,603,603,604,604,604];
 const surOn=(a,b)=>{const r=[];for(let i=0;i<114;i++){const s=SURP[i],e=i<113?Math.max(SURP[i+1]-1,s):604;if(s<=b&&e>=a)r.push(SUR[i])}return r};
 const juzOf=p=>p<22?1:Math.min(30,Math.floor((p-22)/20)+2);
-const QPD=4;
+const qGoal=()=>Math.min(4,Math.max(1,Math.round(num(prof().qGoal)||2)));
 
 /* ---------- Islam : actes ajoutés et détails ---------- */
 ACTS.find(a=>a.id==='rawatib').more="Quand et combien : 2 rak'at avant le Fajr, 4 avant le Dhuhr (2 + 2), 2 après le Dhuhr, 2 après le Maghrib et 2 après le 'Ishâ'. Umm Habîba a précisé : « … quatre avant le Dhuhr et deux après, deux après le Maghrib, deux après le 'Ishâ' et deux avant la prière du Fajr. » (at-Tirmidhî 415). Et sur les 2 du Fajr : « Les deux rak'at du Fajr valent mieux que ce bas monde et tout ce qu'il contient. » (Muslim 725, rapporté par 'Âïsha)";
@@ -770,9 +781,9 @@ const dayIdx=n=>{const d=Math.floor(new Date(today()+'T12:00:00')/864e5);return(
 
 /* ---------- vues v6 ---------- */
 const rawChips=t=>{const r=dayOf(t).raw||[];return`<div class="chips2">${RAW.map(([k,l])=>`<button class="${r.includes(k)?'on':''}" data-act="raw" data-x="${k}">${esc(l)}</button>`).join('')}</div>`};
-function coranCard(){const p=prof(),t=today(),qp=Math.min(604,Math.max(1,num(p.quranPage)||1)),to=Math.min(604,qp+QPD-1),rd=num(dayOf(t).quran),left=Math.ceil((605-qp)/QPD);
- return `<div class="card"><div class="kick">Plan : ${QPD} pages par jour</div><div class="bigrow" style="margin-top:4px"><b>${qp}–${to}</b><span class="mute">pages du jour</span></div><div class="mute" style="margin-top:4px">${esc(surOn(qp,to).join(' · '))} · juz ${juzOf(qp)}</div>${bar(qp-1,604)}<div class="mute" style="margin-top:6px">${Math.round((qp-1)/604*100)} % du Coran · fini dans environ ${left} jours</div>${rd?`<div class="mute" style="margin-top:4px;color:var(--acc)">Aujourd'hui : ${rd} page${rd>1?'s':''} lue${rd>1?'s':''}</div>`:''}<div class="acts"><button class="btn acc" data-act="qread">J'ai lu mes pages</button><button class="btn" data-act="pg" data-x="coran">Le plan</button></div></div>`}
-function pCoran(){const p=prof(),qp=num(p.quranPage)||1;let plan='';for(let i=0;i<7;i++){const a=qp+i*QPD,b=Math.min(604,a+QPD-1);if(a>604)break;plan+=lr(`<span class="ini t">${esc(fmtD(addDays(today(),i)).split(' ')[0])}</span>`,`Pages ${a} à ${b}`,esc(surOn(a,b).join(' · ')),'',null)}
+function coranCard(){const p=prof(),t=today(),qp=Math.min(604,Math.max(1,num(p.quranPage)||1)),to=Math.min(604,qp+qGoal()-1),rd=num(dayOf(t).quran),left=Math.ceil((605-qp)/qGoal());
+ return `<div class="card"><div class="kick">Plan : ${qGoal()} pages par jour</div><div class="bigrow" style="margin-top:4px"><b>${qp}–${to}</b><span class="mute">pages du jour</span></div><div class="mute" style="margin-top:4px">${esc(surOn(qp,to).join(' · '))} · juz ${juzOf(qp)}</div>${bar(qp-1,604)}<div class="mute" style="margin-top:6px">${Math.round((qp-1)/604*100)} % du Coran · fini dans environ ${left} jours</div>${rd?`<div class="mute" style="margin-top:4px;color:var(--acc)">Aujourd'hui : ${rd} page${rd>1?'s':''} lue${rd>1?'s':''}</div>`:''}<div class="acts"><button class="btn acc" data-act="qread">J'ai lu mes pages</button><button class="btn" data-act="pg" data-x="coran">Le plan</button></div></div>`}
+function pCoran(){const p=prof(),qp=num(p.quranPage)||1;let plan='';for(let i=0;i<7;i++){const a=qp+i*qGoal(),b=Math.min(604,a+qGoal()-1);if(a>604)break;plan+=lr(`<span class="ini t">${esc(fmtD(addDays(today(),i)).split(' ')[0])}</span>`,`Pages ${a} à ${b}`,esc(surOn(a,b).join(' · ')),'',null)}
  return `<div class="card"><div class="kick">Où j'en suis</div><p class="mute" style="margin:6px 0">La page où tu reprends (mushaf de Médine, 604 pages).</p><div style="display:flex;gap:8px"><input id="qpage" inputmode="numeric" value="${qp}" style="margin:0"><button class="btn acc" data-act="qset">OK</button></div></div>${sect('Les 7 prochains jours')}<div class="card list">${plan||'<div class="empty">Coran terminé. Recommence à la page 1 quand tu veux.</div>'}</div><div class="card"><div class="kick">Le vendredi</div><p style="margin:6px 0 0">Sourate al-Kahf : pages 293 à 304. Elle apparaît dans tes actes du jour chaque vendredi, avec le hadith.</p></div><p class="mute">Si ton mushaf n'a pas 604 pages, les numéros peuvent changer un peu.</p>`}
 function pHadiths(){const seen=new Set(),L=[];ACTS.forEach(a=>{L.push({t:a.t,h:a.h,src:a.src,m:a.more})});ADH.forEach(a=>{if(a.h&&!seen.has(a.h)){seen.add(a.h);L.push({t:a.t,h:a.h,src:a.src})}});
  return `<p class="mute" style="margin-top:0">Tous les hadiths de MG9, avec le texte et la source.</p>`+L.map(x=>`<div class="card hadith"><div class="kick">${esc(x.t)}</div><p>${esc(x.h)}</p><div class="mute">${esc(x.src)}</div>${x.m?`<p class="mute" style="font-size:14px;margin-top:8px">${esc(x.m)}</p>`:''}</div>`).join('')}
@@ -782,7 +793,7 @@ function pSys(){const d=sysDone(),nx=SYS.find(x=>!d.includes(x.id))||SYS[0];retu
 function pMod(id){const m=SYS.find(x=>x.id===id);if(!m)return'';const on=sysDone().includes(id);
  return `<h1 class="vt" style="font-size:32px">${esc(m.t)}</h1><button class="cta" data-act="learn" data-x="${m.id}">▶ Mode interactif (cartes + quiz)</button>${sect('À savoir')}<div class="card"><ol class="steps" style="margin:0">${m.p.map(x=>`<li>${esc(x)}</li>`).join('')}</ol></div>${sect('À taper')}<div class="card">${m.c.map(([c,d])=>`<div class="cmd"><code>${esc(c)}</code><span>${esc(d)}</span></div>`).join('')}</div>${sect('Quiz')}<div class="card list">${m.q.map(([q,a])=>`<details class="qz"><summary>${esc(q)}</summary><p>${esc(a)}</p></details>`).join('')}</div><button class="cta" data-act="sysdone" data-x="${m.id}">${on?'Module fait (annuler)':'J\'ai fini ce module'}</button>`}
 function engCard(e){return `<div class="bad">✗ ${esc(e[0])}</div><div class="good">✓ ${esc(e[1])}</div><div class="mute">${esc(e[2])}</div>`}
-function pEnglish(){const e=ENG[dayIdx(ENG.length)],w=(prof().engWrong||[]).length;return `<button class="cta" style="margin-bottom:12px" data-act="eng">▶ Quiz : 8 questions</button><div class="stat3" style="margin-bottom:12px"><div class="g"><b>${ENG.length}</b><span>erreurs au total</span></div><div class="${w?'w':''}"><b>${w}</b><span>à revoir</span></div><div><b>${dayOf(today()).engDone?'Oui':'Non'}</b><span>quiz du jour</span></div></div><div class="card"><div class="kick">L'erreur du jour</div>${engCard(e)}</div>${sect('Toutes les erreurs')}<p class="mute" style="margin-top:0">Touche une phrase pour voir la correction. Les erreurs que tu rates au quiz reviennent en priorité.</p><div class="card list">${ENG.map(x=>`<details class="qz"><summary>✗ ${esc(x[0])}</summary><p><b style="color:var(--acc)">✓ ${esc(x[1])}</b><br>${esc(x[2])}</p></details>`).join('')}</div>`}
+function pEnglish(){const e=ENG[dayIdx(ENG.length)],w=(prof().engWrong||[]).length;return `<div class="stat3" style="margin-bottom:12px"><div class="g"><b>${ENG.length}</b><span>erreurs au total</span></div><div class="${w?'w':''}"><b>${w}</b><span>à revoir</span></div><div><b>${dayOf(today()).engDone?'Oui':'Non'}</b><span>quiz du jour</span></div></div><div class="card"><div class="kick">L'erreur du jour</div>${engCard(e)}</div>${sect('Toutes les erreurs')}<p class="mute" style="margin-top:0">Touche une phrase pour voir la correction. Les erreurs que tu rates au quiz reviennent en priorité.</p><div class="card list">${ENG.map(x=>`<details class="qz"><summary>✗ ${esc(x[0])}</summary><p><b style="color:var(--acc)">✓ ${esc(x[1])}</b><br>${esc(x[2])}</p></details>`).join('')}</div>`}
 function learnCard(){const e=ENG[dayIdx(ENG.length)],all=[];SYS.forEach(m=>m.p.forEach(p=>all.push([m,p])));const [m,pt]=all[dayIdx(all.length)];
  return `${sect('À apprendre aujourd\'hui')}<div class="card"><div class="kick">Anglais · l'erreur du jour</div>${engCard(e)}<div class="kick" style="margin-top:14px">Admin sys · ${esc(m.t)}</div><p style="margin:6px 0 0">${esc(pt)}</p><div class="acts"><button class="btn acc" data-act="eng">Quiz anglais</button><button class="btn" data-act="learn" data-x="${m.id}">Le module</button></div></div>`}
 const habEnd=h=>{const l=String(h.title||'').toLowerCase();return l.includes('tirement')?`<button class="btn sm" data-act="quick" data-x="mobilite">Le faire</button>`:/touche|jongl/.test(l)?`<button class="btn sm" data-act="quick" data-x="ballon">Le faire</button>`:''};
@@ -822,10 +833,10 @@ function planItems(){const t=today(),dw=dowOf(t),day=dayOf(t),L=[],acts=day.acts
  const work=items('session').filter(s=>DMAP[s.day]===dw&&s.type!=='Repos'),sd=day.sess||[];
  if(work.length){const s0=work.find(s=>!sd.includes(s.id))||work[0];L.push({t:'Séance : '+s0.title,s:s0.type+' · '+parseEx(s0).length+' exercices',done:work.every(s=>sd.includes(s.id)),a:['play','',s0.id]})}
  else L.push({t:'Récupération (jour de repos)',s:'Mobilité du soir, 8 min',done:(day.quick||[]).includes('mobilite'),a:['quick','mobilite']});
- const qp=num(prof().quranPage)||1;L.push({t:'Coran : pages '+qp+' à '+Math.min(604,qp+QPD-1),s:surOn(qp,Math.min(604,qp+QPD-1)).join(' · '),done:acts.includes('quran'),a:['tab','vie']});
+ const qp=num(prof().quranPage)||1;L.push({t:'Coran : pages '+qp+' à '+Math.min(604,qp+qGoal()-1),s:surOn(qp,Math.min(604,qp+qGoal()-1)).join(' · '),done:acts.includes('quran'),a:['tab','vie']});
  if(dw===5)L.push({t:'Sourate al-Kahf (vendredi)',s:'Pages 293 à 304',done:acts.includes('kahf'),a:['tab','vie']});
- L.push({t:'Anglais : 8 questions',s:'2 minutes',done:!!day.engDone,a:['eng','']});
- if([2,4,6].includes(dw)){const m=SYS.find(x=>!sysDone().includes(x.id))||SYS[0];L.push({t:'Admin sys : '+m.t,s:'Module interactif, 15 à 20 min',done:!!day.sysDay,a:['learn',m.id]})}
+ L.push({t:'Anglais : session du jour',s:'8 exercices, toujours différents',done:!!day.engDone,a:['eng','']});
+ if([2,4,6].includes(dw)){const m=SYS.find(x=>!sysDone().includes(x.id))||SYS[0];L.push({t:'Admin sys : défi du jour',s:'8 défis, jamais les mêmes',done:!!day.sysDay,a:['sysmix']})}
  const hb=items('habit'),hd=(day.hab||[]).filter(id=>hb.some(h=>h.id===id)).length;if(hb.length)L.push({t:'Mes petits objectifs',s:hd+'/'+hb.length,done:hd===hb.length,a:['tab','ia']});
  L.push({t:'Adhkar du soir',s:"Après le 'Asr",done:!!day.adhS,a:['adhkar','S']});
  L.push({t:'Witr + adhkar du coucher',s:'Avant de dormir',done:!!day.adhC&&acts.includes('witr'),a:['adhkar','C']});
@@ -850,13 +861,13 @@ function startModule(id){const m=SYS.find(x=>x.id===id);if(!m)return;const steps
 function startEnglish(){const p=prof(),wrong=(p.engWrong||[]).slice(0,4),start=dayIdx(ENG.length),ids=[...wrong];for(let k=0;ids.length<8&&k<ENG.length;k++){const j=(start+k*7)%ENG.length;if(!ids.includes(j))ids.push(j)}
  const steps=shuffle(ids).map(j=>{const e=ENG[j];return{...mcq('Quelle phrase est correcte ?',[e[1],e[0]],e[2]),eid:j}});openPlayer({type:'learn',mode:'eng',title:'Anglais · 8 questions',steps,i:0,score:0,nq:steps.length})}
 function renderLearn(){const P=S.P,el=$('#player'),n=P.steps.length;
- const top=`<div class="ptop"><h3>${esc(P.title)}</h3><button class="pclose" data-act="pclose" aria-label="Fermer">×</button></div><div class="dots">${P.steps.map((_,i)=>`<i class="${i<=P.i||P.done?'on':''}"></i>`).join('')}</div>`;
- if(P.done){const ok=P.nq?P.score/P.nq:1;el.innerHTML=top+`<div class="pbody"><div class="bigscore">${P.score}/${P.nq}</div><h2>${ok>=0.99?'Parfait !':ok>=0.66?'Bien joué':'On révise et on recommence'}</h2><p class="sub">+${P.gain} XP${P.mode==='sys'&&ok>=0.66?' · module validé':''}</p>${P.mode==='eng'&&P.missed.length?`<div class="hd">À retenir :<br>${P.missed.map(j=>'✓ '+esc(ENG[j][1])).join('<br>')}</div>`:''}<div class="pbtns" style="margin-top:14px"><button class="btn line" data-act="pclose">Fermer</button><button class="btn white" data-act="lagain">Recommencer</button></div></div>`;return}
+ const top=`<div class="ptop"><h3>${esc(P.title)}</h3><button class="pclose" data-act="pclose" aria-label="Fermer">×</button></div>${P.speed&&!P.done?`<div class="ltimer" id="ltimer">${Math.max(0,Math.ceil((P.end-Date.now())/1000))} s · ${P.score} pts</div>`:`<div class="dots">${P.steps.map((_,i)=>`<i class="${i<=P.i||P.done?'on':''}"></i>`).join('')}</div>`}`;
+ if(P.done){const ok=P.nq?P.score/P.nq:1;el.innerHTML=top+`<div class="pbody"><div class="bigscore">${P.score}/${P.nq}</div><h2>${ok>=0.99?'Parfait !':ok>=0.66?'Bien joué':'On révise et on recommence'}</h2><p class="sub">+${P.gain} XP${P.mode==='sys'&&ok>=0.66?' · module validé':''}</p>${P.mode==='eng'&&P.missed.length?`<div class="hd">À retenir :<br>${P.missed.map(j=>'✓ '+esc(ENG[j][1])).join('<br>')}</div>`:''}${P.recap&&P.recap.length?`<div class="hd">À retenir :<br>${P.recap.map(x=>'✓ '+esc(x)).join('<br>')}</div>`:''}${P.speed?`<p class="sub">${P.rec?'Nouveau record !':'Record : '+P.best}</p>`:''}<div class="pbtns" style="margin-top:14px"><button class="btn line" data-act="pclose">Fermer</button><button class="btn white" data-act="lagain">Recommencer</button></div></div>`;return}
  const st=P.steps[P.i];let body='';
- if(st.k==='card')body=`<div class="pbody"><div class="sub">${esc(st.kick)}</div><div class="lcard">${esc(st.x)}</div></div><div class="src" style="text-align:center;margin-top:6px">Glisse vers la gauche ou touche Suivant</div>`;
+ if(st.k==='card')body=`<div class="pbody"><div class="sub">${esc(st.kick)}</div><div class="lcard${st.x.length>170?' long':''}">${esc(st.x)}${st.src?`<div class="lsrc">${esc(st.src)}</div>`:''}</div></div><div class="src" style="text-align:center;margin-top:6px">Glisse vers la gauche ou touche Suivant</div>`;
  else if(st.k==='cmd')body=`<div class="pbody" style="justify-content:flex-start"><div class="sub">${esc(st.kick)}</div>${st.c.map(([c,d])=>`<div class="lcard" style="text-align:left;padding:12px 14px"><code>${esc(c)}</code><div style="font-size:14px;opacity:.85;margin-top:4px">${esc(d)}</div></div>`).join('')}</div>`;
- else{const pk=P.picked;body=`<div class="pbody" style="justify-content:flex-start"><div class="sub">Question</div><h2 style="font-size:27px">${esc(st.q)}</h2><div class="opts">${st.opts.map((o,j)=>{let c='';if(pk!=null){if(o===st.ans)c=' ok';else if(j===pk)c=' ko'}return`<button class="opt${c}" data-act="lpick" data-x="${j}" ${pk!=null?'disabled':''}>${esc(o)}</button>`}).join('')}</div>${pk!=null?`<div class="hd">${st.opts[pk]===st.ans?'<b>Bonne réponse !</b> ':'<b>Pas tout à fait.</b> '}${esc(st.expl)}</div>`:''}</div>`}
- el.innerHTML=top+body+`<div class="pbtns"><button class="btn line" data-act="pprev" ${P.i?'':'disabled'}>Précédent</button><button class="btn white" data-act="pnext" ${st.k==='mcq'&&P.picked==null?'disabled':''}>${P.i===n-1?'Terminer':'Suivant'}</button></div>`}
+ else if(st.k!=='mcq')body=renderStep10(st);else{const pk=P.picked;body=`<div class="pbody" style="justify-content:flex-start"><div class="sub">Question</div><h2 style="font-size:27px">${esc(st.q)}</h2><div class="opts">${st.opts.map((o,j)=>{let c='';if(pk!=null){if(o===st.ans)c=' ok';else if(j===pk)c=' ko'}return`<button class="opt${c}" data-act="lpick" data-x="${j}" ${pk!=null?'disabled':''}>${esc(o)}</button>`}).join('')}</div>${pk!=null?`<div class="hd">${st.opts[pk]===st.ans?'<b>Bonne réponse !</b> ':'<b>Pas tout à fait.</b> '}${esc(st.expl)}</div>`:''}</div>`}
+ el.innerHTML=top+body+`<div class="pbtns"><button class="btn line" data-act="pprev" ${P.i?'':'disabled'}>Précédent</button><button class="btn white" data-act="pnext" ${answered(st)?'':'disabled'}>${P.i===n-1&&!P.speed?'Terminer':'Suivant'}</button></div>`}
 function learnNext(){const P=S.P,st=P.steps[P.i];if(st.k==='mcq'&&P.picked==null){toast('Choisis une réponse');return}if(P.i<P.steps.length-1){P.i++;P.picked=P.steps[P.i].picked;renderPlayer();$('#player').scrollTo(0,0)}else finishLearn()}
 function learnPrev(){const P=S.P;if(P.i>0){P.i--;P.picked=P.steps[P.i].picked;renderPlayer()}}
 function finishLearn(){const P=S.P;P.done=true;P.gain=P.score*(P.mode==='sys'?10:5)+(P.mode==='sys'?20:10);addXP(P.gain);const t=today();
@@ -877,13 +888,13 @@ const prTable=t=>{const last=[...Array(7)].map((_,i)=>addDays(t,i-6));return`<ta
 const hadCard=(h,src,kick)=>`<div class="card hadith">${kick?`<div class="kick">${kick}</div>`:''}<p>${esc(h)}</p><div class="mute">${esc(src)}</div></div>`;
 function vIslam(){const t=today(),day=dayOf(t),dw=dowOf(t),acts=day.acts||[],hs=items('hifz'),L=hs.reduce((n,h)=>n+num(h.learned),0);
  const list=ACTS.filter(a=>!a.days||a.days.includes(dw)),dn=list.filter(a=>acts.includes(a.id)).length,hd=hadithDuJour();
- return `<h1 class="vt">Islam</h1>
+ return `<h1 class="vt">Islam</h1>${hadBig()}
  ${sect('Prières')}<div class="card">${prayBtns(t).replace('class="prs"','class="prs" style="margin-top:0"')}${prTable(t)}</div>
  <div class="tiles">${adhTiles(t)}${tile('adhkar','C','','Adhkar','Coucher',day.adhC?'Fait aujourd\'hui':'Avant de dormir',day.adhC?'done q':'q')}${tile('adhkar','P','','Adhkar','Après la prière',day.adhP?'Fait aujourd\'hui':'Après chaque prière',day.adhP?'done q':'q')}</div>
  ${sect('Mes actes du jour',`<span class="mute">${dn}/${list.length}</span>`)}<div class="card list">${list.map(a=>{const on=acts.includes(a.id);return`<div class="lr${on?' done':''}" style="align-items:flex-start">${rc(on,'act','',a.id)}<div class="lm"><div class="lt">${esc(a.t)}</div><details class="why"><summary>${a.more?'Le hadith et le détail':'Le hadith'}</summary><p>${esc(a.h)}</p><span>${esc(a.src)}</span>${a.more?`<p>${esc(a.more)}</p>`:''}</details>${a.id==='rawatib'?rawChips(t):''}</div>${a.count?`<button class="btn sm" data-act="dhikr" data-x="istighfar">Compter</button>`:''}</div>`}).join('')}</div>
  ${sect('Coran')}${coranCard()}
- <div class="tiles">${tile('pg','hifz','','Hifz',L,'versets mémorisés','pur')}${tile('pg','hifz','','Sourates',hs.length,hs.length?'en cours':'Ajoute ta sourate')}${tile('pg','hadiths','','Bibliothèque','Hadiths','Tous les textes et sources','q')}${tile('pg','coran','','Coran','Le plan','4 pages par jour','q')}</div>
- ${hadCard(hd.h,hd.src,'Hadith du jour')}`}
+ <div class="tiles">${tile('pg','hifz','','Hifz',L,'versets mémorisés','pur')}${tile('pg','hifz','','Sourates',hs.length,hs.length?'en cours':'Ajoute ta sourate')}${tile('pg','hadiths','','Bibliothèque','Hadiths','Tous les textes et sources','q')}${tile('pg','coran','','Coran','Le plan',qGoal()+' page'+(qGoal()>1?'s':'')+' par jour','q')}</div>
+ ${islSection()}`}
 const habRows=(t,max)=>{const d=dayOf(t).hab||[];return items('habit').slice(0,max||99).map(h=>{const on=d.includes(h.id);return lr(rc(on,'hab',h.id),esc(h.title),'',habEnd(h),['edit','',h.id],on?'done':'')}).join('')};
 function vMoi(){const t=today(),p=prof(),day=dayOf(t),hb=items('habit'),hd=(day.hab||[]).filter(id=>hb.some(h=>h.id===id)).length,qd=day.quick||[];
  const ms=items('meal').filter(m=>m.date===t),prot=ms.reduce((n,m)=>n+num(m.protein),0);
@@ -895,7 +906,7 @@ function vMoi(){const t=today(),p=prof(),day=dayOf(t),hb=items('habit'),hd=(day.
  ${sect('Demander à Claude')}<div class="card"><p class="mute" style="margin:0 0 10px">MG9 ajoute ton contexte (profil, agents, devoirs, planning), le copie, et tu colles dans Claude.</p><textarea id="aiq" placeholder="Ex : rédige une relance pour Laurent de Pétange"></textarea><button class="cta" style="margin-top:10px" data-act="askc">Copier et ouvrir Claude</button><div class="seg wrap" style="margin:12px 0 0">${Q.map(q=>`<button data-act="askq" data-x="${esc(q)}">${esc(q)}</button>`).join('')}</div></div>`}
 function pPrayers(){const t=today();return`<div class="card">${prayBtns(t).replace('class="prs"','class="prs" style="margin-top:0"')}${prTable(t)}</div><div class="tiles">${adhTiles(t)}</div>`}
 function pNutri(){const t=today(),p=prof(),day=dayOf(t),ms=items('meal').filter(m=>m.date===t),prot=ms.reduce((n,m)=>n+num(m.protein),0);
- return `<div class="card"><div class="rings two">${ring('pt3','Protéines',prot,p.protein,prot+'g','','')}${ring('ea3','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div><div class="list" style="margin-top:10px">${ms.map(m=>lr(m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="">`:`<span class="ini t">${num(m.protein)}g</span>`,esc(m.name),num(m.protein)+' g de protéines',I.chev,['edit','',m.id])).join('')||'<div class="empty">Aucun repas noté aujourd\'hui.</div>'}</div><div class="acts"><button class="btn acc" data-act="mealphoto">Repas en photo</button><button class="btn" data-act="add" data-x="meal">+ Repas</button><button class="btn" data-act="water" data-x="-1">− Eau</button></div></div>`+pMeals()}
+ return `<div class="card"><div class="rings two">${ring('pt3','Protéines',prot,p.protein,prot+'g','','')}${ring('ea3','Bouteilles 50 cl',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div><div class="list" style="margin-top:10px">${ms.map(m=>lr(m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="">`:`<span class="ini t">${num(m.protein)}g</span>`,esc(m.name),num(m.protein)+' g de protéines',I.chev,['edit','',m.id])).join('')||'<div class="empty">Aucun repas noté aujourd\'hui.</div>'}</div><div class="acts"><button class="btn acc" data-act="mealphoto">Repas en photo</button><button class="btn" data-act="add" data-x="meal">+ Repas</button><button class="btn" data-act="water" data-x="-1">− Eau</button></div></div>`+pMeals()}
 
 /* ---------- lecteur plein écran ---------- */
 let tick=0;
@@ -940,11 +951,11 @@ function closeSheet(){$('#sheet').classList.remove('open');$('#panel').innerHTML
 function openSettings(){const p=prof();$('#panel').innerHTML=`<h2>Réglages</h2><form id="sfrm">
  <label class="f">À propos de moi (l'IA lit ce texte)<textarea name="about" style="min-height:200px">${esc(p.about)}</textarea></label>
  <label class="f">Mes cours (un par ligne)<textarea name="courses">${esc(p.courses.join('\n'))}</textarea></label>
- <div class="grid2"><label class="f">Objectif protéines (g/jour)<input name="protein" inputmode="numeric" value="${esc(p.protein)}"></label><label class="f">Objectif eau (verres/jour)<input name="water" inputmode="numeric" value="${esc(p.water)}"></label></div>
- <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div><div class="acts" style="margin:-4px 0 12px"><button type="button" class="btn" data-act="forceupd">Forcer la mise à jour</button></div><p class="mute" style="margin:0 0 12px">Version de MG9 : v9 (23 nov.)</p>
+ <div class="grid2"><label class="f">Objectif protéines (g/jour)<input name="protein" inputmode="numeric" value="${esc(p.protein)}"></label><label class="f">Objectif eau (bouteilles de 50 cl)<input name="water" inputmode="numeric" value="${esc(p.water)}"></label></div>
+ <p class="mute">Tes données sont gardées sur ton iPhone. Exporte une sauvegarde de temps en temps (et avant de supprimer l'appli).</p><div class="acts" style="margin-bottom:12px"><button type="button" class="btn" data-act="export">Exporter ma sauvegarde</button><button type="button" class="btn" data-act="import">Importer</button></div><div class="acts" style="margin:-4px 0 12px"><button type="button" class="btn" data-act="forceupd">Forcer la mise à jour</button></div><p class="mute" style="margin:0 0 12px">Version de MG9 : v10 (25 nov.)</p>
  <div class="acts"><button class="btn" type="submit">Enregistrer</button><button type="button" class="btn ghost" data-act="close">Fermer</button></div></form>`;
  $('#sheet').classList.add('open');
- $('#sfrm').onsubmit=e=>{e.preventDefault();const f=e.target.elements;saveProfile({about:f.about.value.trim(),courses:f.courses.value.split('\n').map(x=>x.trim()).filter(Boolean),protein:num(f.protein.value)||140,water:num(f.water.value)||8});closeSheet();toast('Réglages enregistrés')}}
+ $('#sfrm').onsubmit=e=>{e.preventDefault();const f=e.target.elements;saveProfile({about:f.about.value.trim(),courses:f.courses.value.split('\n').map(x=>x.trim()).filter(Boolean),protein:num(f.protein.value)||140,water:num(f.water.value)||6});closeSheet();toast('Réglages enregistrés')}}
 
 /* ---------- actions ---------- */
 const ACT={
@@ -957,7 +968,7 @@ const ACT={
  quick:(id,x)=>{const q=QUICK.find(z=>z.id===x);if(!q)return;unlockAudio();openPlayer({type:'sess',sid:'q-'+q.id,quick:q,list:parseEx(q),i:0,set:1,rest:false})},
  hab:(id,x,b)=>{const t=today(),s=[...(dayOf(t).hab||[])],i=s.indexOf(id);if(i>=0)s.splice(i,1);else{s.push(id);if(b)burst(b.getBoundingClientRect())}setDay(t,{hab:s})},
  act:(id,x,b)=>{const t=today(),s=[...(dayOf(t).acts||[])],i=s.indexOf(x);if(i>=0)s.splice(i,1);else{s.push(x);if(b)burst(b.getBoundingClientRect())}setDay(t,{acts:s})},
- qread:(id,x,b)=>{const t=today(),p=prof(),qp=Math.min(604,Math.max(1,num(p.quranPage)||1)),to=Math.min(604,qp+QPD-1),n=to-qp+1,a=[...(dayOf(t).acts||[])];if(!a.includes('quran'))a.push('quran');if(b)burst(b.getBoundingClientRect());saveProfile({quranPage:to>=604?1:to+1});setDay(t,{quran:num(dayOf(t).quran)+n,acts:a});toast(to>=604?'Coran terminé, Allâhumma bârik !':'Bârak Allâhu fîk. Demain : page '+(to+1))},
+ qread:(id,x,b)=>{const t=today(),p=prof(),qp=Math.min(604,Math.max(1,num(p.quranPage)||1)),to=Math.min(604,qp+qGoal()-1),n=to-qp+1,a=[...(dayOf(t).acts||[])];if(!a.includes('quran'))a.push('quran');if(b)burst(b.getBoundingClientRect());saveProfile({quranPage:to>=604?1:to+1});setDay(t,{quran:num(dayOf(t).quran)+n,acts:a});toast(to>=604?'Coran terminé, Allâhumma bârik !':'Bârak Allâhu fîk. Demain : page '+(to+1))},
  qset:()=>{const v=Math.round(num(($('#qpage')||{}).value));if(v<1||v>604){toast('Page entre 1 et 604');return}saveProfile({quranPage:v});toast('Plan mis à jour : page '+v)},
  raw:(id,x,b)=>{const t=today(),r=[...(dayOf(t).raw||[])],i=r.indexOf(x);if(i>=0)r.splice(i,1);else{r.push(x);if(b)burst(b.getBoundingClientRect())}let a=[...(dayOf(t).acts||[])];const all=RAW.every(([k])=>r.includes(k));a=a.filter(z=>z!=='rawatib');if(all)a.push('rawatib');setDay(t,{raw:r,acts:a})},
  sysdone:(id,x,b)=>{const d=[...sysDone()],i=d.indexOf(x);if(i>=0)d.splice(i,1);else{d.push(x);if(b)burst(b.getBoundingClientRect())}saveProfile({sysDone:d})},
@@ -1188,7 +1199,7 @@ function dayType(d){if(items('match').some(m=>m.date===d)||(dayOf(d).load||[]).s
 const PLATE={rest:['Jour de repos',"Moitié légumes, un quart protéines, un quart féculents. Moins de glucides, protéines toujours hautes."],train:["Jour d'entraînement","Un tiers légumes, un tiers protéines, un tiers féculents (riz, pâtes, pommes de terre, pain)."],match:['Jour de match',"Plus de féculents autour du match (la moitié de l'assiette), protéines normales, très peu de gras avant de jouer."]};
 const foodChips=()=>`<div class="food">${FOODS.map((f,i)=>`<button data-act="food" data-x="${i}"><b>+${f[1]} g</b>${esc(f[0])}</button>`).join('')}</div>`;
 function nutriCore(){const t=today(),p=prof(),day=dayOf(t),ms=items('meal').filter(m=>m.date===t),prot=protOn(t),pl=PLATE[dayType(t)];
- return`<div class="card"><div class="dtype"><span class="kick" style="margin:0">${esc(pl[0])}</span><span class="mute" style="font-size:14px;line-height:1.3">${esc(pl[1])}</span></div><div class="rings two">${ring('pt2','Protéines',prot,p.protein,prot+'g','','')}${ring('ea2','Eau · touche',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div>
+ return`<div class="card"><div class="dtype"><span class="kick" style="margin:0">${esc(pl[0])}</span><span class="mute" style="font-size:14px;line-height:1.3">${esc(pl[1])}</span></div><div class="rings two">${ring('pt2','Protéines',prot,p.protein,prot+'g','','')}${ring('ea2','Bouteilles 50 cl',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div>
  <div class="mute" style="margin-top:12px;font-size:14px">Ajout rapide (touche pour ajouter) :</div>${foodChips()}
  <div class="list" style="margin-top:10px">${ms.map(m=>lr(m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="">`:`<span class="ini t">${num(m.protein)}g</span>`,esc(m.name),num(m.protein)+' g de protéines'+(num(m.kcal)?' · '+num(m.kcal)+' kcal':''),I.chev,['edit','',m.id])).join('')}</div>
  <div class="acts"><button class="btn acc" data-act="mealphoto">Repas en photo</button><button class="btn" data-act="add" data-x="meal">+ Repas</button><button class="btn" data-act="water" data-x="-1">− Eau</button></div></div>`}
@@ -1267,7 +1278,7 @@ const pushPost=(p,o,keep)=>fetch(PUSH+p,{method:'POST',headers:{'content-type':'
 function pushState(){const t=today(),d=dayOf(t),p=prof(),dw=dowOf(t),acts=d.acts||[];
  const work=items('session').filter(s=>DMAP[s.day]===dw&&s.type!=='Repos'),sd=d.sess||[],nx=work.find(s=>!sd.includes(s.id));
  return{d:t,pr:PR.filter(([k])=>(d.prayers||{})[k]).map(([k])=>k),adhM:!!d.adhM,adhS:!!d.adhS,adhC:!!d.adhC,witr:acts.includes('witr'),chk:!!d.chk,
-  train:work.length>0,sess:!!(sd.length||(d.quick||[]).length),sessT:nx?nx.title:'',load:!!(d.load||[]).length,quran:acts.includes('quran'),kahf:acts.includes('kahf'),qp:num(p.quranPage)||1,
+  train:work.length>0,sess:!!(sd.length||(d.quick||[]).length),sessT:nx?nx.title:'',load:!!(d.load||[]).length,quran:acts.includes('quran'),kahf:acts.includes('kahf'),qp:num(p.quranPage)||1,qg:qGoal(),
   prot:protOn(t),protT:num(p.protein)||140,water:num(d.water),waterT:num(p.water)||8,eng:!!d.engDone,sys:!!d.sysDay,hw:items('hw').filter(h=>!h.done&&h.due&&h.due<=addDays(t,1)).length}}
 let pushT=0,pushLast='';
 function pushSync(now){if(!prof().pushOn||!prof().pushId)return;clearTimeout(pushT);const go=()=>{const st=pushState(),s=JSON.stringify(st);if(s===pushLast)return;pushLast=s;pushPost('/state',{id:prof().pushId,tz:TZ(),st},true).catch(()=>{pushLast=''})};if(now)go();else pushT=setTimeout(go,15000)}
@@ -1313,6 +1324,517 @@ Object.assign(ACT,{
  ptest:async()=>{if(!prof().pushId){toast('Active d\'abord les notifications');return}try{const r=await(await pushPost('/test',{id:prof().pushId})).json();toast(r.ok?'Notif test envoyée : elle arrive dans quelques secondes':'Échec de l\'envoi ('+(r.status||r.error)+')')}catch(e){toast('Pas de connexion')}},
  forceupd:async()=>{toast('Mise à jour…');try{const ks=await caches.keys();await Promise.all(ks.map(k=>caches.delete(k)));const rs=await navigator.serviceWorker.getRegistrations();await Promise.all(rs.map(r=>r.update()))}catch(e){}location.replace(location.pathname+'?u='+Date.now())}
 });
+/* =========================================================
+   v10 (a) : repas, eau en bouteilles, Coran, hadith du jour
+   ========================================================= */
+const rnd=(a,b)=>a+Math.floor(Math.random()*(b-a+1));
+const pick=a=>a[Math.floor(Math.random()*a.length)];
+const sample=(a,n)=>shuffle([...a]).slice(0,n);
+
+/* ---------- base d'aliments (valeurs approximatives) ---------- */
+const FCAT=['Féculents','Protéines','Légumes et sauces','Petit-déj et extras','Boissons'];
+const FDB=[
+{id:'pates',c:'Féculents',n:'Pâtes (poids cru)',p:[['100 g',13,355],['150 g',19,530],['200 g',25,710],['250 g',32,890]]},
+{id:'riz',c:'Féculents',n:'Riz (poids cru)',p:[['100 g',7,360],['150 g',11,540],['200 g',14,720]]},
+{id:'pdt',c:'Féculents',n:'Pommes de terre sautées',p:[['200 g',4,280],['300 g',6,410],['400 g',8,550]]},
+{id:'pdteau',c:'Féculents',n:"Pommes de terre à l'eau",p:[['200 g',4,155],['300 g',6,230]]},
+{id:'puree',c:'Féculents',n:'Purée',p:[['1 assiette',5,250],['Grosse assiette',8,400]]},
+{id:'pain',c:'Féculents',n:'Pain',p:[['1 tranche',3,80],['2 tranches',6,160],['½ baguette',9,330]]},
+{id:'poulet',c:'Protéines',n:'Poulet (blanc, poids cru)',p:[['100 g',23,120],['1 blanc ≈ 150 g',34,180],['2 blancs',68,360]]},
+{id:'thon',c:'Protéines',n:'Thon en boîte',p:[['½ boîte',15,65],['1 boîte',30,130]]},
+{id:'boeuf',c:'Protéines',n:'Viande hachée 5 %',p:[['100 g',21,125],['125 g',26,155],['200 g',42,250]]},
+{id:'viande',c:'Protéines',n:'Morceau de viande (bœuf)',p:[['100 g',21,180],['150 g',32,270],['200 g',42,360]]},
+{id:'oeufs',c:'Protéines',n:'Œufs',p:[['1',6,75],['2',13,145],['3',19,215],['4',25,290]]},
+{id:'hrouges',c:'Protéines',n:'Haricots rouges ou noirs (boîte)',p:[['½ boîte',10,155],['1 boîte',20,310]]},
+{id:'fromage',c:'Protéines',n:'Fromage râpé',p:[['1 poignée',7,120]]},
+{id:'whey',c:'Protéines',n:'Whey',p:[['1 dose',24,120]]},
+{id:'hverts',c:'Légumes et sauces',n:'Haricots verts (boîte)',p:[['½ boîte',2,35],['1 boîte',4,70]]},
+{id:'stomate',c:'Légumes et sauces',n:'Sauce tomate',p:[['1 louche',2,60],['½ pot',4,125]]},
+{id:'sblanche',c:'Légumes et sauces',n:'Sauce blanche maison (béchamel + sour cream)',p:[['1 portion',7,265]]},
+{id:'legumes',c:'Légumes et sauces',n:'Légumes ou salade',p:[['1 portion',2,40]]},
+{id:'pancakes',c:'Petit-déj et extras',n:'Pancakes (mix)',p:[['3',6,250],['6',12,500],['10',20,830]]},
+{id:'crepes',c:'Petit-déj et extras',n:'Crêpes',p:[['2',8,260],['3',12,390],['5',20,650]]},
+{id:'donut',c:'Petit-déj et extras',n:'Donut',p:[['1',3,250],['2',6,500]]},
+{id:'tartiner',c:'Petit-déj et extras',n:'Pâte à tartiner',p:[['1 c. à soupe',1,90],['2 c. à soupe',2,180]]},
+{id:'yaourt',c:'Petit-déj et extras',n:'Yaourt grec ou skyr',p:[['1 pot',15,100]]},
+{id:'cereales',c:'Petit-déj et extras',n:'Céréales + lait',p:[['1 bol',9,300]]},
+{id:'banane',c:'Petit-déj et extras',n:'Banane',p:[['1',1,105]]},
+{id:'laitchoc',c:'Boissons',n:'Lait chocolaté',p:[['1 verre (25 cl)',8,200],['50 cl',16,400]]},
+{id:'lait',c:'Boissons',n:'Lait',p:[['1 verre (25 cl)',8,125],['50 cl',16,250]]},
+{id:'soda',c:'Boissons',n:'Jus ou soda',p:[['1 verre (25 cl)',0,110],['50 cl',0,220]]}];
+const PLATS=[
+{id:'p1',n:'Pâtes au thon, sauce blanche',sel:{pates:2,thon:1,sblanche:0}},
+{id:'p2',n:'Pâtes sauce tomate, haricots verts, viande',sel:{pates:2,stomate:0,hverts:0,boeuf:1}},
+{id:'p3',n:'Riz, poulet, haricots verts',sel:{riz:1,poulet:1,hverts:0}},
+{id:'p4',n:'Riz, thon, haricots rouges',sel:{riz:1,thon:1,hrouges:0}},
+{id:'p5',n:'Purée et poulet',sel:{puree:0,poulet:1,hverts:0}},
+{id:'p6',n:'Pommes de terre sautées et poulet',sel:{pdt:1,poulet:1}},
+{id:'p7',n:'Pancakes et lait chocolaté',sel:{pancakes:1,laitchoc:0}},
+{id:'p8',n:'Crêpes',sel:{crepes:1,tartiner:0}}];
+function selTot(sel){let p=0,k=0;const parts=[];for(const id in sel){const f=FDB.find(x=>x.id===id);if(!f||!f.p[sel[id]])continue;const o=f.p[sel[id]];p+=o[1];k+=o[2];parts.push(f.n.replace(/ \(.*\)$/,'')+' '+o[0])}return{p,k,parts}}
+const allPlats=()=>[...(prof().myPlats||[]),...PLATS];
+function platsHtml(){return`<div class="list">${allPlats().map(pl=>{const T=selTot(pl.sel);return lr(`<span class="ini t">${T.p}g</span>`,esc(pl.n),T.k+' kcal · touche pour ajuster',`<button class="btn sm acc" data-act="platadd" data-x="${pl.id}">+</button>`,['plat',pl.id])}).join('')}</div>`}
+function compSheet(){const sel=S.tmp.sel,T=selTot(sel);
+ return`<div class="ctot"><div><b>${T.p} g</b><span>protéines</span></div><div><b>${T.k}</b><span>kcal</span></div><button class="btn acc" data-act="compsave" ${T.parts.length?'':'disabled'}>Ajouter</button></div>
+ <h2 style="margin-top:6px">${S.tmp.pid?'Ajuster le plat':'Mon repas'}</h2><p class="mute" style="margin:-6px 0 6px">Touche une quantité pour l'ajouter, retouche pour l'enlever.</p>
+ ${FCAT.map(c=>`<div class="kick" style="margin:16px 0 6px">${c}</div>`+FDB.filter(f=>f.c===c).map(f=>`<div class="frow${sel[f.id]!=null?' on':''}"><div class="fn">${esc(f.n)}</div><div class="fp">${f.p.map((o,i)=>`<button type="button" class="${sel[f.id]===i?'on':''}" data-act="cpick" data-x="${f.id}:${i}">${esc(o[0])}<small>${o[1]} g</small></button>`).join('')}</div></div>`).join('')).join('')}
+ <label class="f" style="margin-top:16px">Nom du repas (facultatif)<input id="cname" value="${esc(S.tmp.name||'')}" placeholder="${esc(T.parts.slice(0,3).join(', ')||'Ex : pâtes thon')}"></label>
+ <label class="chkl"><input type="checkbox" id="cfav" ${S.tmp.fav?'checked':''}> Garder ce repas dans mes plats</label>
+ <p class="mute" style="font-size:12px">Valeurs approximatives. Pâtes, riz et viande : poids cru. Thon au naturel.</p>
+ <div class="acts"><button class="btn acc" data-act="compsave" ${T.parts.length?'':'disabled'}>Ajouter le repas</button>${S.tmp.pid&&String(S.tmp.pid).startsWith('u')?`<button class="btn ghost" data-act="platdel" data-x="${S.tmp.pid}">Retirer de mes plats</button>`:''}<button class="btn ghost" data-act="close">Fermer</button></div>`}
+function keepComp(){const n=$('#cname'),f=$('#cfav');if(n)S.tmp.name=n.value;if(f)S.tmp.fav=f.checked}
+function reSheetKeep(){const sh=$('#sheet'),pn=$('#panel'),a=sh?sh.scrollTop:0,b=pn?pn.scrollTop:0;reSheet();if(sh)sh.scrollTop=a;if(pn)pn.scrollTop=b}
+function addMeal(name,T,b){if(b)burst(b.getBoundingClientRect());saveItem({kind:'meal',date:today(),name,protein:T.p,kcal:T.k,parts:T.parts});toast('+'+T.p+' g de protéines · '+T.k+' kcal')}
+
+/* ---------- eau : bouteilles de 50 cl ---------- */
+const litres=n=>String(Math.round(n*50)/100).replace('.',',');
+function waterLine(){const t=today(),p=prof(),v=num(dayOf(t).water);return`<div class="wline"><span>${litres(v)} L sur ${litres(p.water)} L</span><button class="btn sm" data-act="water" data-x="-1">−</button><button class="btn sm" data-act="water" data-x="0.5">+ ½</button><button class="btn sm acc" data-act="water" data-x="1">+ 1 bouteille</button></div>`}
+
+/* ---------- nutrition (remplace la v8) ---------- */
+nutriCore=function(){const t=today(),p=prof(),day=dayOf(t),ms=items('meal').filter(m=>m.date===t),prot=protOn(t),kc=ms.reduce((n,m)=>n+num(m.kcal),0),pl=PLATE[dayType(t)];
+ return`<div class="card"><div class="dtype"><span class="kick" style="margin:0">${esc(pl[0])}</span><span class="mute" style="font-size:14px;line-height:1.3">${esc(pl[1])}</span></div><div class="rings two">${ring('pt2','Protéines',prot,p.protein,prot+'g','','')}${ring('ea2','Bouteilles 50 cl',num(day.water),p.water,num(day.water)+'/'+p.water,'water','1')}</div>${waterLine()}
+ <div class="mute" style="margin:12px 0 0;font-size:14px">Aujourd'hui : ${ms.length} repas · ${kc} kcal</div>
+ <div class="list" style="margin-top:6px">${ms.map(m=>lr(m.photo?`<img class="thumb" src="${esc(m.photo)}" alt="">`:`<span class="ini t">${num(m.protein)}g</span>`,esc(m.name),num(m.protein)+' g de protéines'+(num(m.kcal)?' · '+num(m.kcal)+' kcal':''),I.chev,['edit','',m.id])).join('')}</div>
+ <div class="acts"><button class="btn acc" data-act="comp">Composer mon repas</button><button class="btn" data-act="mealphoto">En photo</button></div></div>
+ ${sect('Mes plats',`<span class="mute">+ = ajouter tel quel</span>`)}<div class="card">${platsHtml()}</div>`};
+pNutri8=function(){const t=today(),p=prof(),last=[...Array(7)].map((_,i)=>addDays(t,-i)),avg=Math.round(last.reduce((n,d)=>n+protOn(d),0)/7),hit=last.filter(d=>protOn(d)>=p.protein).length,wat=Math.round(last.reduce((n,d)=>n+num(dayOf(d).water),0)/7*10)/10;
+ return nutriCore()+`<div class="card"><div class="stat3"><div class="g"><b>${avg}</b><span>g de protéines / jour (7 j)</span></div><div><b>${hit}/7</b><span>jours objectif atteint</span></div><div><b>${litres(wat)}</b><span>L d'eau / jour (7 j)</span></div></div></div>`
+ +sect('Quand manger')+`<div class="card list">${[['2 à 3 h avant','Repas : féculents + protéines, peu de gras.'],['30 à 60 min avant','Si faim : banane ou pain. Rien de lourd.'],['Pendant',"De l'eau. Plus d'1 h d'effort intense : boisson sucrée possible."],['Dans les 2 h après','Protéines + glucides, puis un vrai repas.'],['Avant de dormir','Si faim : fromage blanc ou skyr.']].map(([a,b])=>lr(`<span class="ini t" style="font-size:12px;width:62px;border-radius:12px">${a}</span>`,esc(b),'')).join('')}</div>`
+ +sect('Apprendre')+`<div class="card list">${learnRows(FOOTM.filter(m=>m.nut))}</div>`+sect('7 derniers jours')+pMeals()};
+PAGES.nutri.f=pNutri8;
+
+/* ---------- Coran : objectif réglable ---------- */
+function coranGo(n,b){const t=today(),p=prof(),qp=Math.min(604,Math.max(1,num(p.quranPage)||1)),stop=Math.min(604,qp+n-1),a=[...(dayOf(t).acts||[])];if(!a.includes('quran'))a.push('quran');if(b)burst(b.getBoundingClientRect());saveProfile({quranPage:stop>=604?1:stop+1});setDay(t,{quran:num(dayOf(t).quran)+n,acts:a});toast(n+' page'+(n>1?'s':'')+' lue'+(n>1?'s':'')+'. Reprise page '+(stop>=604?1:stop+1))}
+coranCard=function(){const p=prof(),t=today(),g=qGoal(),qp=Math.min(604,Math.max(1,num(p.quranPage)||1)),to=Math.min(604,qp+g-1),rd=num(dayOf(t).quran),done=(dayOf(t).acts||[]).includes('quran');
+ return`<div class="card"><div class="kick">Coran · objectif ${g} page${g>1?'s':''} par jour</div><div class="bigrow" style="margin-top:4px"><b>${qp===to?qp:qp+'–'+to}</b><span class="mute">page${g>1?'s':''} du jour</span></div><div class="mute" style="margin-top:4px">${esc(surOn(qp,to).join(' · '))} · juz ${juzOf(qp)}</div>${bar(qp-1,604)}<div class="mute" style="margin-top:6px">${Math.round((qp-1)/604*100)} % du Coran · environ ${Math.ceil((605-qp)/g)} jours à ce rythme</div>${rd?`<div class="mute" style="margin-top:4px;color:var(--acc)">Aujourd'hui : ${rd} page${rd>1?'s':''} lue${rd>1?'s':''}</div>`:''}
+ <div class="seg wrap" style="margin-top:12px">${[1,2,3,4].map(n=>`<button class="${g===n?'on':''}" data-act="qgoal" data-x="${n}">${n} page${n>1?'s':''}</button>`).join('')}</div>
+ <div class="acts"><button class="btn acc" data-act="qread">${done?'Encore '+g+' page'+(g>1?'s':''):"C'est fait"}</button><button class="btn" data-act="qstop">Je me suis arrêté à…</button><button class="btn ghost" data-act="pg" data-x="coran">Le plan</button></div></div>`};
+pCoran=function(){const p=prof(),g=qGoal(),qp=num(p.quranPage)||1;let plan='';for(let i=0;i<7;i++){const a=qp+i*g,b=Math.min(604,a+g-1);if(a>604)break;plan+=lr(`<span class="ini t">${esc(fmtD(addDays(today(),i)).split(' ')[0])}</span>`,a===b?'Page '+a:`Pages ${a} à ${b}`,esc(surOn(a,b).join(' · ')),'',null)}
+ return coranCard()+`<div class="card"><div class="kick">Où j'en suis</div><p class="mute" style="margin:6px 0">La page où tu reprends (mushaf de Médine, 604 pages).</p><div style="display:flex;gap:8px"><input id="qpage" inputmode="numeric" value="${qp}" style="margin:0"><button class="btn acc" data-act="qset">OK</button></div></div>${sect('Les 7 prochains jours')}<div class="card list">${plan||'<div class="empty">Coran terminé. Recommence à la page 1 quand tu veux.</div>'}</div><div class="card"><div class="kick">Le vendredi</div><p style="margin:6px 0 0">Sourate al-Kahf : pages 293 à 304. Elle apparaît dans tes actes du jour chaque vendredi, avec le hadith.</p></div>`};
+PAGES.coran.f=pCoran;
+function qstopSheet(){const p=prof(),qp=Math.min(604,Math.max(1,num(p.quranPage)||1)),v=S.tmp.stop,n=v-qp+1;
+ return`<h2>Je me suis arrêté à la page…</h2><p class="mute" style="margin:-6px 0 12px">Tu as commencé page ${qp}.</p><div class="stepper"><button data-act="qst" data-x="-1">−</button><b>${v}</b><button data-act="qst" data-x="1">+</button></div><div class="mute" style="text-align:center;margin:8px 0 2px">${esc(surOn(v,v).join(' · '))}</div><div style="text-align:center;font-weight:700;color:${n>qGoal()?'var(--acc)':'inherit'}">${n} page${n>1?'s':''} lue${n>1?'s':''}${n>qGoal()?' · bonus de '+(n-qGoal())+' !':''}</div>
+ <div class="acts"><button class="btn acc" data-act="qstopsave">Valider</button><button class="btn ghost" data-act="close">Fermer</button></div>`}
+
+/* ---------- hadith du jour, mis en avant ---------- */
+const HAD10=[
+{h:"« Les actes ne valent que par les intentions, et chacun n'aura que ce qu'il a eu l'intention de faire. »",src:"al-Bukhârî 1, Muslim 1907",t:'Intention'},
+{h:"« Le croyant fort est meilleur et plus aimé d'Allah que le croyant faible, et dans chacun il y a du bien. Attache-toi à ce qui t'est utile, demande l'aide d'Allah et ne baisse pas les bras. »",src:"Muslim 2664",t:'Effort'},
+{h:"« Les actes les plus aimés d'Allah sont les plus réguliers, même s'ils sont peu nombreux. »",src:"al-Bukhârî 6464, Muslim 783",t:'Régularité'},
+{h:"« Aucun de vous ne sera vraiment croyant tant qu'il n'aimera pas pour son frère ce qu'il aime pour lui-même. »",src:"al-Bukhârî 13, Muslim 45",t:'Fraternité'},
+{h:"« Que celui qui croit en Allah et au Jour dernier dise du bien ou se taise. »",src:"al-Bukhârî 6018, Muslim 47",t:'Langue'},
+{h:"« Le fort n'est pas celui qui terrasse les gens. Le fort est celui qui se maîtrise quand il est en colère. »",src:"al-Bukhârî 6114, Muslim 2609",t:'Colère'},
+{h:"« Le musulman est celui dont les musulmans sont à l'abri de la langue et de la main. »",src:"al-Bukhârî 10, Muslim 41",t:'Comportement'},
+{h:"« Facilitez et ne rendez pas les choses difficiles ; annoncez la bonne nouvelle et ne faites pas fuir les gens. »",src:"al-Bukhârî 69, Muslim 1734",t:'Facilité'},
+{h:"« Il y a deux bienfaits dont beaucoup de gens sont lésés : la santé et le temps libre. »",src:"al-Bukhârî 6412",t:'Temps'},
+{h:"« Profite de cinq choses avant cinq autres : ta jeunesse avant ta vieillesse, ta santé avant ta maladie, ta richesse avant ta pauvreté, ton temps libre avant tes occupations, et ta vie avant ta mort. »",src:"al-Hâkim, authentifié par al-Albânî (Sahîh al-Jâmi' 1077)",t:'Temps'},
+{h:"« Crains Allah où que tu sois, fais suivre la mauvaise action d'une bonne qui l'effacera, et comporte-toi avec les gens avec un bon caractère. »",src:"at-Tirmidhî 1987 (hasan)",t:'Piété'},
+{h:"« Sois dans ce bas monde comme si tu étais un étranger ou un voyageur de passage. »",src:"al-Bukhârî 6416",t:'Ce monde'},
+{h:"« Celui qui emprunte un chemin pour chercher une science, Allah lui facilite par cela un chemin vers le Paradis. »",src:"Muslim 2699",t:'Science'},
+{h:"« Le meilleur d'entre vous est celui qui apprend le Coran et l'enseigne. »",src:"al-Bukhârî 5027",t:'Coran'},
+{h:"« Lisez le Coran, car il viendra le Jour de la Résurrection intercéder pour ceux qui le lisaient. »",src:"Muslim 804",t:'Coran'},
+{h:"« Allah ne regarde ni vos corps ni vos apparences, mais Il regarde vos cœurs et vos actes. »",src:"Muslim 2564",t:'Cœur'},
+{h:"« Préserve Allah, Il te préservera. Sache que si toute la communauté se réunissait pour te faire profiter de quelque chose, elle ne te ferait profiter que de ce qu'Allah a déjà écrit pour toi. »",src:"at-Tirmidhî 2516 (hasan sahih)",t:'Confiance'},
+{h:"« Quelle merveille que l'affaire du croyant : tout est un bien pour lui. S'il lui arrive un bonheur, il remercie, et c'est un bien pour lui. S'il lui arrive un malheur, il patiente, et c'est un bien pour lui. »",src:"Muslim 2999",t:'Patience'},
+{h:"« Rien n'est plus lourd dans la balance du croyant, le Jour de la Résurrection, qu'un bon caractère. »",src:"at-Tirmidhî 2002 (authentique)",t:'Comportement'},
+{h:"« Ton sourire à ton frère est une aumône. »",src:"at-Tirmidhî 1956",t:'Sourire'},
+{h:"« Celui qui ne remercie pas les gens ne remercie pas Allah. »",src:"Abû Dâwûd 4811, at-Tirmidhî 1954",t:'Gratitude'},
+{h:"« L'homme suit la religion de son ami proche : que chacun de vous regarde donc qui il prend pour ami. »",src:"Abû Dâwûd 4833, at-Tirmidhî 2378 (hasan)",t:'Amis'},
+{h:"« La pudeur n'apporte que du bien. »",src:"al-Bukhârî 6117, Muslim 37",t:'Pudeur'},
+{h:"« Celui qui prie les deux prières de la fraîcheur (le Fajr et le 'Asr) entrera au Paradis. »",src:"al-Bukhârî 574, Muslim 635",t:'Prière'},
+{h:"« Le moment où le serviteur est le plus proche de son Seigneur, c'est quand il est prosterné : multipliez donc les invocations. »",src:"Muslim 482",t:'Prière'},
+{h:"« La prière la plus lourde pour les hypocrites est celle du 'Ishâ' et celle du Fajr. S'ils savaient ce qu'elles contiennent, ils y viendraient même en rampant. »",src:"al-Bukhârî 657, Muslim 651",t:'Prière'},
+{h:"« La véracité mène à la bonté, et la bonté mène au Paradis. Le mensonge mène à la perversité, et la perversité mène au Feu. »",src:"al-Bukhârî 6094, Muslim 2607",t:'Vérité'},
+{h:"« Celui qui indique un bien a la même récompense que celui qui le fait. »",src:"Muslim 1893",t:'Bien'},
+{h:"« Allah est Bon et n'accepte que ce qui est bon. »",src:"Muslim 1015",t:'Pureté'}];
+function hadPool(){const seen=new Set(),L=[];[...HAD10,...ACTS.map(a=>({h:a.h,src:a.src,t:a.t})),...ADH.map(a=>({h:a.h,src:a.src,t:a.t}))].forEach(x=>{if(x.h&&!seen.has(x.h)){seen.add(x.h);L.push(x)}});return L}
+hadithDuJour=function(){const L=hadPool(),n=Math.floor(new Date(today()+'T12:00:00')/864e5)+(S.hdOff||0);return L[((n%L.length)+L.length)%L.length]};
+function hadBig(){const h=hadithDuJour();return`<div class="card hadbig"><div class="kick">${S.hdOff?'Hadith':'Hadith du jour'}${h.t?' · '+esc(h.t):''}</div><p>${esc(h.h)}</p><div class="hsrc">${esc(h.src)}</div><div class="acts"><button class="btn sm" data-act="hdnext">Un autre</button><button class="btn sm ghost" data-act="pg" data-x="hadiths">Tous les hadiths</button></div></div>`}
+PAGES.hadiths.f=function(){return`<p class="mute" style="margin-top:0">Tous les hadiths de MG9, avec le texte et la source.</p>`+hadPool().map(x=>`<div class="card hadith">${x.t?`<div class="kick">${esc(x.t)}</div>`:''}<p>${esc(x.h)}</p><div class="mute">${esc(x.src)}</div></div>`).join('')};
+
+Object.assign(ACT,{
+ comp:()=>{S.tmp={sel:{},name:'',fav:false};openSheet(compSheet)},
+ plat:(id,x)=>{const pl=allPlats().find(p=>p.id===x);if(!pl)return;S.tmp={sel:{...pl.sel},name:pl.n,fav:false,pid:pl.id};openSheet(compSheet)},
+ platadd:(id,x,b)=>{const pl=allPlats().find(p=>p.id===x);if(pl)addMeal(pl.n,selTot(pl.sel),b)},
+ platdel:(id,x)=>{saveProfile({myPlats:(prof().myPlats||[]).filter(p=>p.id!==x)});closeSheet();toast('Retiré de tes plats')},
+ cpick:(id,x)=>{keepComp();const [f,i]=x.split(':'),sel=S.tmp.sel;if(sel[f]===+i)delete sel[f];else sel[f]=+i;reSheetKeep()},
+ compsave:(id,x,b)=>{keepComp();const T=selTot(S.tmp.sel);if(!T.parts.length){toast('Choisis au moins un aliment');return}const name=(S.tmp.name||'').trim()||T.parts.join(', ');
+  if(S.tmp.fav){const L=(prof().myPlats||[]).filter(p=>p.n!==name);saveProfile({myPlats:[{id:'u'+uid(),n:name,sel:{...S.tmp.sel}},...L].slice(0,20)})}
+  closeSheet();addMeal(name,T,b)},
+ water:(id,x,b)=>{const t=today(),p=prof(),v=Math.max(0,Math.round((num(dayOf(t).water)+num(x))*2)/2);if(num(x)>0&&v>=p.water&&num(dayOf(t).water)<p.water&&b)burst(b.getBoundingClientRect());setDay(t,{water:v})},
+ qgoal:(id,x)=>{saveProfile({qGoal:+x});toast('Objectif : '+x+' page'+(+x>1?'s':'')+' par jour')},
+ qread:(id,x,b)=>coranGo(qGoal(),b),
+ qstop:()=>{const qp=Math.min(604,Math.max(1,num(prof().quranPage)||1));S.tmp={stop:Math.min(604,qp+qGoal()-1)};openSheet(qstopSheet)},
+ qst:(id,x)=>{const qp=Math.min(604,Math.max(1,num(prof().quranPage)||1));S.tmp.stop=Math.min(604,Math.max(qp,S.tmp.stop+ +x));reSheet()},
+ qstopsave:(id,x,b)=>{const qp=Math.min(604,Math.max(1,num(prof().quranPage)||1));closeSheet();coranGo(S.tmp.stop-qp+1,b)},
+ hdnext:()=>{S.hdOff=(S.hdOff||0)+1;render()}
+});
+function migrate10(){const p=prof();if(p.w50)return;const t=today(),d=dayOf(t);S.profile={...p,water:6,w50:true,qGoal:p.qGoal||2};if(num(d.water))S.days[t]={...d,water:Math.round(num(d.water)/2)};persist()}
+
+/* =========================================================
+   v10 (b) : apprendre l'islam (modules sourcés)
+   ========================================================= */
+const ISL=[
+{id:'i1',t:"Les piliers de l'islam et de la foi",s:"Islam, îmân, ihsân",p:[
+ ["L'islam repose sur cinq piliers : l'attestation de foi, la prière, la zakât, le pèlerinage et le jeûne du Ramadan.","« L'islam est bâti sur cinq : témoigner qu'il n'y a de divinité qu'Allah et que Muhammad est le Messager d'Allah, accomplir la prière, donner la zakât, le pèlerinage à la Maison et le jeûne du Ramadan. » al-Bukhârî 8, Muslim 16"],
+ ["L'attestation de foi (shahâda) : « Ash-hadu an lâ ilâha illa-llâh, wa ash-hadu anna Muhammadan rasûlu-llâh ». J'atteste qu'il n'y a de divinité digne d'adoration qu'Allah, et que Muhammad est le Messager d'Allah.","Même hadith : al-Bukhârî 8, Muslim 16"],
+ ["La foi (îmân) a six piliers : croire en Allah, en Ses anges, en Ses livres, en Ses messagers, au Jour dernier, et au destin, dans son bien comme dans son mal.","Hadith de Jibrîl : « Que tu croies en Allah, en Ses anges, en Ses livres, en Ses messagers, au Jour dernier, et que tu croies au destin, son bien et son mal. » Muslim 8"],
+ ["Le plus haut degré, c'est l'ihsân : adorer Allah comme si tu Le voyais.","« Que tu adores Allah comme si tu Le voyais ; et si tu ne Le vois pas, Lui te voit. » Muslim 8"],
+ ["Le tawhîd, c'est l'unicité d'Allah. La sourate al-Ikhlâs la résume : Il est Unique, tout dépend de Lui, Il n'a pas d'enfant, Il n'est pas né, et rien ne Lui est égal.","Coran 112:1-4 (sens)"],
+ ["Le droit d'Allah sur Ses serviteurs : qu'ils L'adorent sans rien Lui associer.","« Le droit d'Allah sur les serviteurs est qu'ils L'adorent sans rien Lui associer, et le droit des serviteurs sur Allah est qu'Il ne châtie pas celui qui ne Lui associe rien. » al-Bukhârî 2856, Muslim 30"]],
+q:[["Combien y a-t-il de piliers de l'islam ?",["5","6","3","7"],"Shahâda, prière, zakât, pèlerinage, jeûne (al-Bukhârî 8, Muslim 16)."],
+ ["Lequel est un pilier de la foi (îmân) ?",["Croire au destin","Faire le pèlerinage","Donner la zakât","Jeûner le lundi"],"Les 6 piliers de la foi : Allah, les anges, les livres, les messagers, le Jour dernier, le destin (Muslim 8)."],
+ ["L'ihsân, c'est…",["Adorer Allah comme si tu Le voyais","Donner beaucoup d'aumône","Apprendre tout le Coran","Prier la nuit"],"Définition donnée par le Prophète ﷺ dans le hadith de Jibrîl (Muslim 8)."]]},
+{id:'i2',t:'Les ablutions (wudû\')',s:'Étapes, récompense, ce qui les annule',p:[
+ ["Allah ordonne les ablutions avant la prière : laver le visage, les mains jusqu'aux coudes, passer les mains mouillées sur la tête et laver les pieds jusqu'aux chevilles.","Coran 5:6 (sens)"],
+ ["Sans ablutions, la prière n'est pas acceptée.","« Allah n'accepte pas la prière de celui qui a perdu ses ablutions tant qu'il ne les a pas refaites. » al-Bukhârî 135, Muslim 225"],
+ ["Les étapes : l'intention (dans le cœur), Bismillah, les mains 3 fois, la bouche et le nez 3 fois, le visage 3 fois, le bras droit puis le gauche jusqu'aux coudes 3 fois, la tête une fois (puis les oreilles), le pied droit puis le gauche jusqu'aux chevilles 3 fois.","Description de 'Uthmân ibn 'Affân : al-Bukhârî 159, Muslim 226 ; les oreilles : Abû Dâwûd et at-Tirmidhî"],
+ ["Laver chaque partie une seule fois est valable. Trois fois, c'est la sunna. Le Prophète ﷺ les a faites une fois, deux fois et trois fois.","al-Bukhârî 157, 158 et 159"],
+ ["La récompense : « Celui qui fait ses ablutions comme mes ablutions que voici, puis prie deux rak'a sans se laisser distraire, ses péchés passés lui sont pardonnés. »","al-Bukhârî 159, Muslim 226"],
+ ["Après les ablutions : « Ash-hadu an lâ ilâha illa-llâhu wahdahu lâ sharîka lah, wa ash-hadu anna Muhammadan 'abduhu wa rasûluh. » Les huit portes du Paradis lui sont ouvertes, il entre par celle qu'il veut.","Muslim 234"],
+ ["Ce qui annule les ablutions : faire ses besoins (urine, selles), les gaz, le sommeil profond, la perte de conscience. D'autres cas sont discutés entre les écoles : demande à un savant de confiance.","En cas de doute sur un gaz : « Qu'il ne quitte pas la prière tant qu'il n'a pas entendu un son ou senti une odeur. » al-Bukhârî 137, Muslim 361"]],
+q:[["Que laves-tu juste avant les bras ?",["Le visage","Les pieds","La tête","Les oreilles"],"Mains, bouche et nez, visage, puis bras, tête, pieds (al-Bukhârî 159)."],
+ ["Pendant la prière, tu doutes d'avoir perdu tes ablutions (gaz). Tu…",["Continues, sauf si tu as entendu un son ou senti une odeur","Arrêtes tout de suite","Recommences la prière","Fais 2 prosternations"],"La certitude ne s'annule pas par le doute (al-Bukhârî 137, Muslim 361)."],
+ ["Combien de fois passe-t-on les mains sur la tête ?",["Une fois","Trois fois","Deux fois","Sept fois"],"La tête est essuyée une fois (al-Bukhârî 159)."],
+ ["La récompense de l'invocation après les ablutions ?",["Les 8 portes du Paradis lui sont ouvertes","Ses ablutions durent 2 jours","Il n'a plus besoin de prier la sunna","Rien de précis"],"Muslim 234."]]},
+{id:'i3',t:'La prière : conditions et piliers',s:'Ce qui la rend valable',p:[
+ ["Avant de commencer : être en état de pureté, que l'heure soit entrée, être tourné vers la qibla, couvrir sa 'awra, et avoir l'intention.","Heures : Coran 4:103 (sens : « la prière est prescrite aux croyants à des moments déterminés ») ; qibla : Coran 2:144 ; intention : « Les actes ne valent que par les intentions » al-Bukhârî 1"],
+ ["La règle de base : « Priez comme vous m'avez vu prier. »","al-Bukhârî 631"],
+ ["Un homme priait vite. Le Prophète ﷺ lui a dit trois fois : « Retourne prier, car tu n'as pas prié », puis lui a appris : « Dis Allâhu akbar, récite ce qui t'est facile du Coran, incline-toi jusqu'à être immobile, redresse-toi jusqu'à être bien droit, prosterne-toi jusqu'à être immobile, relève-toi jusqu'à être immobile assis, et fais cela dans toute ta prière. »","al-Bukhârî 757, Muslim 397"],
+ ["La Fâtiha est obligatoire dans chaque rak'a.","« Pas de prière pour celui qui ne récite pas la Fâtiha. » al-Bukhârî 756, Muslim 394"],
+ ["Les piliers, selon la majorité des savants : le takbîr d'ouverture, rester debout (si on peut), la Fâtiha, l'inclinaison, se redresser, les deux prosternations, s'asseoir entre elles, le dernier tashahhud assis, le salâm, et le calme (tuma'nîna) dans chaque position. Les écoles les classent un peu différemment.","Synthèse des écoles (malikite, chafi'ite, hanafite, hanbalite)"],
+ ["Elle commence par le takbîr et se termine par le salâm.","« La clé de la prière est la purification ; on y entre par le takbîr et on en sort par le taslîm. » Abû Dâwûd 61, at-Tirmidhî 3"],
+ ["Tu ne sais plus si tu as prié 3 ou 4 rak'a ? Base-toi sur ce dont tu es sûr (le plus petit nombre), termine, puis fais deux prosternations de l'oubli avant le salâm.","« Si l'un de vous doute dans sa prière et ne sait pas s'il a prié trois ou quatre, qu'il écarte le doute, se base sur ce dont il est sûr, puis fasse deux prosternations avant le salâm. » Muslim 571"]],
+q:[["Ce que le Prophète ﷺ a corrigé chez l'homme qui priait mal ?",["Le manque de calme dans chaque position","Sa tenue","Le choix des sourates","L'heure de sa prière"],"Il lui a appris à être immobile dans chaque position (al-Bukhârî 757, Muslim 397)."],
+ ["Sans la Fâtiha, la prière est…",["Non valable","Valable mais moins récompensée","Valable si on récite une autre sourate","Valable pour la sunna"],"« Pas de prière pour celui qui ne récite pas la Fâtiha » (al-Bukhârî 756, Muslim 394)."],
+ ["Tu doutes : 3 ou 4 rak'a ?",["Je retiens 3, je termine, puis 2 prosternations de l'oubli","Je retiens 4 et je termine","Je recommence toute la prière","Je continue sans rien faire"],"On se base sur la certitude (Muslim 571)."],
+ ["Combien de prosternations dans chaque rak'a ?",["2","1","3","4"],"Deux prosternations, séparées par une position assise."]]},
+{id:'i4',t:'Les 5 prières et leurs sunnas',s:'Rak\'a, horaires, rawâtib, witr',p:[
+ ["Fajr 2 rak'a, Dhuhr 4, 'Asr 4, Maghrib 3, 'Ishâ' 4 : 17 rak'a obligatoires par jour.","Connu de façon certaine (transmission unanime)"],
+ ["Les horaires : le Fajr de l'aube au lever du soleil ; le Dhuhr quand le soleil a passé le zénith ; le 'Asr tant que le soleil n'a pas jauni ; le Maghrib après le coucher, tant que la lueur rouge n'a pas disparu ; le 'Ishâ' jusqu'au milieu de la nuit.","Hadith de 'Abdullâh ibn 'Amr, Muslim 612"],
+ ["Prier à l'heure fait partie des actes les plus aimés d'Allah.","« Quelle est l'action la plus aimée d'Allah ? — La prière à son heure. » al-Bukhârî 527, Muslim 85"],
+ ["Les 12 rak'a sunna (rawâtib) : 2 avant le Fajr, 4 avant le Dhuhr et 2 après, 2 après le Maghrib, 2 après le 'Ishâ'.","« Celui qui prie douze rak'a dans la journée et la nuit, une maison lui est construite au Paradis. » Muslim 728 ; le détail : at-Tirmidhî 415"],
+ ["Les 2 rak'a avant le Fajr valent plus que le monde entier.","« Les deux rak'a du Fajr sont meilleures que ce bas monde et ce qu'il contient. » Muslim 725"],
+ ["Le witr (nombre impair de rak'a) termine la prière de la nuit, après le 'Ishâ'.","« Faites du witr la dernière de vos prières de la nuit. » al-Bukhârî 998, Muslim 751"],
+ ["Le vendredi, la prière du Jumu'a remplace le Dhuhr pour les hommes.","Coran 62:9 (sens : « quand on appelle à la prière du vendredi, accourez à l'évocation d'Allah et laissez le commerce »)"]],
+q:[["Combien de rak'a obligatoires par jour ?",["17","15","20","12"],"2 + 4 + 4 + 3 + 4 = 17."],
+ ["Les 2 rak'a avant le Fajr valent…",["Mieux que ce bas monde et ce qu'il contient","Une prière obligatoire","Un jour de jeûne","Rien de précis"],"Muslim 725."],
+ ["Combien de rak'a pour les rawâtib, chaque jour ?",["12","10","8","17"],"Muslim 728, détail chez at-Tirmidhî 415."],
+ ["Le temps du 'Asr se termine…",["Avant que le soleil jaunisse (de préférence)","À midi","À minuit","Au lever du soleil"],"Muslim 612."]]},
+{id:'i5',t:'Les prophètes : Âdam, Nûh, Ibrâhîm',s:'Histoires du Coran',p:[
+ ["Allah a créé Âdam d'argile et a ordonné aux anges de se prosterner devant lui. Tous l'ont fait sauf Iblîs, par orgueil : « Je suis meilleur que lui, Tu m'as créé de feu et Tu l'as créé d'argile. »","Coran 7:11-12 et 38:71-76 (sens)"],
+ ["Âdam et son épouse ont mangé de l'arbre interdit, trompés par Satan. Ils se sont repentis : « Rabbanâ zalamnâ anfusanâ, wa in lam taghfir lanâ wa tarhamnâ lanakûnanna mina-l-khâsirîn » (Seigneur, nous nous sommes fait du tort ; si Tu ne nous pardonnes pas et ne nous fais pas miséricorde, nous serons perdants). Leçon : l'erreur arrive, le repentir l'efface.","Coran 7:19-23 et 2:37"],
+ ["Nûh a appelé son peuple pendant 950 ans, mais peu ont cru.","Coran 29:14 et 11:40"],
+ ["Il a construit l'arche pendant qu'on se moquait de lui. Son propre fils a refusé de monter : « Je vais me réfugier sur une montagne qui me protégera de l'eau. » Leçon : la guidée vient d'Allah seul.","Coran 11:38 et 11:42-43 (sens)"],
+ ["Ibrâhîm a brisé les idoles de son peuple. Ils l'ont jeté au feu, et Allah a dit : « Ô feu, sois fraîcheur et paix pour Ibrâhîm. »","Coran 21:57-69 (sens)"],
+ ["Quand Allah lui a demandé de sacrifier son fils, celui-ci a répondu : « Ô mon père, fais ce qui t'est ordonné ; tu me trouveras, si Allah le veut, parmi les patients. » Allah l'a racheté par un sacrifice.","Coran 37:102-107 (sens)"],
+ ["Ibrâhîm et son fils Ismâ'îl ont élevé les fondations de la Ka'ba. Allah a pris Ibrâhîm pour ami intime (khalîl).","Coran 2:127 et 4:125"]],
+q:[["Pourquoi Iblîs a-t-il refusé de se prosterner ?",["Par orgueil","Par oubli","Il n'avait pas entendu l'ordre","Par peur"],"« Je suis meilleur que lui » (Coran 7:12)."],
+ ["Combien de temps Nûh a-t-il appelé son peuple ?",["950 ans","40 ans","100 ans","500 ans"],"Coran 29:14."],
+ ["Qu'a dit Allah au feu ?",["« Sois fraîcheur et paix pour Ibrâhîm »","« Éteins-toi »","« Brûle les idoles »","« Monte au ciel »"],"Coran 21:69."],
+ ["Qui a élevé les fondations de la Ka'ba ?",["Ibrâhîm et Ismâ'îl","Âdam et Nûh","Mûsâ et Hârûn","Le Prophète Muhammad ﷺ seul"],"Coran 2:127."]]},
+{id:'i6',t:'Les prophètes : Yûsuf, Mûsâ, Yûnus',s:'Patience, confiance, repentir',p:[
+ ["Allah appelle l'histoire de Yûsuf « la plus belle des histoires ». Enfant, il voit en rêve onze étoiles, le soleil et la lune se prosterner devant lui.","Coran 12:3-4"],
+ ["Jaloux, ses frères le jettent dans un puits. Son père Ya'qûb, en apprenant la nouvelle, dit : « Une belle patience ! » (fa-sabrun jamîl).","Coran 12:15-18"],
+ ["Vendu en Égypte, Yûsuf résiste à la femme du ministre : « Seigneur, la prison m'est préférable à ce à quoi elles m'invitent. » Plus tard, il interprète le rêve du roi et devient responsable des réserves du pays.","Coran 12:23-33 et 12:43-55 (sens)"],
+ ["Quand ses frères reviennent, il leur pardonne : « Pas de reproche contre vous aujourd'hui. Qu'Allah vous pardonne. »","Coran 12:92 (sens)"],
+ ["Mûsâ, bébé, est mis dans le fleuve par sa mère sur l'ordre d'Allah, et grandit dans le palais de Pharaon. Plus tard, Allah lui parle dans la vallée de Tuwâ.","Coran 28:7-13 et 20:11-14"],
+ ["Poursuivi par Pharaon, Mûsâ frappe la mer de son bâton et elle s'ouvre. Pharaon se noie et déclare croire au dernier moment, trop tard.","Coran 26:61-66 et 10:90-92"],
+ ["Yûnus quitte son peuple en colère et se retrouve avalé par un énorme poisson. Dans les ténèbres, il invoque : « Lâ ilâha illâ anta, subhânaka, innî kuntu mina-z-zâlimîn » (pas de divinité à part Toi, gloire à Toi, j'étais parmi les injustes). Allah le sauve.","Coran 21:87-88. « Aucun musulman n'invoque par elle pour une chose sans qu'Allah lui réponde. » at-Tirmidhî 3505 (authentifié par al-Albânî)"]],
+q:[["Qu'a dit Ya'qûb en perdant Yûsuf ?",["« Une belle patience ! »","« Vengeons-nous »","« C'est ma faute »","Rien"],"Coran 12:18."],
+ ["Ce que Yûsuf a dit à ses frères à la fin :",["« Pas de reproche contre vous aujourd'hui »","« Partez d'ici »","« Je ne vous pardonnerai pas »","« Rendez-moi mes années »"],"Coran 12:92."],
+ ["L'invocation de Yûnus dans le poisson commence par…",["Lâ ilâha illâ anta, subhânaka…","Rabbanâ âtinâ…","Hasbunallâh…","Bismillâh…"],"Coran 21:87."],
+ ["Qu'est-il arrivé à la mer quand Mûsâ l'a frappée ?",["Elle s'est ouverte","Elle a gelé","Elle s'est asséchée pour toujours","Rien"],"Coran 26:63."]]},
+{id:'i7',t:"'Îsâ et le Prophète Muhammad ﷺ",s:'Le Messie et le sceau des prophètes',p:[
+ ["'Îsâ est né de Maryam sans père, par l'ordre d'Allah. « L'exemple de 'Îsâ auprès d'Allah est comme celui d'Âdam : Il l'a créé de terre, puis lui a dit « Sois », et il fut. »","Coran 3:59 et 19:16-22 (sens)"],
+ ["Bébé, il parle dans le berceau : « Je suis le serviteur d'Allah. Il m'a donné le Livre et m'a fait prophète. » Il a fait des miracles par la permission d'Allah.","Coran 19:29-30 et 5:110 (sens)"],
+ ["Il n'a été ni tué ni crucifié : Allah l'a élevé vers Lui. Il redescendra avant la fin des temps.","Coran 4:157-158 ; « Le fils de Maryam va bientôt descendre parmi vous comme juge équitable. » al-Bukhârî 2222, Muslim 155"],
+ ["Muhammad ﷺ est né à La Mecque, vers l'an 570. Orphelin très jeune, il était connu comme « al-Amîn », le digne de confiance.","Sîra (biographie du Prophète ﷺ)"],
+ ["À 40 ans, dans la grotte de Hirâ', l'ange Jibrîl lui apporte les premiers versets : « Lis, au nom de ton Seigneur qui a créé. »","Coran 96:1 ; récit complet : al-Bukhârî 3"],
+ ["En 622, il émigre de La Mecque à Médine : c'est l'Hégire, le début du calendrier musulman. Il meurt en 632, à 63 ans.","al-Bukhârî 3536 (âge à sa mort)"],
+ ["Il est le dernier des prophètes, et son caractère était le Coran.","Coran 33:40 (« le sceau des prophètes ») ; 'Â'isha : « Son caractère était le Coran. » Muslim 746"]],
+q:[["Comment Allah décrit-Il la naissance de 'Îsâ ?",["Comme la création d'Âdam","Comme celle de Mûsâ","Comme celle de Yûsuf","Elle n'est pas décrite"],"Coran 3:59."],
+ ["Les premiers mots révélés au Prophète ﷺ ?",["« Lis, au nom de ton Seigneur qui a créé »","« Au nom d'Allah, le Tout Miséricordieux »","« Dis : Il est Allah, Unique »","« Ô toi, l'enveloppé »"],"Coran 96:1, al-Bukhârî 3."],
+ ["L'Hégire, c'est…",["L'émigration de La Mecque à Médine","Le pèlerinage","La première révélation","La conquête de La Mecque"],"En 622, début du calendrier musulman."],
+ ["Que dit le Coran de la crucifixion de 'Îsâ ?",["Il n'a été ni tué ni crucifié","Il a été crucifié puis est revenu","Il est mort de vieillesse","Le Coran n'en parle pas"],"Coran 4:157-158."]]},
+{id:'i8',t:'Petits actes, grandes récompenses',s:'Faciles à faire chaque jour',p:[
+ ["Le sourire est une aumône.","« Ton sourire à ton frère est une aumône. » at-Tirmidhî 1956"],
+ ["Deux phrases légères à dire, lourdes dans la balance.","« Deux paroles légères sur la langue, lourdes dans la balance, aimées du Tout Miséricordieux : Subhâna-llâhi wa bihamdih, Subhâna-llâhi-l-'azîm. » al-Bukhârî 6406, Muslim 2694"],
+ ["Dire le salâm à ceux qu'on connaît et à ceux qu'on ne connaît pas fait naître l'amour entre les gens.","« … Voulez-vous que je vous indique une chose qui, si vous la faites, vous fera vous aimer ? Répandez le salâm entre vous. » Muslim 54"],
+ ["Avant de manger : Bismillah, manger de la main droite et dans ce qui est devant soi.","« Ô garçon, dis Bismillah, mange de ta main droite et mange de ce qui est devant toi. » al-Bukhârî 5376, Muslim 2022"],
+ ["Enlever un obstacle du chemin fait partie de la foi.","« La foi comporte soixante-dix et quelques branches… la plus petite est d'écarter ce qui gêne du chemin, et la pudeur est une branche de la foi. » Muslim 35"],
+ ["Celui qui montre un bien à quelqu'un a la même récompense que celui qui le fait.","« Celui qui indique un bien a la même récompense que celui qui le fait. » Muslim 1893"],
+ ["Le bon comportement envers les parents : ne même pas leur dire « ouf ».","Coran 17:23 (sens : « ne leur dis pas ‹ ouf ›, ne les brusque pas, et adresse-leur des paroles respectueuses »)"]],
+q:[["Les deux paroles légères et lourdes dans la balance ?",["Subhâna-llâhi wa bihamdih, Subhâna-llâhi-l-'azîm","Allâhu akbar, Allâhu akbar","Astaghfirullâh, Astaghfirullâh","Bismillâh, al-hamdulillâh"],"al-Bukhârî 6406, Muslim 2694."],
+ ["Ce qui fait naître l'amour entre les gens, selon le hadith :",["Répandre le salâm","Faire des cadeaux chers","Parler beaucoup","Rester entre amis"],"Muslim 54."],
+ ["La plus petite branche de la foi ?",["Écarter ce qui gêne du chemin","Faire la prière","Jeûner","Lire le Coran"],"Muslim 35."]]},
+{id:'i9',t:'Le jeûne',s:'Ramadan et jeûnes sunna',p:[
+ ["Le jeûne du Ramadan est prescrit aux croyants pour atteindre la piété (taqwâ).","Coran 2:183 (sens)"],
+ ["« Celui qui jeûne le Ramadan avec foi et en espérant la récompense d'Allah, ses péchés passés lui sont pardonnés. »","al-Bukhârî 38, Muslim 760"],
+ ["Le sahûr (repas avant l'aube) est béni, même une gorgée d'eau.","« Prenez le sahûr, car il y a dans le sahûr une bénédiction. » al-Bukhârî 1923, Muslim 1095"],
+ ["Rompre le jeûne dès le coucher du soleil, sans traîner.","« Les gens resteront dans le bien tant qu'ils se hâteront de rompre le jeûne. » al-Bukhârî 1957, Muslim 1098"],
+ ["Tu as mangé ou bu par oubli ? Ton jeûne reste valable : continue-le.","« Celui qui oublie qu'il jeûne et mange ou boit, qu'il complète son jeûne : c'est Allah qui l'a nourri et abreuvé. » al-Bukhârî 1933, Muslim 1155"],
+ ["Le lundi et le jeudi sont des jours de jeûne sunna.","« Les actes sont présentés le lundi et le jeudi, et j'aime que mon acte soit présenté alors que je jeûne. » at-Tirmidhî 747"],
+ ["Le jour de 'Arafa et le jour de 'Âshûrâ' ont une grande récompense.","« Le jeûne du jour de 'Arafa : j'espère d'Allah qu'il expie l'année précédente et l'année suivante. Le jeûne de 'Âshûrâ' : j'espère qu'il expie l'année précédente. » Muslim 1162"]],
+q:[["Tu bois par oubli pendant que tu jeûnes. Ton jeûne…",["Reste valable, tu continues","Est annulé","Doit être rattrapé deux fois","Est valable seulement si tu craches"],"al-Bukhârî 1933, Muslim 1155."],
+ ["Le sahûr, c'est…",["Le repas avant l'aube","Le repas de rupture","La prière de la nuit","L'aumône du Ramadan"],"al-Bukhârî 1923, Muslim 1095."],
+ ["Pourquoi jeûner le lundi et le jeudi ?",["Les actes sont présentés ces jours-là","C'est obligatoire","Pour rattraper le Ramadan seulement","Pour la santé"],"at-Tirmidhî 747."]]},
+{id:'i10',t:'Le comportement du musulman',s:'Caractère, langue, amis, pudeur',p:[
+ ["Le bon caractère est ce qu'il y a de plus lourd dans la balance.","« Rien n'est plus lourd dans la balance du croyant, le Jour de la Résurrection, qu'un bon caractère. » at-Tirmidhî 2002"],
+ ["Se maîtriser quand on est en colère, c'est ça la vraie force.","« Le fort n'est pas celui qui terrasse les gens, le fort est celui qui se maîtrise quand il est en colère. » al-Bukhârî 6114, Muslim 2609"],
+ ["Dire la vérité, même quand c'est dur.","« La véracité mène à la bonté, et la bonté mène au Paradis… le mensonge mène à la perversité, et la perversité mène au Feu. » al-Bukhârî 6094, Muslim 2607"],
+ ["Tenir ses promesses et ce qu'on nous confie.","« Les signes de l'hypocrite sont trois : quand il parle, il ment ; quand il promet, il ne tient pas ; quand on lui confie quelque chose, il trahit. » al-Bukhârî 33, Muslim 59"],
+ ["Bien choisir ses amis, car on finit par leur ressembler.","« L'homme suit la religion de son ami proche : que chacun de vous regarde donc qui il prend pour ami. » Abû Dâwûd 4833, at-Tirmidhî 2378"],
+ ["Baisser le regard et préserver sa pudeur : c'est plus pur.","Coran 24:30 (sens : « dis aux croyants de baisser leurs regards et de préserver leur chasteté ; c'est plus pur pour eux »)"],
+ ["Être bon avec les voisins.","« Celui qui croit en Allah et au Jour dernier, qu'il honore son voisin. » al-Bukhârî 6019, Muslim 47"]],
+q:[["La vraie force, selon le hadith ?",["Se maîtriser dans la colère","Gagner les bagarres","Ne jamais parler","Être le plus musclé"],"al-Bukhârî 6114, Muslim 2609."],
+ ["Un signe de l'hypocrite ?",["Ne pas tenir ses promesses","Prier en retard une fois","Avoir peu d'amis","Être timide"],"al-Bukhârî 33, Muslim 59."],
+ ["Ce qui est le plus lourd dans la balance ?",["Le bon caractère","Les longues prières seulement","La richesse","Le nombre d'amis"],"at-Tirmidhî 2002."]]}];
+const islDone=()=>prof().islDone||[];
+function startIsl(id){const m=ISL.find(x=>x.id===id);if(!m)return;const steps=[...m.p.map((c,i)=>({k:'card',kick:'Point '+(i+1)+'/'+m.p.length,t:m.t,x:c[0],src:c[1]})),...m.q.map(q=>mcq(q[0],q[1],q[2]))];openPlayer({type:'learn',mode:'isl',mid:id,title:m.t,steps,i:0,score:0,nq:m.q.length})}
+function islRows(){const d=islDone();return ISL.map(m=>{const ok=d.includes(m.id);return lr(`<span class="pdot${ok?' on':''}">${ok?I.check:''}</span>`,esc(m.t),esc(m.s)+(ok?' · validé':''),I.chev,['isl',m.id])}).join('')}
+function islSection(){const d=islDone().length,nx=ISL.find(m=>!islDone().includes(m.id))||ISL[0];return sect("Apprendre l'islam",`<span class="mute">${d}/${ISL.length}</span>`)+`<div class="card"><div class="kick">${d?'Prochain module':'Commence ici'}</div><h3 class="h3b" style="font-size:24px">${esc(nx.t)}</h3><p class="mute" style="margin:0 0 10px">Cartes à lire, chacune avec sa source, puis un petit quiz.</p><button class="cta" data-act="isl" data-x="${nx.id}">${I.play} ${d?'Continuer':'Commencer'}</button></div><div class="card list">${islRows()}</div>`}
+Object.assign(PAGES,{islearn:{t:"Apprendre l'islam",f:()=>`<div class="card list">${islRows()}</div>`}});
+
+/* =========================================================
+   v10 (c) : anglais et admin sys variés, nouveaux exercices
+   ========================================================= */
+/* ---------- banques anglais ---------- */
+const FILL=[
+["I have been in Chicago ___ August.","since",["for","from","during"],"« since » + point de départ (since August) ; « for » + durée (for 3 months)."],
+["I have been playing soccer ___ fifteen years.","for",["since","during","from"],"« for » + une durée."],
+["The game is ___ Saturday.","on",["in","at","the"],"« on » + jour (on Saturday)."],
+["Practice starts ___ 4:30.","at",["on","in","to"],"« at » + heure précise."],
+["I was born ___ 2006.","in",["on","at","since"],"« in » + année, mois, saison."],
+["He is good ___ dribbling.","at",["in","on","for"],"good at + -ing."],
+["I'm looking forward to ___ you.","seeing",["see","saw","seen"],"look forward to + -ing."],
+["She ___ to the gym yesterday.","went",["goed","has gone","go"],"go → went (irrégulier), et « yesterday » = prétérit."],
+["I ___ my homework already.","have done",["did","have did","done"],"already + present perfect : have + participe passé."],
+["How ___ money do you have?","much",["many","lot","few"],"much + indénombrable (money)."],
+["How ___ goals did you score?","many",["much","lot","more"],"many + dénombrable (goals)."],
+["He is taller ___ me.","than",["then","that","as"],"Comparatif : taller than."],
+["This is the ___ game of the season.","best",["better","most good","goodest"],"good → better → the best."],
+["I ___ coffee.","don't drink",["doesn't drink","not drink","no drink"],"I/you/we/they → don't ; he/she/it → doesn't."],
+["She ___ play on Fridays.","doesn't",["don't","isn't","not"],"Troisième personne : doesn't."],
+["___ you ever been to New York?","Have",["Did","Do","Are"],"Expérience : Have you ever been…?"],
+["The team lost ___ ball in midfield.","the",["a","an","—"],"Le ballon précis : the ball."],
+["I need ___ hour to finish.","an",["a","the","one"],"an devant un son voyelle (hour, h muet)."],
+["___ going to rain tomorrow.","It's",["Its","It","Is"],"It's = it is ; its = son/sa."],
+["The team lost ___ last game.","its",["it's","his","their's"],"Possessif de « it » : its."],
+["___ coming to the game tonight.","They're",["Their","There","Theyre"],"They're = they are."],
+["Can you ___ me your notes?","lend",["borrow","loan to","lent"],"lend = prêter ; borrow = emprunter."],
+["Can I ___ your charger?","borrow",["lend","lent","borrowed to"],"borrow = emprunter."],
+["He ___ me that the bus was late.","told",["said","said me","told to"],"tell someone ; say something."],
+["Don't ___ the ball!","lose",["loose","lost","loosing"],"lose = perdre ; loose = lâche/desserré."],
+["I'm used to ___ early.","waking up",["wake up","woke up","wakes up"],"be used to + -ing."],
+["If I ___ more time, I would study more.","had",["have","would have","will have"],"Conditionnel : if + prétérit, would + verbe."],
+["We ___ the game if we had defended better.","would have won",["would win","will win","won"],"Regret passé : would have + participe."],
+["I need to ___ a decision.","make",["do","take on","get"],"make a decision."],
+["I ___ my best every day.","do",["make","get","take"],"do your best."],
+["There ___ a lot of people at the game.","were",["was","is","be"],"a lot of people = pluriel → were."],
+["He runs ___ than me.","faster",["more fast","fastest","more faster"],"fast → faster."],
+["I'm interested ___ your program.","in",["on","for","by"],"interested in."],
+["It depends ___ the coach.","on",["of","from","to"],"depend on."],
+["I've lived here ___ three months.","for",["since","during","ago"],"for + durée."]];
+const ORDER=[
+["I have been playing soccer since I was six","Je joue au foot depuis l'âge de six ans."],
+["Could you send me the schedule for next week","Pourrais-tu m'envoyer le planning de la semaine prochaine ?"],
+["I am looking forward to hearing from you","Au plaisir d'avoir de vos nouvelles (fin d'email)."],
+["My first touch has improved a lot this season","Ma première touche s'est beaucoup améliorée cette saison."],
+["Where did you go last weekend","Où es-tu allé le week-end dernier ?"],
+["I don't know what time practice starts","Je ne sais pas à quelle heure commence l'entraînement."],
+["Can you tell me where the locker room is","Peux-tu me dire où est le vestiaire ?"],
+["I would like to attend your ID camp","J'aimerais participer à votre ID camp."],
+["How long have you been living in Chicago","Depuis combien de temps vis-tu à Chicago ?"],
+["The coach told us to press higher","Le coach nous a dit de presser plus haut."],
+["I usually go to the gym before class","Je vais d'habitude à la salle avant les cours."],
+["If I had more time I would study more","Si j'avais plus de temps, j'étudierais plus."],
+["I am interested in transferring to your program","Je suis intéressé par un transfert dans votre programme."],
+["We lost the game but we played well","On a perdu le match mais on a bien joué."],
+["She has never been to France","Elle n'est jamais allée en France."],
+["What time does the game start on Saturday","À quelle heure commence le match samedi ?"],
+["I didn't understand the assignment","Je n'ai pas compris le devoir."],
+["Please find my highlight video attached","Vous trouverez ma vidéo highlight en pièce jointe."],
+["I scored two goals and had one assist","J'ai marqué deux buts et fait une passe décisive."],
+["Is there anything else I should send you","Y a-t-il autre chose que je devrais vous envoyer ?"],
+["Thank you for taking the time to watch my video","Merci d'avoir pris le temps de regarder ma vidéo."],
+["I need to improve my finishing","Je dois améliorer ma finition."]];
+const TRAD=[
+["Actuellement, je joue en Juco.",["Currently, I play in Juco.","Actually, I play in Juco.","Actualy I play in Juco."],"« Actually » = en fait. « Actuellement » = currently."],
+["J'ai 20 ans.",["I am 20 years old.","I have 20 years.","I have 20 years old."],"En anglais on « est » son âge : I am 20."],
+["Je suis d'accord.",["I agree.","I am agree.","I am agreed with."],"agree est un verbe : I agree."],
+["J'ai assisté au cours.",["I attended the class.","I assisted the class.","I assisted to the class."],"assister à = attend. assist = aider."],
+["Je suis ici depuis trois mois.",["I have been here for three months.","I am here since three months.","I am here for three months ago."],"Durée qui continue : present perfect + for."],
+["Explique-moi.",["Explain it to me.","Explain me.","Explain me it."],"explain something to someone."],
+["Il m'a dit de venir.",["He told me to come.","He said me to come.","He told me come."],"tell someone to do something."],
+["Je passe un examen demain.",["I'm taking an exam tomorrow.","I'm passing an exam tomorrow.","I pass an exam tomorrow."],"pass an exam = le réussir. Passer = take."],
+["Je cherche un stage.",["I'm looking for an internship.","I'm looking for a stage.","I search a stage."],"stage = internship ; a stage = une scène."],
+["Je suis allé à la librairie.",["I went to the bookstore.","I went to the library.","I goed to the bookstore."],"library = bibliothèque ; librairie = bookstore."],
+["Éventuellement, on pourra s'entraîner ensemble.",["Possibly, we could train together.","Eventually, we could train together.","Eventualy we can train together."],"eventually = finalement. éventuellement = possibly / maybe."],
+["Je suis en train de manger.",["I am eating.","I am in train of eating.","I eat now."],"Action en cours : be + -ing."],
+["Ça dépend du coach.",["It depends on the coach.","It depends of the coach.","It's depend of the coach."],"depend on."],
+["Je n'ai pas d'argent.",["I don't have any money.","I don't have no money.","I have not money."],"Une seule négation : don't … any."],
+["Il est très sensible.",["He is very sensitive.","He is very sensible.","He is very sensibly."],"sensible = raisonnable ; sensible (fr) = sensitive."],
+["Je me suis blessé au genou.",["I hurt my knee.","I hurted my knee.","I blessed my knee."],"hurt → hurt (irrégulier). bless = bénir."],
+["Je me suis entraîné hier.",["I trained yesterday.","I have trained yesterday.","I train yesterday."],"Moment précis du passé (yesterday) : prétérit."],
+["Résume le texte.",["Summarize the text.","Resume the text.","Resumate the text."],"resume = reprendre. résumer = summarize."],
+["On a gagné le match.",["We won the game.","We winned the game.","We gained the match."],"win → won. gain = prendre (du poids…)."],
+["Je vais à l'entraînement.",["I'm going to practice.","I'm going to the training.","I go to entrainment."],"Aux US on dit « practice »."]];
+const VOC=[["l'ailier","the winger"],["une passe en profondeur","a through ball"],["la première touche","the first touch"],["un essai (pour un club)","a tryout"],["une bourse","a scholarship"],["une frappe","a shot"],["un coup franc","a free kick"],["le hors-jeu","offside"],["un devoir","an assignment"],["la date limite","the deadline"],["un relevé de notes","a transcript"],["le vestiaire","the locker room"],["une blessure","an injury"],["s'échauffer","to warm up"],["un remplaçant","a substitute"],["le classement","the standings"],["une note (examen)","a grade"],["s'inscrire","to enroll"],["un dégagement","a clearance"],["le banc","the bench"],["un centre","a cross"],["une feinte","a fake / a feint"],["la mi-temps","halftime"],["le coup d'envoi","the kickoff"]];
+
+/* ---------- banques admin sys ---------- */
+const PORTS=[['SSH',22],['FTP',21],['Telnet',23],['SMTP',25],['DNS',53],['DHCP (serveur)',67],['HTTP',80],['POP3',110],['NTP',123],['IMAP',143],['SNMP',161],['LDAP',389],['HTTPS',443],['SMB',445],['Syslog',514],['SMTP (soumission)',587],['LDAPS',636],['IMAPS',993],['POP3S',995],['MySQL',3306],['RDP',3389],['PostgreSQL',5432]];
+const OSI=[['Switch (commutateur)',2],['Routeur',3],['Adresse IP',3],['Adresse MAC',2],['TCP, UDP et les ports',4],['HTTP, DNS, SSH',7],['Câble, hub, signal électrique',1],['Trame Ethernet',2],['Paquet IP',3],['Segment TCP',4],['VLAN',2],['ICMP (ping)',3]];
+const OSIN={1:'1 – Physique',2:'2 – Liaison',3:'3 – Réseau',4:'4 – Transport',5:'5 – Session',6:'6 – Présentation',7:'7 – Application'};
+const CMDS=[
+["Linux : affiche les adresses IP de la machine.",['ip a','ip addr','ip address','ip addr show','ip a show','ifconfig'],'ip a'],
+["Windows : affiche la configuration IP complète.",['ipconfig /all'],'ipconfig /all'],
+["Windows : vide le cache DNS.",['ipconfig /flushdns'],'ipconfig /flushdns'],
+["Windows : redemande une adresse au serveur DHCP.",['ipconfig /renew'],'ipconfig /renew'],
+["Linux : envoie exactement 4 pings à 8.8.8.8.",['ping -c 4 8.8.8.8','ping -c4 8.8.8.8'],'ping -c 4 8.8.8.8'],
+["Windows : affiche le chemin jusqu'à google.com.",['tracert google.com'],'tracert google.com'],
+["Linux : affiche le chemin jusqu'à google.com.",['traceroute google.com','tracepath google.com','mtr google.com'],'traceroute google.com'],
+["Demande au DNS l'adresse de google.com.",['nslookup google.com','dig google.com','host google.com'],'nslookup google.com'],
+["Linux : liste les ports TCP et UDP en écoute, avec les programmes.",['ss -tulpn','netstat -tulpn','ss -tulnp','netstat -tulnp'],'ss -tulpn'],
+["Linux : affiche la table de routage.",['ip route','ip r','ip route show','route -n'],'ip route'],
+["Rends le fichier script.sh exécutable.",['chmod +x script.sh','chmod a+x script.sh','chmod u+x script.sh','chmod 755 script.sh'],'chmod +x script.sh'],
+["Donne rwx au propriétaire et r-x au groupe et aux autres sur script.sh (en chiffres).",['chmod 755 script.sh'],'chmod 755 script.sh'],
+["Donne rw au propriétaire et r au groupe et aux autres sur notes.txt (en chiffres).",['chmod 644 notes.txt'],'chmod 644 notes.txt'],
+["Change le propriétaire de fichier.txt pour l'utilisateur alice.",['chown alice fichier.txt'],'chown alice fichier.txt'],
+["Crée l'utilisateur bob avec son dossier personnel.",['useradd -m bob','adduser bob'],'useradd -m bob'],
+["Ajoute bob au groupe sudo, sans le retirer de ses autres groupes.",['usermod -aG sudo bob','usermod -a -G sudo bob','adduser bob sudo','gpasswd -a bob sudo'],'usermod -aG sudo bob'],
+["Affiche l'état du service ssh.",['systemctl status ssh','systemctl status sshd','service ssh status'],'systemctl status ssh'],
+["Redémarre le service apache2.",['systemctl restart apache2','service apache2 restart'],'systemctl restart apache2'],
+["Fais démarrer nginx automatiquement au démarrage.",['systemctl enable nginx','systemctl enable --now nginx'],'systemctl enable nginx'],
+["Debian/Ubuntu : mets à jour la liste des paquets.",['apt update','apt-get update'],'apt update'],
+["Debian/Ubuntu : installe nginx.",['apt install nginx','apt-get install nginx','apt install -y nginx','apt-get install -y nginx'],'apt install nginx'],
+["Affiche les 20 dernières lignes de /var/log/syslog.",['tail -n 20 /var/log/syslog','tail -20 /var/log/syslog','tail -n20 /var/log/syslog'],'tail -n 20 /var/log/syslog'],
+["Suis /var/log/syslog en direct.",['tail -f /var/log/syslog','journalctl -f'],'tail -f /var/log/syslog'],
+["Cherche le mot error dans app.log.",['grep error app.log','grep -i error app.log'],'grep error app.log'],
+["Affiche l'espace disque, lisible par un humain.",['df -h'],'df -h'],
+["Affiche la taille totale du dossier /var/log, lisible.",['du -sh /var/log'],'du -sh /var/log'],
+["Arrête le processus numéro 1234.",['kill 1234','kill -9 1234','kill -15 1234','kill -kill 1234','kill -term 1234'],'kill 1234'],
+["Connecte-toi en SSH à 192.168.1.10 avec l'utilisateur admin.",['ssh admin@192.168.1.10','ssh -l admin 192.168.1.10'],'ssh admin@192.168.1.10'],
+["Copie fichier.txt dans /tmp du serveur 10.0.0.5 (utilisateur admin).",['scp fichier.txt admin@10.0.0.5:/tmp','scp fichier.txt admin@10.0.0.5:/tmp/'],'scp fichier.txt admin@10.0.0.5:/tmp'],
+["UFW : autorise le port 22.",['ufw allow 22','ufw allow ssh','ufw allow 22/tcp'],'ufw allow 22'],
+["Affiche les logs du service nginx (systemd).",['journalctl -u nginx','journalctl -u nginx.service'],'journalctl -u nginx'],
+["Affiche le dossier dans lequel tu es.",['pwd'],'pwd'],
+["Liste tous les fichiers, même cachés, en format détaillé.",['ls -la','ls -al','ls -lah','ls -alh','ls -lA'],'ls -la'],
+["Cisco : passe en mode configuration globale.",['configure terminal','conf t','config t','conf term'],'configure terminal'],
+["Cisco : affiche le résumé des interfaces avec leurs IP.",['show ip interface brief','sh ip int br','show ip int brief','sh ip int brief','show ip int br','sh ip interface brief'],'show ip interface brief'],
+["Cisco : sauvegarde la configuration.",['copy running-config startup-config','copy run start','wr','write memory','write','wr mem'],'copy running-config startup-config'],
+["Cisco : affiche la table de routage.",['show ip route','sh ip route'],'show ip route'],
+["Windows : liste les connexions et les ports avec le PID.",['netstat -ano'],'netstat -ano'],
+["PowerShell : teste le port 443 de google.com.",['test-netconnection google.com -port 443','tnc google.com -port 443'],'Test-NetConnection google.com -Port 443']];
+const SCEN=[
+["Un PC a l'adresse 169.254.12.4. Le problème le plus probable ?",["Il n'a pas reçu d'adresse du serveur DHCP","Le DNS est en panne","Le câble est en fibre","Le pare-feu bloque le port 80"],"169.254.x.x = adresse APIPA : la machine s'est donné une adresse toute seule faute de DHCP."],
+["ping 8.8.8.8 marche, mais ping google.com ne marche pas.",["Problème de résolution DNS","Problème de câble","Problème de DHCP","La passerelle est mauvaise"],"Internet répond par IP, donc seul le nom ne se résout pas : DNS."],
+["192.168.1.10/24 et 192.168.2.10/24, sur le même switch, ne se pingent pas.",["Ils ne sont pas dans le même sous-réseau","Le switch est en panne","Il manque un câble croisé","Le DNS est mal configuré"],"/24 : le 3e octet doit être le même. Il faut un routeur entre les deux réseaux."],
+["Un site marche depuis le serveur lui-même, mais pas depuis Internet.",["Pare-feu ou redirection de port (NAT) manquante","Le site est mal codé","Le DNS local est en panne","Le serveur n'a pas de RAM"],"Le service tourne : c'est le chemin depuis l'extérieur qui est bloqué."],
+["« Permission denied » en lançant ./script.sh.",["Le fichier n'a pas le droit d'exécution","Le script est vide","Il manque une adresse IP","Le disque est plein"],"chmod +x script.sh."],
+["Un serveur Linux ralentit, des erreurs d'écriture apparaissent. Première commande ?",["df -h","ping 8.8.8.8","chmod 777 /","reboot"],"On vérifie d'abord si le disque est plein."],
+["SSH : « Connection refused ».",["Aucun service n'écoute sur ce port","Le pare-feu filtre silencieusement","Mauvais mot de passe","Le DNS est en panne"],"Refused = la machine répond, mais rien n'écoute (sshd arrêté ou mauvais port)."],
+["SSH : « Connection timed out ».",["Un pare-feu filtre, ou la machine est injoignable","Le mot de passe est faux","Le service est arrêté","La clé SSH est expirée"],"Timeout = pas de réponse du tout : filtrage ou route."],
+["Deux VLAN doivent communiquer entre eux. Il faut…",["Un routeur ou un switch de niveau 3","Un hub","Un câble plus long","Un serveur DNS"],"Chaque VLAN est un réseau séparé : il faut du routage."],
+["Plusieurs VLAN doivent passer sur un seul câble entre deux switchs.",["Un lien trunk (802.1Q)","Un lien access","Un câble croisé","Du NAT"],"Le trunk étiquette les trames avec le numéro de VLAN."],
+["Le réseau sature à cause d'une boucle entre switchs. Quel protocole l'évite ?",["STP (Spanning Tree)","DHCP","OSPF","NTP"],"STP bloque les liens qui créent une boucle."],
+["Après un changement de DNS, Windows va encore sur l'ancienne IP.",["Vider le cache DNS (ipconfig /flushdns)","Changer de navigateur","Redémarrer le switch","Désactiver le DHCP"],"Le PC garde l'ancienne réponse en cache."],
+["Pour administrer un serveur à distance de façon sécurisée, on préfère…",["SSH, car il chiffre la connexion","Telnet, car il est plus rapide","FTP","HTTP"],"Telnet envoie tout en clair, même le mot de passe."],
+["Une machine a une bonne IP mais n'atteint aucun autre réseau.",["Mauvaise passerelle par défaut","Mauvais masque de DNS","Mauvaise adresse MAC","Câble trop court"],"La passerelle est la porte de sortie du réseau local."],
+["Un service ne démarre pas sous Linux. Où regarder d'abord ?",["Ses logs (journalctl -u service)","Le BIOS","La table ARP","Le fichier hosts"],"Le journal explique presque toujours la cause."]];
+
+/* ---------- outils ---------- */
+const ip2n=a=>a.split('.').reduce((n,x)=>n*256+ +x,0),n2ip=n=>[24,16,8,0].map(s=>Math.floor(n/2**s)%256).join('.');
+const maskOf=p=>n2ip(2**32-2**(32-p));
+function opts4(ans,cands){const s=[String(ans)];for(const c of cands){const v=String(c);if(!s.includes(v))s.push(v);if(s.length===4)break}return s}
+function canon(s){s=String(s).trim().toLowerCase().replace(/^sudo\s+/,'').replace(/["']/g,'').replace(/\s+/g,' ');const out=[];let fl='';for(const t of s.split(' ')){if(/^-[a-z]+$/.test(t)&&t.length<=6)fl+=t.slice(1);else{if(fl){out.push('-'+[...new Set(fl)].sort().join(''));fl=''}out.push(t)}}if(fl)out.push('-'+[...new Set(fl)].sort().join(''));return out.join(' ')}
+const typeStep=(q,acc,show,expl,o={})=>({k:'type',q,acc:acc.map(canon),show,expl,...o});
+const orderStep=(sent,fr)=>{const w=sent.split(' ');let sh=shuffle([...w]);for(let k=0;k<5&&sh.join(' ')===sent;k++)sh=shuffle([...w]);return{k:'order',words:sh,ans:sent,fr,built:[]}};
+const matchStep=(pairs,q)=>({k:'match',q,pairs,right:shuffle(pairs.map(p=>p[1])),ok:[],err:0,sel:null});
+
+/* ---------- générateurs anglais ---------- */
+const engChoose=j=>{const e=ENG[j];return{...mcq('Quelle phrase est correcte ?',[e[1],e[0]],e[2]),eid:j,rc:e[1]}};
+const SPOTS=(()=>{const r=[];ENG.forEach((e,j)=>{const b=e[0].split(' '),g=e[1].split(' ');if(b.length!==g.length)return;const d=b.map((w,i)=>w!==g[i]?i:-1).filter(i=>i>=0);if(d.length===1)r.push([j,d[0]])});return r})();
+function engSpot(){if(!SPOTS.length)return engChoose(rnd(0,ENG.length-1));const [j,i]=pick(SPOTS),e=ENG[j],w=e[0].split(' '),others=shuffle(w.filter((x,k)=>k!==i&&x.replace(/\W/g,'').length>1&&x!==w[i]));return{...mcq(`Trouve le mot faux : « ${e[0]} »`,opts4(w[i],others),`Correct : « ${e[1]} ». ${e[2]}`),eid:j,rc:e[1]}}
+const engFill=f=>({...mcq('Complète : '+f[0],[f[1],...f[2]],f[3]),rc:f[0].replace('___',f[1])});
+const engTrad=t=>({...mcq(`Traduis : « ${t[0]} »`,t[1],t[2]),rc:t[1][0]});
+function engMix(){const w=(prof().engWrong||[]).filter(j=>ENG[j]).slice(0,2),steps=[];const ids=[...w];while(ids.length<2){const j=rnd(0,ENG.length-1);if(!ids.includes(j))ids.push(j)}
+ ids.forEach(j=>steps.push(engChoose(j)));steps.push(engSpot());sample(FILL,2).forEach(f=>steps.push(engFill(f)));steps.push(engTrad(pick(TRAD)));
+ const o=pick(ORDER);steps.push(orderStep(o[0],o[1]));steps.push(matchStep(sample(VOC,4),'Relie le français et l\'anglais'));return shuffle(steps)}
+const engFast=()=>pick([()=>engChoose(rnd(0,ENG.length-1)),()=>engFill(pick(FILL)),()=>engTrad(pick(TRAD)),()=>engSpot()])();
+
+/* ---------- générateurs admin sys ---------- */
+function subnetQ(asType){const p=pick([30,29,28,27,26,25,24,23,22,20,16]),b=pick([[192,168],[10,rnd(0,255)],[172,rnd(16,31)]]),ipn=ip2n([...b,rnd(0,255),rnd(1,254)].join('.')),size=2**(32-p),net=Math.floor(ipn/size)*size,bc=net+size-1,ip=n2ip(ipn),hosts=size-2;
+ const t=asType?pick(['hosts','net']):pick(['mask','hosts','net','bc','same']);
+ if(t==='mask')return mcq(`Quel est le masque d'un /${p} ?`,opts4(maskOf(p),[maskOf(Math.min(30,p+1)),maskOf(p-1),maskOf(Math.min(30,p+2)),maskOf(p-2)]),`/${p} = ${p} bits à 1, soit ${maskOf(p)}.`);
+ if(t==='hosts'){const ex=`2^${32-p} = ${size} adresses, moins l'adresse réseau et le broadcast = ${hosts}.`;return asType?typeStep(`Combien d'adresses utilisables dans un /${p} ?`,[String(hosts)],String(hosts),ex,{num:1,kick:'Tape ta réponse'}):mcq(`Combien d'adresses utilisables dans un /${p} ?`,opts4(hosts,[size,2**(31-p)-2,2**(33-p)-2,hosts-1]),ex)}
+ const ex=`/${p} = blocs de ${size} adresses. ${ip} tombe dans le bloc ${n2ip(net)} → ${n2ip(bc)}.`;
+ if(t==='net')return asType?typeStep(`${ip}/${p} : quelle est l'adresse réseau ?`,[n2ip(net)],n2ip(net),ex,{kick:'Tape ta réponse'}):mcq(`${ip}/${p} : quelle est l'adresse réseau ?`,opts4(n2ip(net),[n2ip(bc),n2ip(Math.floor(ipn/256)*256),n2ip(net+size),n2ip(Math.max(0,net-size)),n2ip(net+1)]),ex);
+ if(t==='bc')return mcq(`${ip}/${p} : quelle est l'adresse de broadcast ?`,opts4(n2ip(bc),[n2ip(net),n2ip(bc+size),n2ip(Math.floor(ipn/256)*256+255),n2ip(bc-1)]),ex);
+ const same=Math.random()<.5,oth=same?net+rnd(1,Math.max(1,size-2)):(net+size+rnd(1,Math.max(1,size-2))),o2=n2ip(oth);
+ return mcq(`${ip}/${p} et ${o2}/${p} sont-elles dans le même réseau ?`,same?['Oui','Non']:['Non','Oui'],`${ip} est dans ${n2ip(net)}/${p}. ${o2} est dans ${n2ip(Math.floor(oth/size)*size)}/${p}.`)}
+function portQ(){const [s,n]=pick(PORTS);return Math.random()<.5?mcq(`Quel port utilise ${s} ?`,opts4(n,shuffle(PORTS.filter(x=>x[1]!==n)).map(x=>x[1])),`${s} = ${n}.`):mcq(`Le port ${n}, c'est…`,opts4(s,shuffle(PORTS.filter(x=>x[0]!==s)).map(x=>x[0])),`${n} = ${s}.`)}
+function osiQ(){const [x,l]=pick(OSI);return mcq(`À quelle couche OSI se trouve : ${x} ?`,opts4(OSIN[l],shuffle([1,2,3,4,7].filter(k=>k!==l)).map(k=>OSIN[k])),`${x} → couche ${OSIN[l]}.`)}
+function binQ(){const v=pick([128,192,224,240,248,252,254,255,10,172,168,64,100,200,1,127]),b=v.toString(2).padStart(8,'0'),flip=i=>b.slice(0,i)+(b[i]==='1'?'0':'1')+b.slice(i+1);
+ return Math.random()<.5?mcq(`${v} en binaire (8 bits) ?`,opts4(b,[flip(rnd(0,3)),flip(rnd(4,7)),flip(rnd(0,7)),b.split('').reverse().join('')]),`${v} = ${b}. Poids des bits : 128 64 32 16 8 4 2 1.`):typeStep(`Convertis ${b} en décimal.`,[String(v)],String(v),`128 64 32 16 8 4 2 1 : additionne les bits à 1 → ${v}.`,{num:1,kick:'Tape ta réponse'})}
+function cmdQ(){const c=pick(CMDS);return typeStep(c[0],c[1],c[2],'Accepté aussi : '+c[1].slice(0,3).join(' · '),{term:1,hint:c[2].split(' ')[0]+' …'})}
+const scenQ=()=>{const s=pick(SCEN);return mcq(s[0],s[1],s[2])};
+const portMatch=()=>{const L=sample(PORTS,4);return matchStep(L.map(x=>[x[0],String(x[1])]),'Relie chaque service à son port')};
+function sysMix(){return shuffle([subnetQ(),subnetQ(true),portMatch(),portQ(),cmdQ(),cmdQ(),scenQ(),pick([osiQ,binQ])()])}
+const sysFast=()=>pick([()=>subnetQ(),portQ,osiQ,()=>{const q=binQ();return q.k==='mcq'?q:portQ()},scenQ])();
+
+/* ---------- lancement des sessions ---------- */
+function startEng2(speed){if(speed){const P={type:'learn',mode:'eng2',speed:1,gen:engFast,title:'Défi 60 secondes',steps:[engFast()],i:0,score:0,nq:0,end:Date.now()+60000};openPlayer(P);speedTick(P)}else openPlayer({type:'learn',mode:'eng2',title:'Anglais · session du jour',steps:engMix(),i:0,score:0,nq:8})}
+function startSys2(speed){if(speed){const P={type:'learn',mode:'sys2',speed:1,gen:sysFast,title:'Défi 60 secondes',steps:[sysFast()],i:0,score:0,nq:0,end:Date.now()+60000};openPlayer(P);speedTick(P)}else openPlayer({type:'learn',mode:'sys2',title:'Admin sys · défi du jour',steps:sysMix(),i:0,score:0,nq:8})}
+function speedTick(P){const iv=setInterval(()=>{if(S.P!==P||P.done){clearInterval(iv);return}const s=Math.max(0,Math.ceil((P.end-Date.now())/1000)),el=$('#ltimer');if(el)el.textContent=s+' s · '+P.score+' pt'+(P.score>1?'s':'');if(s<=0){clearInterval(iv);P.nq=P.steps.filter(x=>x.picked!=null).length;finishLearn()}},250)}
+startEnglish=function(){startEng2(false)};
+
+/* ---------- rendu des nouveaux exercices ---------- */
+function renderStep10(st){
+ if(st.k==='order'){const built=st.built,pool=st.words.map((w,i)=>i).filter(i=>!built.includes(i));
+  return`<div class="pbody" style="justify-content:flex-start"><div class="sub">Remets les mots dans l'ordre</div>${st.fr?`<p class="sub" style="opacity:.85;margin-top:0">${esc(st.fr)}</p>`:''}<div class="obuilt${st.done?(st.ok?' ok':' ko'):''}">${built.map((i,k)=>`<button data-act="lob" data-x="${k}" ${st.done?'disabled':''}>${esc(st.words[i])}</button>`).join('')||'<span class="ph">Touche les mots ci-dessous</span>'}</div><div class="opool">${pool.map(i=>`<button data-act="low" data-x="${i}">${esc(st.words[i])}</button>`).join('')}</div>${st.done?`<div class="hd">${st.ok?'<b>Parfait !</b>':'<b>Pas tout à fait.</b> La bonne phrase : '+esc(st.ans)}</div>`:built.length?`<div style="text-align:center"><button class="btn line sm" data-act="lor">Effacer</button></div>`:''}</div>`}
+ if(st.k==='type')return`<div class="pbody" style="justify-content:flex-start"><div class="sub">${esc(st.kick||'Tape la commande')}</div><h2 style="font-size:23px">${esc(st.q)}</h2><div class="term${st.done?(st.ok?' ok':' ko'):''}"><span>${st.term?'$':'›'}</span><input id="ltin" ${st.num?'inputmode="decimal"':''} autocomplete="off" autocapitalize="off" autocorrect="off" spellcheck="false" ${st.done?'disabled':''} value="${esc(st.typed||'')}" placeholder="${st.term?'ta commande…':'ta réponse…'}"></div>${st.done?`<div class="hd">${st.ok?'<b>Bonne réponse !</b> ':'<b>Pas tout à fait.</b> Réponse : <code>'+esc(st.show)+'</code>. '}${esc(st.expl||'')}</div>`:`<div class="pbtns" style="padding:0;margin-top:4px"><button class="btn line" data-act="lhint">${st.term?'Indice':'Je ne sais pas'}</button><button class="btn white" data-act="ltype">Valider</button></div>${st.hintOn?`<div class="hd">Indice : <code>${esc(st.hint||'')}</code></div>`:''}`}</div>`;
+ if(st.k==='match')return`<div class="pbody" style="justify-content:flex-start"><div class="sub">${esc(st.q)}</div><div class="mgrid"><div>${st.pairs.map((p,i)=>`<button class="${st.ok.includes(i)?'ok':''}${st.sel===i?' sel':''}" data-act="lml" data-x="${i}" ${st.ok.includes(i)?'disabled':''}>${esc(p[0])}</button>`).join('')}</div><div>${(st.done?st.pairs.map(p=>p[1]):st.right).map((r,j)=>{const m=st.ok.some(i=>st.pairs[i][1]===r);return`<button class="${m?'ok':''}${st.flash===j?' ko':''}" data-act="lmr" data-x="${j}" ${m?'disabled':''}>${esc(r)}</button>`}).join('')}</div></div>${st.done?`<div class="hd"><b>${st.err<=1?'Bien joué !':'Terminé.'}</b> ${st.err} erreur${st.err>1?'s':''}.</div>`:'<p class="sub">Touche à gauche, puis la bonne réponse à droite.</p>'}</div>`;
+ return''}
+const answered=st=>st.k==='mcq'?st.picked!=null:['order','type','match'].includes(st.k)?!!st.done:true;
+function stepRight(st){return st.k==='mcq'?st.opts[st.picked]===st.ans:st.k==='match'?st.err<=1:!!st.ok}
+
+/* ---------- fin de session ---------- */
+const _fl10=finishLearn;finishLearn=function(){const P=S.P;if(!P||!['eng2','sys2','isl'].includes(P.mode))return _fl10();
+ P.done=true;const t=today();if(P.speed)P.nq=Math.max(P.nq,P.steps.filter(answered).length);
+ P.gain=P.mode==='isl'?P.score*10+20:P.speed?Math.min(60,P.score*2):P.score*8+15;addXP(P.gain);
+ if(P.mode==='eng2'){setDay(t,{engDone:true});const w=new Set(prof().engWrong||[]);P.steps.forEach(s=>{if(s.eid==null||!answered(s))return;if(stepRight(s))w.delete(s.eid);else w.add(s.eid)});saveProfile({engWrong:[...w].slice(-30)})}
+ if(P.mode==='sys2')setDay(t,{sysDay:true});
+ if(P.mode==='isl'&&P.nq&&P.score/P.nq>=0.66&&!islDone().includes(P.mid))saveProfile({islDone:[...islDone(),P.mid]});
+ P.recap=P.steps.filter(s=>answered(s)&&!stepRight(s)).map(s=>s.rc||s.ans||s.show).filter(Boolean).slice(0,6);
+ if(P.speed){const k=P.mode==='eng2'?'eng':'sys',b=prof().best||{};P.rec=P.score>(b[k]||0);P.best=Math.max(P.score,b[k]||0);if(P.rec)saveProfile({best:{...b,[k]:P.score}})}
+ renderPlayer();burst(center())};
+const _ln10=learnNext;learnNext=function(){const P=S.P;if(P&&P.type==='learn'){const st=P.steps[P.i];if(!answered(st)){toast("Réponds d'abord");return}if(P.speed&&P.i===P.steps.length-1){if(Date.now()<P.end){P.steps.push(P.gen());P.i++;P.picked=null;renderPlayer();return}P.nq=P.steps.filter(answered).length;return finishLearn()}}return _ln10()};
+
+/* ---------- cartes d'accueil des pages ---------- */
+function eng2Card(){const b=(prof().best||{}).eng||0;return`<div class="card"><div class="kick">Toujours différent</div><h3 class="h3b" style="font-size:24px">Session du jour</h3><p class="mute" style="margin:0 0 10px">8 exercices mélangés : trouver l'erreur, compléter, remettre dans l'ordre, faux amis, vocabulaire foot. Tes erreurs reviennent en priorité.</p><button class="cta" data-act="eng">${I.play} Lancer</button><div class="acts"><button class="btn" data-act="speed" data-x="eng">Défi 60 secondes${b?' · record '+b:''}</button></div></div>`}
+function sys2Card(){const b=(prof().best||{}).sys||0;return`<div class="card"><div class="kick">Jamais les mêmes questions</div><h3 class="h3b" style="font-size:24px">Défi du jour</h3><p class="mute" style="margin:0 0 10px">Sous-réseaux générés au hasard, commandes à taper dans un vrai terminal, ports à relier, pannes à diagnostiquer.</p><button class="cta" data-act="sysmix">${I.play} Lancer</button><div class="acts"><button class="btn" data-act="speed" data-x="sys">Défi 60 secondes${b?' · record '+b:''}</button></div></div>`}
+{const fe=PAGES.english.f,fs=PAGES.sys.f;PAGES.english.f=()=>eng2Card()+fe();PAGES.sys.f=()=>sys2Card()+fs()}
+learnCard=function(){const d=dayOf(today());return`${sect("À apprendre aujourd'hui")}<div class="tiles">${tile('eng','','','Anglais',d.engDone?'Fait':'8 exos',"Session du jour, toujours différente",d.engDone?'done q':'acc q')}${tile('sysmix','','','Admin sys',d.sysDay?'Fait':'8 défis','Sous-réseaux, terminal, ports',d.sysDay?'done q':'q')}${tile('pg','islearn','','Islam',islDone().length+'/'+ISL.length,'Apprendre, avec les sources','pur q')}</div>`};
+
+Object.assign(ACT,{
+ eng:()=>startEng2(false),
+ sysmix:()=>startSys2(false),
+ speed:(id,x)=>x==='sys'?startSys2(true):startEng2(true),
+ isl:(id,x)=>startIsl(x),
+ low:(id,x)=>{const P=S.P,st=P.steps[P.i];if(st.done)return;st.built.push(+x);if(st.built.length===st.words.length){st.done=true;st.ok=st.built.map(i=>st.words[i]).join(' ')===st.ans;if(st.ok){P.score++;burst(center())}}renderPlayer()},
+ lob:(id,x)=>{const st=S.P.steps[S.P.i];if(st.done)return;st.built.splice(+x,1);renderPlayer()},
+ lor:()=>{const st=S.P.steps[S.P.i];if(!st.done){st.built=[];renderPlayer()}},
+ ltype:()=>{const P=S.P,st=P.steps[P.i],el=$('#ltin');if(st.done||!el)return;const v=el.value.trim();if(!v){toast('Tape ta réponse');return}st.typed=v;st.done=true;st.ok=st.acc.includes(canon(v));if(st.ok){P.score++;burst(center())}renderPlayer()},
+ lhint:()=>{const P=S.P,st=P.steps[P.i];if(st.done)return;if(st.term){st.hintOn=true;renderPlayer()}else{st.typed='';st.done=true;st.ok=false;renderPlayer()}},
+ lml:(id,x)=>{const st=S.P.steps[S.P.i];st.sel=+x;st.flash=null;renderPlayer()},
+ lmr:(id,x)=>{const P=S.P,st=P.steps[P.i];if(st.sel==null){toast("Choisis d'abord à gauche");return}if(st.pairs[st.sel][1]===st.right[+x]){st.ok.push(st.sel);st.sel=null;st.flash=null;if(st.ok.length===st.pairs.length){st.done=true;if(st.err<=1){P.score++;burst(center())}}}else{st.err++;st.flash=+x}renderPlayer()},
+ lagain:()=>{const P=S.P;if(P.mode==='sys')startModule(P.mid);else if(P.mode==='foot'||P.mode==='nut')startFoot(P.mid);else if(P.mode==='isl')startIsl(P.mid);else if(P.mode==='sys2')startSys2(!!P.speed);else startEng2(!!P.speed)}
+});
+{const lp=ACT.lpick;ACT.lpick=(id,x,b)=>{const P=S.P;lp(id,x,b);if(P&&P.speed&&!P.done)setTimeout(()=>{if(S.P===P&&!P.done)learnNext()},550)}}
+document.addEventListener('keydown',e=>{if(e.key==='Enter'&&e.target&&e.target.id==='ltin'){e.preventDefault();ACT.ltype()}});
+
+
 
 
 
@@ -1358,7 +1880,7 @@ S.loaded=true;S.fresh=!loadLocal();
 if(!S.fresh&&!S.profile.habSeeded&&!S.items.some(i=>i.kind==='habit')){HAB_DEFAULT.forEach((t,i)=>S.items.push({id:'hab-'+i,kind:'habit',title:t}));S.profile={...S.profile,habSeeded:true};persist()}
 try{if(navigator.storage&&navigator.storage.persist)navigator.storage.persist()}catch(e){}
 if('serviceWorker' in navigator)addEventListener('load',()=>navigator.serviceWorker.register('sw.js',{updateViaCache:'none'}).then(r=>r.update()).catch(()=>{}));
-render();
+migrate10();render();
 ;(()=>{const g=new URLSearchParams(location.search).get('go');if(g){history.replaceState(null,'',location.pathname);setTimeout(()=>handleGo(g),350)}setTimeout(pushBoot,1200)})();
 }
 </script>
